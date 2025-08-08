@@ -1,0 +1,226 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mihir Lakhani | ML Portfolio</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Optional fallback -->
+</head>
+
+<body>
+    <!-- Header / Navigation -->
+    <header class="navbar">
+        <div class="nav-container">
+            <h1 class="logo"></h1>
+            <nav>
+                <ul class="nav-links-header">
+                    <li><a href="#top">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#work">My Work</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <div class="home-bg">
+        <div class="intro">
+            <h1>
+                <span class="greeting"><span class="initial1">H</span>i, I am</span><br>
+                <span class="fullname">
+                    <span class="initial2">M</span>ihir <span class="initial2">L</span>akhani
+                </span>
+            </h1>
+        </div>
+
+        <div class="intro-box">
+            <!-- Left Text Block -->
+            <div class="name-role">
+                <h5 class="tagline">
+                    <span class="highlight">M</span>achine <span class="highlight">L</span>earning in <br> practice —
+                </h5>
+                <h6 class="quote-text">
+                    <span class="italic">
+                        "An AI system that doesn’t just predict SLA violations, but understands, explains, and prevents them before impact."
+                    </span><br>
+                    Hi, I’m Mihir, the guy behind this project. This is my technical portfolio that's not just a collection of experiments, but applied Machine Learning projects.
+                    These models aren't just demos; they run in production and make sense of their own decisions.
+                    Everything here reflects how I build, debug, and deliver with intent.<br>
+                    If you're into ML that's used, not just trained then you'll feel right at home.
+                </h6>
+            </div>
+
+            <!-- Vertical Caption -->
+            <div class="vertical-text-wrapper">
+                <div class="vertical-text">
+                    Machine Learning Enthusiast & AI Developer Solving Real-World Problems with Code, Data & Machine Learning
+                </div>
+            </div>
+
+            <!-- Profile Photo -->
+            <div class="intro-photo">
+                <img src="{{ url_for('static', filename='images/mihir.jpg') }}" alt="Mihir Lakhani">
+            </div>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <section id="about" class="content-section about-section">
+        <h3>About</h3>
+        <div class="about-container">
+            <ul class="lux-list">
+                <li><strong>🎓 B.Tech AI/ML</strong> @ SRMIST – Future-focused, research-active.</li>
+                <li><strong>🧠 Built AutoML pipeline</strong> – model-specific preprocessing + SHAP explainability.</li>
+                <li><strong>📡 6G Network Research</strong> – AI for slicing + smart mobility optimization.</li>
+                <li><strong>💻 Flask + Frontend Dev</strong> – built this portfolio from scratch.</li>
+                <li><strong>🏆 Nokia Campus Connect 2025</strong> – Top 3 in SLA violation prediction model.</li>
+            </ul>
+            <div class="skills-box">
+                <div class="skills-head">Skills</div>
+                <div class="skills-window">
+                    <ul id="skills-list">
+                        <li>Python</li>
+                        <li>Machine Learning</li>
+                        <li>Deep Learning</li>
+                        <li>Flask</li>
+                        <li>Frontend (HTML/CSS/JS)</li>
+                        <li>Data Visualization</li>
+                        <li>MySQL/PostgreSQL</li>
+                        <li>Git & GitHub</li>
+                        <li>Notion</li>
+                        <li>Jupyter</li>
+                        <li>VS Code</li>
+                        <li>Research Writing</li>
+                    </ul>
+                </div>
+                <a href="{{ url_for('static', filename='Updated-Resume.pdf') }}" class="download-resume-btn" target="_blank" style="align-self: flex-end; margin-top: 12px;">
+                    ⬇️ Download Resume
+                </a>
+            </div>
+        </div>
+        <div class="about-background-row">
+            <div class="about-actions-row" style="display: flex; gap: 1px; align-items: center; margin-top: -10px;">
+                <button class="expand-btn" onclick="toggleParagraph()">Read Full Background ↓</button>
+            </div>
+            <p id="about-paragraph" class="about-full hidden"></p>
+            <span id="type-cursor" style="display:none;">●</span>
+        </div>
+    </section>
+
+
+    <!-- Work Section -->
+    <section id="work" class="content-section">
+        <h3>MY WORK</h3>
+        <div class="work-flex-row">
+            <!-- Project Cards Only -->
+            <div class="work-cards">
+                <a href="/cardio" class="card landscape-card">
+                    <div class="card-img">
+                        <img src="{{ url_for('static', filename='images/cardio.png') }}" alt="Cardio Risk Predictor">
+                    </div>
+                    <div class="card-content">
+                        <h4>💓 Cardio Risk Predictor</h4>
+                        <p><br>A Machine Learning model that predicts heart disease risk using clinical and lifestyle data. Built using Decision Tree without using sklearn, Additionally this project demonstrates preprocessing pipelines, model tuning, and explainable AI techniques and some graphs for better understanding of the dataset.</p>
+                    </div>
+                </a>
+                <a href="/fraud" class="card landscape-card">
+                    <div class="card-img">
+                        <img src="{{ url_for('static', filename='images/fraud.jpg') }}" alt="Stroke Classifier">
+                    </div>
+                    <div class="card-content">
+                        <h4>💸 Fraud Transaction Detector</h4>
+                        <p>|----Deploying Soon----|<br>Detects suspicious banking transactions in real time with high accuracy. Flags rare frauds with minimal false positives. Lightweight for on-device fintech deployment.</p>
+                    </div>
+                </a>
+                <a href="/car" class="card landscape-card">
+                    <div class="card-img">
+                        <img src="{{ url_for('static', filename='images/sla.jpg') }}" alt="SLA Predictor">
+                    </div>
+                    <div class="card-content">
+                        <h4>📶 SLA Violation Predictor</h4>
+                        <p>|----Deploying Soon----|<br>Real-time SLA violation prediction using ML on QoS logs. Delivers precise alerts with SHAP-based root-cause analysis. Optimized for low-latency telecom use. Demoed with closed-loop feedback at NOKIA Campus Connect '25.</p>
+                    </div>
+                </a>
+                <a href="/cardi" class="card landscape-card">
+                    <div class="card-img">
+                        <img src="{{ url_for('static', filename='images/automl.png') }}" alt="AutoML">
+                    </div>
+                    <div class="card-content">
+                        <h4>⚙️ AutoML System</h4>
+                        <p>|----In Development----|<br>Automated end-to-end ML pipeline with data cleaning, model selection, and hyperparameter tuning. Modular design supports scalable workflows. Model-specific preprocessing boosts accuracy. SHAP-based explainability ensures transparent predictions.</p>
+                    </div>
+                </a>
+                <!-- About My Work section BESIDE the fourth card -->
+                <div class="work-description-glass" style="margin-left:32px;min-width:320px;max-width:420px;align-self:stretch;display:flex;flex-direction:column;justify-content:center;">
+                    <h4>About My Work</h4>
+                    <p>
+                        My journey in machine learning began with building a decision-tree–based cardiovascular risk predictor, demonstrating interpretable AI on clinical datasets. Later, I developed a service-license agreement violation predictor that earned a top 3 finish at Nokia Campus Connect 2025, tackling QoS risk proactively for 5G/6G networks. Currently, I’m architecting an AutoML pipeline that automates preprocessing, feature engineering, and model explainability, aimed at scalable, transparent ML workflows
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Separator -->
+    <div class="section-separator"></div>
+    <!-- Contact Section -->
+    <section id="contact" class="content-section">
+        <div class="contact-section-box">
+            <h3>Contact</h3>
+            <p>
+                I’m always open to collaborating on impactful projects, discussing new opportunities, or simply exchanging ideas around AI, machine learning, and technology for good. Feel free to reach out through the following channels:
+            </p>
+            <ul class="contact-list">
+                <li><a href="mailto:mihir7845@gmail.com">mihir7845@gmail.com</a></li>
+                <li><a href="https://www.linkedin.com/in/mihir-lakhani-149504327/" target="_blank">LinkedIn</a></li>
+                <li><a href="https://github.com/Mihir-Lakhani" target="_blank">GitHub</a></li>
+                <li><strong>Location:</strong> Chennai, Tamil Nadu</li>
+            </ul>
+            <p>
+                Alternatively, you can fill out the form below, and I’ll get back to you as soon as possible.
+            </p>
+            <!-- Example contact form (optional, you can style or remove as needed) -->
+            <form class="contact-form" action="https://formspree.io/f/mwpqwkap" method="POST">
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="email" name="email" placeholder="Your Email" required>
+                <textarea name="message" rows="4" placeholder="Your Message" required></textarea>
+                <button type="submit" class="go-btn">Send Message</button>
+            </form>
+
+            <div id="form-success" style="display:none;" class="contact-success">
+                Thank you! Your message has been sent.
+            </div>
+            <script>
+            document.querySelector('.contact-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                fetch(this.action, {
+                    method: 'POST',
+                    body: new FormData(this),
+                    headers: { 'Accept': 'application/json' }
+                }).then(response => {
+                    if (response.ok) {
+                        document.getElementById('form-success').style.display = 'block';
+                        this.reset();
+                    }
+                });
+            });
+            </script>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>📱+91 8290367088 &nbsp;&nbsp; 📍 Udaipur, Rajasthan</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
