@@ -668,7 +668,7 @@ html {
     border: 1.5px solid rgba(255, 215, 0, 0.10);
     text-decoration: none;
     min-width: 240px;
-    max-width: 310px;
+    max-width: 350px;
     flex: 1 1 240px;
 }
 @media (max-width: 768px) {
@@ -1493,4 +1493,5 @@ section {
     margin-bottom: 14px !important;
     word-break: break-word !important;
   }
+
 }
