@@ -669,6 +669,7 @@ html {
     text-decoration: none;
     min-width: 240px;
     max-width: 350px;
+    width: 350px;
     flex: 1 1 240px;
 }
 @media (max-width: 768px) {
@@ -1495,3 +1496,4 @@ section {
   }
 
 }
+
