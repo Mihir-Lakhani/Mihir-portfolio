@@ -368,6 +368,7 @@ h3 {
 .card:hover {
     transform: scale(1.05);
     cursor: pointer;
+    transition: transform 0.7s cubic-bezier(0.4,0,0.2,1); /* Slower and smoother */
 }
 
 .card img {
@@ -668,8 +669,8 @@ html {
     border: 1.5px solid rgba(255, 215, 0, 0.10);
     text-decoration: none;
     min-width: 240px;
-    max-width: 350px;      /* <--- Increase this value */
-    width: 350px;          /* <--- Add this line */
+    max-width: 380px;      /* <--- Increase this value */
+    width: 380px;          /* <--- Add this line */
     flex: none;             /* <--- Prevent flex shrinking/growing */
 }
 @media (max-width: 768px) {
@@ -937,6 +938,22 @@ section {
     align-items: flex-start;
 }
 
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center children horizontally */
+    width: 100%;
+}
+
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form textarea {
+    width: 90%; /* or 92% for more margin */
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    display: block;
+}
+
 .contact-form input[type="text"],
 .contact-form input[type="email"],
 .contact-form textarea {
@@ -970,12 +987,25 @@ section {
 }
 
 .contact-form button.go-btn {
-    margin-top: 8px;
-    width: 100%;
+    width: 90%;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
     font-size: 1.15rem;
     font-weight: bold;
     border-radius: 14px;
     padding: 14px 0;
+    transition: 
+        background 0.2s, 
+        color 0.2s, 
+        box-shadow 0.2s,
+        transform 0.5s cubic-bezier(0.2,0,0.1,1); /* Add transform transition */
+}
+
+.contact-form button.go-btn:hover {
+    background: linear-gradient(90deg, #b6884c 0%, #ffd700 100%);
+    color: #232a26;
+    box-shadow: 0 4px 16px rgba(255, 215, 0, 0.18);
+    transform: scale(1.07) translateY(-2px); /* Add transform effect */
 }
 
 .contact-success {
@@ -1001,7 +1031,11 @@ section {
     text-decoration: none;
     margin-bottom: 0;
     margin-top: 0;
-    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    transition: 
+        background 0.2s, 
+        color 0.2s, 
+        box-shadow 0.2s,
+        transform 0.5s cubic-bezier(0.4,0,0.2,1); /* Add transform transition */
     box-shadow: 0 2px 12px rgba(255, 215, 0, 0.08);
     vertical-align: middle;
     align-self: flex-end;
@@ -1012,6 +1046,7 @@ section {
     color: #232a26;
     box-shadow: 0 4px 16px rgba(255, 215, 0, 0.18);
     text-decoration: none;
+    transform: scale(1.07) translateY(-2px); /* Add transform effect */
 }
 
 /* ===================== MOBILE RESPONSIVE STYLES ===================== */
