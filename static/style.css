@@ -1163,10 +1163,11 @@ section {
     text-align: center;
   }
   .intro-photo img {
-    max-width: 70vw;
-    min-width: 120px;
-    margin: 0 auto;
+    border-radius: 60% !important;
+    width: 75vw !important;
+    height: 75vw !important;
     display: block;
+    margin: 0 auto;
   }
   .vertical-text-wrapper {
     display: none !important;
@@ -1488,25 +1489,50 @@ section {
   .nav-links-header {
     display: none !important;
   }
+  .vertical-text-wrapper {
+    display: block !important;
+    writing-mode: horizontal-tb !important;
+    transform: none !important;
+    height: auto !important;
+    overflow: hidden;
+    margin: 12px auto 0 auto !important;
+    white-space: nowrap !important;
+    width: 100vw !important;
+    position: static !important;
+  }
+  .vertical-text {
+    display: inline-block !important;
+    font-size: 1.4rem !important;
+    color: #e2c5c5 !important;
+    font-weight: 400 !important;
+    animation: scrollLeft 19s linear infinite !important;
+    padding: 0 8vw !important;
+    min-width: 120vw !important;
+  }
+  @keyframes scrollLeft {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+
   .mobile-nav-dropdown {
     display: flex !important;
     flex-direction: column;
-    gap: 18px;
+    gap: 8px;
     position: fixed;
     top: 0;
     left: 0;
-    width: 70vw;
-    max-width: 320px;
-    height: 100vh;
+    width: 100%;
+    max-width: 100%;
+    height: 40vh;
     background: rgba(24, 28, 31, 0.98);
     box-shadow: 2px 0 16px rgba(0,0,0,0.18);
     padding: 80px 24px 24px 24px;
     z-index: 2000;
-    transform: translateX(-100%);
+    transform: translateY(-100%);
     transition: transform 0.3s cubic-bezier(.4,0,.2,1);
   }
   body.nav-open .mobile-nav-dropdown {
-    transform: translateX(0);
+    transform: translateY(0);
   }
   .mobile-nav-toggle {
     display: flex !important;
@@ -1527,7 +1553,7 @@ section {
     display: block;
     width: 28px;
     height: 4px;
-    background: #ffd700;
+    background: #e2c5c5;
     border-radius: 2px;
     transition: all 0.3s;
   }
@@ -1601,3 +1627,4 @@ section {
     box-shadow: 0 4px 16px rgba(255,215,0,0.18);
     background: rgba(255,215,0,0.08);
 }
+
