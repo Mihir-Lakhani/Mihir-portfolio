@@ -1,3 +1,8 @@
+
+.mobile-nav-dropdown {
+    display: none !important;
+  }
+
 @media (max-width: 768px) {
   .work-description-glass {
     width: 80vw !important;
@@ -15,6 +20,7 @@ body {
     color: #e2c5c5;
     min-height: 100vh;
     width: 100%;
+    overflow-x: hidden;
 }
 
 .home-bg {
@@ -670,15 +676,25 @@ html {
     min-height: 140px;
     background: rgba(30, 34, 38, 0.55);
     border-radius: 28px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-    transition: box-shadow 0.2s, transform 0.2s;
-    margin-bottom: 24px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18), 0 2px 12px rgba(0,0,0,0.22);
     border: 1.5px solid rgba(255, 215, 0, 0.10);
     text-decoration: none;
     min-width: 240px;
-    max-width: 380px;      /* <--- Increase this value */
-    width: 380px;          /* <--- Add this line */
-    flex: none;             /* <--- Prevent flex shrinking/growing */
+    max-width: 380px;
+    width: 380px;
+    flex: none;
+    position: relative;
+    overflow: hidden;
+    /* Fading/blurring border effect */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    /* Optional: subtle gradient border fade */
+    box-shadow:
+        0 0 0 8px rgba(30,34,38,0.18) inset,
+        0 8px 32px 0 rgba(31, 38, 135, 0.18),
+        0 2px 12px rgba(0,0,0,0.22);
+    transition: box-shadow 0.7s cubic-bezier(0.4,0,0.2,1), background 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1);
+            /* <--- Prevent flex shrinking/growing */
 }
 @media (max-width: 768px) {
   .landscape-card {
@@ -694,7 +710,6 @@ html {
 
 .landscape-card:hover {
     box-shadow: 0 8px 32px rgba(255, 215, 0, 0.18), 0 2px 12px rgba(0,0,0,0.22);
-    border: 1.5px solid var(--gold, #ffd700);
     transform: scale(1.03) translateY(-2px);
 }
 
@@ -1059,6 +1074,9 @@ section {
 /* ===================== MOBILE RESPONSIVE STYLES ===================== */
 /* For screens 768px and below */
 @media (max-width: 768px) {
+  .nav-links-header {
+    display: none !important;
+  }
   html, body {
     font-size: 15px;
     padding: 0;
@@ -1233,6 +1251,7 @@ section {
     width: 100vw;
     max-width: 100vw;
     align-items: stretch;
+    display: block !important;
   }
   .work-cards a {
     width: 90vw !important;
@@ -1241,6 +1260,10 @@ section {
     height: auto;
     padding: 10px 6px;
     border-radius: 18px;
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 18px 8px 14px 8px !important;
   }
   .card-img img {
     width: 60px;
@@ -1260,12 +1283,13 @@ section {
     padding: 0 2vw;
   }
   .work-description-glass {
-    min-width: 0;
-    max-width: 98vw;
-    padding: 18px 8px 14px 8px;
-    font-size: 1rem;
-    border-radius: 18px;
-    margin: 0 auto;
+    width: 90vw !important;
+    max-width: 90vw !important;
+    min-width: 0 !important;
+    border-radius: 18px !important;
+    padding: 18px 8px 14px 8px !important;
+    display: block !important;
+
   }
   .work-description-glass h4 {
     font-size: 1.2rem;
@@ -1360,6 +1384,9 @@ section {
 
 /* Special mobile styles for contact section */
 @media (max-width: 768px) {
+  .nav-links-header {
+    display: none !important;
+  }
   .contact-section-box {
     max-width: 95vw !important;
     width: 95vw !important;
@@ -1449,4 +1476,122 @@ section {
 .card:hover::before,
 .landscape-card:hover::before {
   background-position: 100% 100%, 0 0;
+}
+
+@media (max-width: 768px) {
+  .nav-links-header {
+    display: none !important;
+  }
+  .mobile-nav-dropdown {
+    display: flex !important;
+    flex-direction: column;
+    gap: 18px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 70vw;
+    max-width: 320px;
+    height: 100vh;
+    background: rgba(24, 28, 31, 0.98);
+    box-shadow: 2px 0 16px rgba(0,0,0,0.18);
+    padding: 80px 24px 24px 24px;
+    z-index: 2000;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+  }
+  body.nav-open .mobile-nav-dropdown {
+    transform: translateX(0);
+  }
+  .mobile-nav-toggle {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: none;
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 2001;
+    cursor: pointer;
+  }
+  .mobile-nav-toggle span {
+    display: block;
+    width: 28px;
+    height: 4px;
+    background: #ffd700;
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+  body.nav-open .mobile-nav-toggle span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+  }
+  body.nav-open .mobile-nav-toggle span:nth-child(2) {
+    opacity: 0;
+  }
+  body.nav-open .mobile-nav-toggle span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+  }
+}
+@media (min-width: 769px) {
+  .mobile-nav-toggle,
+  .mobile-nav-dropdown {
+    display: none !important;
+  }
+  .nav-links-header {
+    display: flex !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-nav-dropdown {
+    display: none !important;
+  }
+}
+.contact-social-icons {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin: 18px 0 12px 0;
+}
+
+.contact-social-icons a img {
+    height: 32px;
+    width: 32px;
+    border-radius: 6px;
+    transition: box-shadow 0.2s, transform 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    background: transparent;
+    vertical-align: middle;
+}
+
+.contact-social-icons a:hover img {
+    transform: scale(1.15) translateY(-2px);
+    box-shadow: 0 4px 16px rgba(255,215,0,0.18);
+    background: rgba(255,215,0,0.08);
+}
+
+.card-github-icon {
+    position: absolute;
+    bottom: 16px;
+    right: 18px;
+    z-index: 3;
+}
+
+.card-github-icon a img {
+    height: 32px;
+    width: 32px;
+    border-radius: 6px;
+    transition: box-shadow 0.2s, transform 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    background: transparent;
+    vertical-align: middle;
+}
+
+.card-github-icon a:hover img {
+    transform: scale(1.15) translateY(-2px);
+    box-shadow: 0 4px 16px rgba(255,215,0,0.18);
+    background: rgba(255,215,0,0.08);
 }
