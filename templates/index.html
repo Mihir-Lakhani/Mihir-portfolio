@@ -11,21 +11,33 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <!-- Optional fallback -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
 </head>
 
 <body>
     <!-- Header / Navigation -->
     <header class="navbar">
         <div class="nav-container">
-            <h1 class="logo"></h1>
-            <nav>
-                <ul class="nav-links-header">
-                    <li><a href="#top">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#work">My Work</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
+            <!-- Hamburger button (only visible on mobile) -->
+            <button class="mobile-nav-toggle" aria-label="Open navigation" onclick="document.body.classList.toggle('nav-open')">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <!-- Desktop nav -->
+            <ul class="nav-links-header">
+                <li><a href="#top">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#work">My Work</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <!-- Mobile dropdown nav -->
+            <ul class="nav-links-header mobile-nav-dropdown">
+                <li><a href="#top">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#work">My Work</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
         </div>
     </header>
 
@@ -98,6 +110,9 @@
                         <li>Jupyter</li>
                         <li>VS Code</li>
                         <li>Research Writing</li>
+                        <li>Ditto</li>
+                        <li>Docker</li>
+                        <li>Kubernetes</li>
                     </ul>
                 </div>
                 <a href="{{ url_for('static', filename='Updated-Resume.pdf') }}" class="download-resume-btn" target="_blank" style="align-self: flex-end; margin-top: 12px;">
@@ -126,16 +141,17 @@
                         <img src="{{ url_for('static', filename='images/cardio.png') }}" alt="Cardio Risk Predictor">
                     </div>
                     <div class="card-content">
-                        <h4>💓 Cardio Risk Predictor</h4>
+                        <h4>Cardio Risk Predictor</h4>
                         <p><br>A Machine Learning model that predicts heart disease risk using clinical and lifestyle data. Built using Decision Tree without using sklearn, Additionally this project demonstrates preprocessing pipelines, model tuning, and explainable AI techniques and some graphs for better understanding of the dataset.</p>
                     </div>
+                    
                 </a>
                 <a href="/fraud" class="card landscape-card">
                     <div class="card-img">
                         <img src="{{ url_for('static', filename='images/fraud.jpg') }}" alt="Stroke Classifier">
                     </div>
                     <div class="card-content">
-                        <h4>💸 Fraud Transaction Detector</h4>
+                        <h4>Fraud Transaction Detector</h4>
                         <p><br>|----Deploying Soon----|<br>Detects suspicious banking transactions in real time with high accuracy. Flags rare frauds with minimal false positives. Lightweight for on-device fintech deployment.</p>
                     </div>
                 </a>
@@ -144,7 +160,7 @@
                         <img src="{{ url_for('static', filename='images/sla.jpg') }}" alt="SLA Predictor">
                     </div>
                     <div class="card-content">
-                        <h4>📶 SLA Violation Predictor</h4>
+                        <h4>SLA Violation Predictor</h4>
                         <p><br>|----Deploying Soon----|<br>Real-time SLA violation prediction using ML on QoS logs. Delivers precise alerts with SHAP-based root-cause analysis. Optimized for low-latency telecom use. Demoed with closed-loop feedback at NOKIA Campus Connect '25.</p>
                     </div>
                 </a>
@@ -153,7 +169,7 @@
                         <img src="{{ url_for('static', filename='images/automl.png') }}" alt="AutoML">
                     </div>
                     <div class="card-content">
-                        <h4>⚙️ AutoML System</h4>
+                        <h4>AutoML System</h4>
                         <p><br>|----In Development----|<br>Automated end-to-end ML pipeline with data cleaning, model selection, and hyperparameter tuning. Modular design supports scalable workflows. Model-specific preprocessing boosts accuracy. SHAP-based explainability ensures transparent predictions.</p>
                     </div>
                 </a>
@@ -177,12 +193,14 @@
             <p>
                 I’m always open to collaborating on impactful projects, discussing new opportunities, or simply exchanging ideas around AI, machine learning, and technology for good. Feel free to reach out through the following channels:
             </p>
-            <ul class="contact-list">
-                <li><a href="mailto:mihir7845@gmail.com">mihir7845@gmail.com</a></li>
-                <li><a href="https://www.linkedin.com/in/mihir-lakhani-149504327/" target="_blank">LinkedIn</a></li>
-                <li><a href="https://github.com/Mihir-Lakhani" target="_blank">GitHub</a></li>
-                <li><strong>Location:</strong> Chennai, Tamil Nadu</li>
-            </ul>
+            <div class="contact-social-icons">
+                <a href="https://www.linkedin.com/in/mihir-lakhani-149504327/" target="_blank" aria-label="LinkedIn">
+                    <img src="{{ url_for('static', filename='images/lkd.png') }}" alt="LinkedIn">
+                </a>
+                <a href="https://github.com/Mihir-Lakhani" target="_blank" aria-label="GitHub">
+                    <img src="{{ url_for('static', filename='images/github.png') }}" alt="GitHub">
+                </a>
+            </div>
             <p>
                 Alternatively, you can fill out the form below, and I’ll get back to you as soon as possible.
             </p>
@@ -224,5 +242,3 @@
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
-
-
