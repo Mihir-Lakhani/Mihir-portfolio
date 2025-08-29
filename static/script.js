@@ -37,8 +37,6 @@ function toggleParagraph() {
     }
 }
 
-// ...existing code...
-
 // Continuous auto-scroll skills
 window.addEventListener("DOMContentLoaded", () => {
     const skillsList = document.getElementById("skills-list");
@@ -66,3 +64,8 @@ window.addEventListener("DOMContentLoaded", () => {
     scrollSkills();
 });
 
+document.querySelectorAll('.mobile-nav-dropdown a').forEach(link => {
+  link.addEventListener('click', function() {
+    document.body.classList.remove('nav-open');
+  });
+});
