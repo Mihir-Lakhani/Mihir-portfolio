@@ -1605,25 +1605,21 @@ section {
     background: rgba(255,215,0,0.08);
 }
 
+
 .card-github-icon {
-    position: absolute;
-    bottom: 16px;
-    right: 18px;
-    z-index: 3;
+  margin-top: 16px;               /* Space above icon */
 }
 
-.card-github-icon a img {
-    height: 32px;
-    width: 32px;
-    border-radius: 6px;
-    transition: box-shadow 0.2s, transform 0.2s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-    background: transparent;
-    vertical-align: middle;
+.card-github-icon img {
+  width: 24px;                    /* Appropriate icon size */
+  height: 24px;
+  object-fit: contain;
 }
+
 
 .card-github-icon a:hover img {
     transform: scale(1.15) translateY(-2px);
     box-shadow: 0 4px 16px rgba(255,215,0,0.18);
     background: rgba(255,215,0,0.08);
 }
+
