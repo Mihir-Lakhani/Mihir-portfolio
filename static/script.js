@@ -37,7 +37,7 @@ function toggleParagraph() {
   }
 }
 
-const taglineText = "OPERATIONAL MACHINE LEARNING MODELS WITH DIGITAL TWIN INTEGRATION";
+const taglineText = "OPERATIONAL MACHINE LEARNING MODELS WITH DIGITAL TWIN INITIATIVES UNDERWAY";
 const taglineElem = document.getElementById("tagline");
 
 function typeTagline(text, elem, speed = 50) {
