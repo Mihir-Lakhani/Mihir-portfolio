@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cardio Risk Predictor</title>
+    <!-- Link to your main and cardio-specific CSS files -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='cardio.css') }}">
+    <!-- Responsive viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <!-- Main centered container (optional, for page padding) -->
+    <div class="page-wrapper">
+
+        <!-- BIG CARD FOR INPUTS & RESULT -->
+        <div class="cardio-main-card">
+
+            <!-- Model Header -->
+            <h1 class="cardio-model-name">Cardio Risk Predictor</h1>
+
+            <div class="cardio-flex-row">
+                <!-- LEFT: Input fields -->
+                <form class="cardio-form" id="cardio-form" method="post" action="/cardio">
+                    <div class="input-group">
+                        <label for="age">Age (years):</label>
+                        <input type="number" id="age" name="age" min="0" max="120" step="1" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="gender">Gender:</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select</option>
+                            <option value="1">Female</option>
+                            <option value="2">Male</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="height">Height (cm):</label>
+                        <input type="number" id="height" name="height" min="50" max="250" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="weight">Weight (kg):</label>
+                        <input type="number" id="weight" name="weight" min="20" max="250" step="0.1" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="ap_hi">Systolic BP (ap_hi):</label>
+                        <input type="number" id="ap_hi" name="ap_hi" min="60" max="250" step="1" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="ap_lo">Diastolic BP (ap_lo):</label>
+                        <input type="number" id="ap_lo" name="ap_lo" min="30" max="200" step="1" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="cholesterol">Cholesterol:</label>
+                        <select id="cholesterol" name="cholesterol" required>
+                            <option value="">Select</option>
+                            <option value="1">Normal</option>
+                            <option value="2">Above normal</option>
+                            <option value="3">Well above normal</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="gluc">Glucose:</label>
+                        <select id="gluc" name="gluc" required>
+                            <option value="">Select</option>
+                            <option value="1">Normal</option>
+                            <option value="2">Above normal</option>
+                            <option value="3">Well above normal</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="smoke">Smoker:</label>
+                        <select id="smoke" name="smoke" required>
+                            <option value="">Select</option>
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="alco">Alcohol Intake:</label>
+                        <select id="alco" name="alco" required>
+                            <option value="">Select</option>
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="active">Physically Active:</label>
+                        <select id="active" name="active" required>
+                            <option value="">Select</option>
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                    <!-- GO button -->
+                    <button type="submit" class="go-btn">GO &rarr;</button>
+                </form>
+                <!-- RIGHT: Writing & Results block -->
+                <div class="cardio-side-block">
+                    <div class="cardio-writing-block">
+                        <h4 class="side-block-title">About This Predictor</h4>
+                        <p>
+                            This cardiovascular risk predictor was built using a fully custom Decision Tree algorithm implemented from scratch in Python without using any external ML libraries like Scikit-learn. It is trained on the <a href="https://www.kaggle.com/datasets/sulianova/cardiovascular-disease-dataset" target="_blank">Cardiovascular Disease dataset</a> repository, which contains anonymized medical records of over 70,000 patients, including features such as age, BMI, blood pressure, cholesterol, and lifestyle factors. The dataset was preprocessed with thoughtful transformations: age was converted from days to years, BMI was calculated and categorized using WHO standards, and a custom blood pressure classification system was designed using both systolic and diastolic readings. Features like health_risk and lifestyle_risk were engineered to combine multiple indicators into a single interpretable metric. The final model was trained using an information gain-based ID3 tree builder with a maximum depth of 12 and a minimum gain threshold to prevent overfitting. Performance was evaluated using a manually implemented accuracy, confusion matrix, and classification report delivering high interpretability and transparency. The model was also serialized using pickle for easy deployment within the Flask-based web application.<br> NOTE: This model is a demonstration prototype built entirely without external machine learning libraries, so its performance metrics may not match production-grade standards. It is not intended for actual clinical or medical decision-making. Always consult qualified healthcare professionals for any medical concerns.
+                        </p>
+                    </div>
+                    <div class="cardio-results-block">
+                        <h4 class="side-block-title">Your Result</h4>
+                        <div class="cardio-result-area" id="cardio-result">
+                            {% if prediction %}
+                                <span class="prediction-text">{{ prediction|safe }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- End .cardio-flex-row -->
+
+        </div> <!-- End .cardio-main-card -->
+
+        <!-- CHARTS AND EXPLANATIONS ROW -->
+        <div class="cardio-charts-row">
+            {% if show_graphs %}
+                <div class="chart-with-caption">
+                    <img src="{{ url_for('static', filename='cardio_pred_distribution.png') }}" alt="Prediction Distribution">
+                    <div class="chart-caption">Prediction Distribution</div>
+                </div>
+                <div class="chart-with-caption">
+                    <img src="{{ url_for('static', filename='cardio_age_distribution.png') }}" alt="Age Distribution">
+                    <div class="chart-caption">Age Distribution</div>
+                </div>
+                <div class="chart-with-caption">
+                    <img src="{{ url_for('static', filename='cardio_bmi_distribution.png') }}" alt="BMI Distribution">
+                    <div class="chart-caption">BMI Distribution</div>
+                </div>
+                <div class="chart-with-caption">
+                    <img src="{{ url_for('static', filename='cardio_roc_curve.png') }}" alt="ROC Curve">
+                    <div class="chart-caption">ROC Curve</div>
+                </div>
+                <div class="chart-with-caption">
+                    <img src="{{ url_for('static', filename='cardio_pr_curve.png') }}" alt="Precision-Recall Curve">
+                    <div class="chart-caption">Precision-Recall Curve</div>
+                </div>
+            {% else %}
+                <div class="chart-placeholder">Graphs will appear here after prediction.</div>
+            {% endif %}
+        </div>
+    </div> <!-- End .page-wrapper -->
+
+
+
+</body>
+</html>
+
