@@ -38,7 +38,7 @@
 
 .cardio-form {
     flex: 1;
-    max-width: 440px; /* Increased width */
+    max-width: 440px;
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -70,16 +70,16 @@
 }
 
 .input-group select {
-    background: rgba(24, 28, 31, 0.95); /* Match dark theme */
-    color: #e2c5c5;                     /* Light text */
+    background: rgba(24, 28, 31, 0.95);
+    color: #e2c5c5;
     border: 1.5px solid #b6884c;
-    border-radius: 12px;                 /* Add border radius */
+    border-radius: 12px;
 }
 
 .input-group select option {
-    background: rgba(24, 28, 31, 0.95); /* Dark dropdown options */
+    background: rgba(24, 28, 31, 0.95);
     color: #e2c5c5;
-    border-radius: 12px;                 /* Add border radius */
+    border-radius: 12px;
 }
 
 .input-group input:focus,
@@ -109,9 +109,9 @@
     text-align: left;
     margin-top: 10px;
     flex: 1;
-    margin-left: 0;         /* Remove left margin */
-    min-height: 0;          /* Remove forced height */
-    display: block;         /* Remove flex centering */
+    margin-left: 0;
+    min-height: 0;
+    display: block;
     background: none;
 }
 
@@ -169,7 +169,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 64px 0; /* Increased vertical margin */
+    margin: 64px 0;
     font-family: 'Playfair Display', serif;
 }
 
@@ -178,8 +178,8 @@
     display: flex;
     flex-direction: column;
     gap: 32px;
-    min-width: 380px;   /* Increased min-width */
-    max-width: 540px;   /* Increased max-width */
+    min-width: 380px;
+    max-width: 540px;
     min-height: 510px;
 }
 
@@ -193,11 +193,10 @@
     color: #e2c5c5;
     font-size: 1.08rem;
     line-height: 1.7;
-      /* Set to a smaller value, or remove this line for auto height */
 }
 
 .cardio-results-block{
-    min-height: 120px; /* Set to a smaller value, or remove this line for auto height */
+    min-height: 120px;
 }
 
 .side-block-title {
@@ -209,16 +208,15 @@
 }
 
 .prediction-text {
-    font-size: 1.08rem;                /* Match About This Predictor */
-    font-family: inherit;               /* Inherit font from parent */
-    color: #e2c5c5;                     /* Match About This Predictor */
-    font-weight: normal;                /* Remove bold for match */
-    letter-spacing: normal;             /* Remove extra spacing */
-    text-shadow: none;                  /* Remove shadow for match */
-    line-height: 1.7;                   /* Match About This Predictor */
+    font-size: 1.08rem;
+    font-family: inherit;
+    color: #e2c5c5;
+    font-weight: normal;
+    letter-spacing: normal;
+    text-shadow: none;
+    line-height: 1.7;
 }
 
-/* Responsive tweaks for mobile */
 @media (max-width: 900px) {
     .cardio-flex-row { flex-direction: column; gap: 24px; }
     .cardio-result-area { margin-left: 0; min-height: 80px; }

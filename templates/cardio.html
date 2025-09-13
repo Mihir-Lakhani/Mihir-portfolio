@@ -3,24 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Cardio Risk Predictor</title>
-    <!-- Link to your main and cardio-specific CSS files -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='cardio.css') }}">
-    <!-- Responsive viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <!-- Main centered container (optional, for page padding) -->
     <div class="page-wrapper">
 
-        <!-- BIG CARD FOR INPUTS & RESULT -->
         <div class="cardio-main-card">
 
-            <!-- Model Header -->
             <h1 class="cardio-model-name">Cardio Risk Predictor</h1>
 
             <div class="cardio-flex-row">
-                <!-- LEFT: Input fields -->
                 <form class="cardio-form" id="cardio-form" method="post" action="/cardio">
                     <div class="input-group">
                         <label for="age">Age (years):</label>
@@ -92,10 +86,8 @@
                             <option value="1">Yes</option>
                         </select>
                     </div>
-                    <!-- GO button -->
                     <button type="submit" class="go-btn">GO &rarr;</button>
                 </form>
-                <!-- RIGHT: Writing & Results block -->
                 <div class="cardio-side-block">
                     <div class="cardio-writing-block">
                         <h4 class="side-block-title">About This Predictor</h4>
@@ -112,11 +104,10 @@
                         </div>
                     </div>
                 </div>
-            </div> <!-- End .cardio-flex-row -->
+            </div>
 
-        </div> <!-- End .cardio-main-card -->
+        </div>
 
-        <!-- CHARTS AND EXPLANATIONS ROW -->
         <div class="cardio-charts-row">
             {% if show_graphs %}
                 <div class="chart-with-caption">
@@ -143,7 +134,7 @@
                 <div class="chart-placeholder">Graphs will appear here after prediction.</div>
             {% endif %}
         </div>
-    </div> <!-- End .page-wrapper -->
+    </div>
 
 
 

@@ -1,6 +1,5 @@
 section {
   scroll-margin-top: 80px;
-  /* or the height of your sticky header */
 }
 
 @font-face {
@@ -38,12 +37,6 @@ section {
   src: url('/static/fonts/ClashDisplay-Variable.ttf') format('opentype');
 }
 
-/*
-font-family: 'Ranade', sans-serif;
-font-family: 'Hind', sans-serif;
-font-family: 'Switzer', sans-serif;
-font-family: 'Amulya', sans-serif;
-*/
 
 
 :root {
@@ -102,22 +95,7 @@ h3 {
   margin: 10px 0 10px 0;
 }
 
-/* force full screen width 
-.home-bg {
-  background-image: url('/static/images/body-big.png');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-attachment: scroll;
-  min-height: 100vh;
-  width: 100vw;
-  margin: 0;
-  padding: 0;
-  padding-top: 10px;
-}
-*/
 
-/*Navigation Bar*/
 
 .nav-links-header li.active a {
   border-bottom: 2.5px solid var(--gold);
@@ -126,36 +104,26 @@ h3 {
 .nav-container {
   display: flex;
   align-items: center;
-  /* vertically center */
   justify-content: center;
-  /* center all content horizontally */
   gap: 32px;
-  /* space between logo and nav links */
   position: relative;
   height: 100%;
 }
 
-/* Logo link container */
 .logo-link {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  /* prevent shrinking */
   margin-right: auto;
 }
 
-/* Logo image styling */
 .logo {
   height: 38px;
-  /* stays below navbar height, adjust as needed */
   width: auto;
-  /* preserves aspect ratio */
   display: block;
   object-fit: contain;
   margin-right: 28px;
-  /* space between logo and nav links */
   margin-left: 34px;
-  /* small left margin if you want */
   padding: 0;
 }
 
@@ -172,8 +140,6 @@ h3 {
   height: 90px;
   min-height: 90px;
   margin-top: 50px;
-  /* border-bottom: 1.5px solid var(--gold-dark); */
-  /* Remove or comment out this line */
 }
 
 .nav-links-header li a {
@@ -187,7 +153,6 @@ h3 {
   font-family: 'Bevellier', sans-serif;
   word-spacing: normal;
   letter-spacing: 0.12em;
-  /* Increase space between alphabets */
 }
 
 .nav-links-header li a:hover {
@@ -211,7 +176,6 @@ h3 {
   width: fit-content;
   padding: 10px 20px;
   background-color: #061f0c;
-  /* links background*/
   text-decoration: none;
   border-radius: 5px;
 }
@@ -238,7 +202,6 @@ h3 {
 }
 
 
-/* Intro Section */
 
 .intro {
   margin-left: 100px;
@@ -247,7 +210,6 @@ h3 {
 
 .greeting {
   font-size: 3rem;
-  /* Smaller text for greeting */
   font-weight: bold;
   color: #e2c5c5;
   font-style: italic;
@@ -257,7 +219,6 @@ h3 {
 }
 
 
-/* Animated vertical sliding words for .fullname */
 .fullname {
   display: inline-block;
   position: relative;
@@ -270,7 +231,6 @@ h3 {
   font-family: 'Anton', sans-serif;
   text-transform: uppercase;
   height: 1.2em;
-  /* Only show one word at a time */
   overflow: hidden;
   vertical-align: bottom;
   font-weight: bolder;
@@ -310,13 +270,11 @@ h3 {
   }
 }
 
-/* Optional: style each word if needed */
 .fullname>span>span {
   display: block;
   height: 1.2em;
 }
 
-/*intro box*/
 .intro-box {
   width: 100%;
   max-width: none;
@@ -328,18 +286,13 @@ h3 {
   gap: 5px;
   flex-wrap: wrap;
   margin-bottom: 10px;
-  /* Reduce from default or previous value */
   padding-bottom: 0;
-  /* Remove extra padding if any */
 }
 
 .name-role {
   width: 60%;
-  /* Adjust as needed */
   max-width: none;
-  /* Optional constraint */
   height: auto;
-  /* Or set a specific height if needed */
 
 }
 
@@ -354,25 +307,19 @@ h3 {
 #tagline {
   display: inline-block;
   white-space: normal;
-  /* Allow wrapping */
   overflow-wrap: break-word;
   height: 3.6rem;
-  /* Adjust this to about 2 lines of your font size */
-  /* For example, if line-height = 1.8 and font-size = 2rem, then 2 * 1.8rem = 3.6rem */
 }
 
 .name-role .tagline {
   font-size: 2.85rem;
-  /* increase from default, try 2.5rem to 3rem */
   line-height: 1.2;
   color: #e2c5c5;
-  /* or any subtle tone like #888 or #aaa */
   text-align: left;
   letter-spacing: 0.02em;
 
 }
 
-/* Keyframe for typing effect: gradually reveal text width */
 .blink-caret {
   display: inline-block;
   animation: blink 1s steps(2, start) infinite;
@@ -397,7 +344,6 @@ h3 {
 }
 
 @font-face {
-  /* Machine Learning in Practice */
   font-family: 'Marschel';
   src: url('/static/fonts/marschel-stencil.otf') format('opentype');
   font-weight: normal;
@@ -406,7 +352,6 @@ h3 {
 
 .name-role .quote-text {
   font-size: 1.25rem;
-  /* adjust as needed: 1.1rem, 1.2rem, 1.3rem, etc. */
   line-height: 1.6;
 }
 
@@ -420,14 +365,10 @@ h3 {
   font-family: 'Hind', sans-serif;
   font-size: 1.1rem;
   margin-top: 0.5rem;
-  /* spacing under "Machine Learning in practice" */
   margin-left: 0;
-  /* align to left */
   max-width: none;
-  /* optional: keeps text from stretching too wide */
   line-height: 1.4;
   color: #d9c5a0;
-  /* optional: match your heading color if needed */
 }
 
 .intro-photo img {
@@ -446,7 +387,6 @@ h3 {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   height: 430px;
-  /* try smaller if too tall */
   overflow: hidden;
   margin-right: 10px;
 }
@@ -456,7 +396,6 @@ h3 {
   white-space: nowrap;
   animation: scrollUp 16s linear infinite;
   color: #e2c5c5;
-  /* choose whatever color fits your theme */
   font-weight: 500;
   font-size: 1.5rem;
   font-family: 'extra', sans-serif;
@@ -473,7 +412,6 @@ h3 {
   }
 }
 
-/* About Section */
 
 
 
@@ -484,10 +422,8 @@ h3 {
   display: flex;
   gap: 40px;
   align-items: flex-start;
-  /* Optional: add some padding and border-radius for a card-like look */
 }
 
-/* 11. Glass effect for About section */
 .about-section {
   padding-bottom: 60px;
   margin: 48px auto;
@@ -594,7 +530,6 @@ h3 {
 
 .skills-window {
   max-height: 193px;
-  /* Show 5 skills at a time (adjust if needed) */
   overflow: hidden;
   position: relative;
 }
@@ -634,7 +569,6 @@ h3 {
     color 0.2s,
     box-shadow 0.2s,
     transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  /* Add transform transition */
   box-shadow: 0 2px 12px rgba(255, 215, 0, 0.08);
   vertical-align: middle;
   align-self: flex-end;
@@ -647,7 +581,6 @@ h3 {
   box-shadow: 0 4px 16px rgba(255, 215, 0, 0.18);
   text-decoration: none;
   transform: scale(1.07) translateY(-2px);
-  /* Add transform effect */
 }
 
 .skill-photo {
@@ -660,13 +593,11 @@ h3 {
 }
 
 
-/* Work Section */
 #work {
   padding-left: 5vw;
   padding-right: 5vw;
 }
 
-/* Project cards column */
 .work-cards {
   display: flex;
   flex-direction: row;
@@ -675,7 +606,6 @@ h3 {
   max-width: 100%;
   flex: 2 1 0;
   flex-wrap: wrap;
-  /* Allows wrapping on smaller screens */
   justify-content: flex-start;
   align-items: stretch;
 }
@@ -716,35 +646,12 @@ h3 {
   margin-top: 15px;
 }
 
-/* Glassmorphic description panel 
-.work-description-glass {
-  background: rgba(30, 34, 38, 0.55);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 32px;
-  border: 1.5px solid rgba(255, 215, 0, 0.12);
-  padding: 28px 40px 24px 40px;
-  color: #e2c5c5;
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-  height: auto;
-  font-size: 1.15rem;
-  line-height: 1.7;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-*/
 .work-cards .card {
-  /*card style*/
   display: block;
   margin: 10px auto;
   min-width: 240px;
   max-width: 380px;
   width: 100%;
-  /* Increased width */
   flex-direction: row;
   gap: 28px;
   min-height: 500px;
@@ -765,7 +672,6 @@ h3 {
   position: relative;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  /* Optional: subtle gradient border fade */
   box-shadow:
     0 0 0 8px rgba(40, 47, 53, 0.18) inset,
     0 8px 32px 0 rgba(31, 38, 135, 0.18),
@@ -779,7 +685,6 @@ h3 {
   color: #e2c5c5;
   font-size: 1.08rem;
   padding: auto;
-  /* Increase from 0.9em */
   line-height: 1.7;
 }
 
@@ -834,7 +739,6 @@ h3 {
   background-position: 100% 100%, 0 0;
 }
 
-/* Card hover: scale and highlight hovered card */
 .card:hover {
   transform: scale(1.05);
   cursor: pointer;
@@ -844,7 +748,6 @@ h3 {
   box-shadow: 0 8px 32px rgba(255, 215, 0, 0.18), 0 2px 12px rgba(0, 0, 0, 0.22);
 }
 
-/* Blur and fade non-hovered cards only when hovering over the card container */
 .work-cards:has(.card:hover) .card:not(:hover) {
   filter: blur(3px);
   opacity: 0.5;
@@ -853,7 +756,6 @@ h3 {
 
 
 .work-description-glass.minimized {
-  /* Keep your sizing */
   min-width: 370px;
   max-width: 420px;
   width: 100%;
@@ -861,15 +763,12 @@ h3 {
   margin-right: -200px;
   margin-left: 0;
 
-  /* Frosted glass base */
   background: rgba(30, 34, 38, 0.45);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 
-  /* Rounded corners */
   border-radius: 28px;
 
-  /* Dual-tone border: subtle amber and deep indigo */
   border: 1px solid transparent;
   background-clip: padding-box;
   position: relative;
@@ -882,28 +781,12 @@ h3 {
   inset: 0;
   border-radius: 28px;
 
-  /* Border thickness 
-  background: linear-gradient(
-    135deg,
-    rgba(182, 136, 76, 0.6),
-    rgba(49, 38, 135, 0.4)
-  );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-    mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-    -webkit-mask-composite: destination-out;
-    mask-composite: exclude;
-    */
   pointer-events: none;
   z-index: 1;
   padding-top: 0;
   margin-top: 0;
 }
 
-/* Panel inner content sits above the gradient border */
 .work-description-glass.minimized>* {
   position: relative;
   z-index: 2;
@@ -912,12 +795,6 @@ h3 {
 }
 
 .work-description-glass.minimized {
-  /* Warm amber glow 
-  box-shadow:
-  inset 0 0 4px rgba(182, 136, 76, 0.4),
-  0 0 24px rgba(182, 136, 76, 0.2),
-  0 2px 12px rgba(0, 0, 0, 0.2);
-  */
   background: transparent;
   box-shadow: none;
   border: none;
@@ -947,17 +824,13 @@ h3 {
 }
 
 :root {
-  /* Size of circular carousel container (width=height) */
   --carousel-radius: 350px;
 
-  /* Size of each card */
   --carousel-card-width: 320px;
   --carousel-card-height: 420px;
 
-  /* Perspective depth */
   --carousel-perspective: 1800px;
 
-  /* Transition speed */
   --carousel-transition: 0.7s cubic-bezier(.4, 0, .2, 1);
 
   --color-primary-blue: #ffffff;
@@ -1010,7 +883,6 @@ h3 {
   transform-style: preserve-3d;
   border-radius: 32px;
   background: rgba(255, 255, 255, 0.05) !important;
-  /* semi-transparent glass tint */
   color: var(--color-white);
   transition:
     transform var(--carousel-transition),
@@ -1028,18 +900,13 @@ h3 {
   padding-left: 25px;
   box-sizing: border-box;
 
-  /* glass effect */
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 
-  /* subtle inner glow and depth border */
   box-shadow:
     inset 0 0 12px rgba(255, 255, 255, 0.3),
-    /* inner highlight */
     0 0 20px rgba(255, 255, 255, 0.1);
-  /* outer glow */
 
-  /* faint border for glass edge */
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
@@ -1082,15 +949,12 @@ h3 {
   white-space: normal;
 }
 
-/* Arrows */
 .carousel-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   background: rgba(255, 255, 255, 0.12);
-  /* lighter translucent circle */
   color: #b6884c;
-  /* gold accent */
   font-size: 1.8rem;
   border-radius: 50%;
   width: 54px;
@@ -1106,7 +970,6 @@ h3 {
     transform 0.2s ease,
     box-shadow 0.3s ease;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-  /* soft drop shadow */
   user-select: none;
   pointer-events: auto;
 }
@@ -1121,13 +984,11 @@ h3 {
 
 .carousel-arrow:hover {
   background: rgba(255, 215, 0, 0.2);
-  /* warm glow on hover */
   color: #fff;
   box-shadow: 0 6px 24px rgba(182, 136, 76, 0.5);
   transform: scale(1.3);
 }
 
-/* Toggle button style (adjust or add to your existing button style) */
 .carousel-toggle-btn {
   position: static;
   top: 24px;
@@ -1144,7 +1005,6 @@ h3 {
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
   margin-left: auto;
-  /* Shifts the button to the far right in a flex container */
   display: block;
 }
 
@@ -1159,20 +1019,14 @@ h3 {
   object-fit: cover;
   border-radius: 24px;
 
-  /* glass effect */
   background: rgba(255, 255, 255, 0.1) !important;
-  /* semi-transparent tint */
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 
-  /* subtle inner glow and soft outer glow */
   box-shadow:
     inset 0 0 2px rgba(255, 255, 255, 0.3),
-    /* inner highlight */
     0 8px 24px rgba(255, 215, 0, 0.08);
-  /* outer glow */
 
-  /* faint border for glass edge */
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
@@ -1188,7 +1042,6 @@ h3 {
 
 
 
-/* Contact Section */
 
 .contact-section-box {
   background: rgba(30, 34, 38, 0.55);
@@ -1224,7 +1077,6 @@ h3 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* Center children horizontally */
   justify-content: center;
   margin: 30px 24px;
   padding: 54px 24px;
@@ -1285,7 +1137,6 @@ h3 {
     color 0.2s,
     box-shadow 0.2s,
     transform 0.5s cubic-bezier(0.2, 0, 0.1, 1);
-  /* Add transform transition */
   box-sizing: border-box;
   display: block
 }
@@ -1295,7 +1146,6 @@ h3 {
   color: #232a26;
   box-shadow: 0 4px 16px rgba(255, 215, 0, 0.18);
   transform: scale(1.07) translateY(-2px);
-  /* Add transform effect */
 }
 
 .contact-success {
@@ -1369,14 +1219,12 @@ footer {
     transform: translateY(-200%);
     transition: transform 0.3s cubic-bezier(.4, 0, .2, 1);
   }
-  /* Show dropdown when nav is open */
   body.nav-open .mobile-nav-dropdown {
     transform: translateY(-10%);
   }
   .mobile-nav-dropdown li a{
     margin: 0;
   }
-  /* Hamburger toggle button */
   .mobile-nav-toggle {
     display: flex !important;
     flex-direction: column;
@@ -1393,7 +1241,6 @@ footer {
     z-index: 2001;
     cursor: pointer;
   }
-  /* Hamburger lines */
   .mobile-nav-toggle span {
     display: block;
     width: 28px;
@@ -1402,7 +1249,6 @@ footer {
     border-radius: 2px;
     transition: all 0.3s;
   }
-  /* Animate hamburger to X when nav is open */
   body.nav-open .mobile-nav-toggle span:nth-child(1) {
     transform: rotate(45deg) translate(6px, 6px);
   }
@@ -1539,17 +1385,13 @@ footer {
   }
 
   :root {
-    /* Size of circular carousel container (width=height) */
     --carousel-radius: 150px;
 
-    /* Size of each card */
     --carousel-card-width: 170px;
     --carousel-card-height: 240px;
 
-    /* Perspective depth */
     --carousel-perspective: 800px;
 
-    /* Transition speed */
     --carousel-transition: 0.7s cubic-bezier(.4, 0, .2, 1);
 
     --color-primary-blue: #ffffff;
@@ -1608,36 +1450,13 @@ footer {
     margin-right: auto !important;
   }
 
-  /*
-  width: var(--carousel-radius);
-  height: var(--carousel-radius);
-    perspective: var(--carousel-perspective);
-    perspective-origin: 50% 50%;
-    display: none;
-    position: relative;
-    align-items: flex-start;
-    transition: opacity var(--carousel-transition);
-    overflow: visible;
-    opacity: 0;
-    pointer-events: none;
-    margin-top: 100px;
-    margin-bottom: 100px;
-    justify-content: flex-start;
-    margin-right: 90px;
-    background-color: #838ce5;
-    width: 100%;
-    margin-left: 5p
-    */
     
-  /* Arrows */
   .carousel-arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     background: rgba(255, 255, 255, 0.12);
-    /* lighter translucent circle */
     color: #b6884c;
-    /* gold accent */
     font-size: 1.8rem;
     border-radius: 50%;
     width: 35px;
@@ -1653,7 +1472,6 @@ footer {
       transform 0.2s ease,
       box-shadow 0.3s ease;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-    /* soft drop shadow */
     user-select: none;
     pointer-events: auto;
   }
@@ -1777,7 +1595,6 @@ footer {
     right: 24px !important;
     font-size: 0.78rem !important;
   }
-  /* Contact section stacks vertically and forms become full-width */
   .contact-section-box {
     flex-direction: column !important;
     gap: 20px !important;
@@ -1846,13 +1663,6 @@ footer {
 }
 
 
-/* ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* Styles for tablets (769px to 1023px) */
 @media (min-width: 769px) and (max-width: 1023px) {
   
   html, body {
@@ -1861,7 +1671,6 @@ footer {
 
   section {
     scroll-margin-top: 60px;
-    /* or the height of your sticky header */
   }
 
   @font-face {
@@ -1899,12 +1708,6 @@ footer {
     src: url('/static/fonts/ClashDisplay-Variable.ttf') format('opentype');
   }
 
-  /*
-font-family: 'Ranade', sans-serif;
-font-family: 'Hind', sans-serif;
-font-family: 'Switzer', sans-serif;
-font-family: 'Amulya', sans-serif;
-*/
 
   :root {
     --gold: #ffd700;
@@ -1961,25 +1764,9 @@ font-family: 'Amulya', sans-serif;
     margin: 10px 0 10px 0;
   }
 
-  /* force full screen width 
-.home-bg {
-  background-image: url('/static/images/body-big.png');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-attachment: scroll;
-  min-height: 100vh;
-  width: 100vw;
-  margin: 0;
-  padding: 0;
-  padding-top: 10px;
-}
-*/
 
-  /*Navigation Bar*/
 
   
-  /* Animate hamburger to X when nav is open */
   body.nav-open .mobile-nav-toggle span:nth-child(1) {
     transform: rotate(45deg) translate(6px, 6px);
   }
@@ -1996,36 +1783,26 @@ font-family: 'Amulya', sans-serif;
   .nav-container {
     display: flex;
     align-items: center;
-    /* vertically center */
     justify-content: center;
-    /* center all content horizontally */
     gap: 32px;
-    /* space between logo and nav links */
     position: relative;
     height: 100%;
   }
 
-  /* Logo link container */
   .logo-link {
     display: flex;
     align-items: center;
     flex-shrink: 0;
-    /* prevent shrinking */
     margin-right: auto;
   }
 
-  /* Logo image styling */
   .logo {
     height: 38px;
-    /* stays below navbar height, adjust as needed */
     width: auto;
-    /* preserves aspect ratio */
     display: block;
     object-fit: contain;
     margin-right: 28px;
-    /* space between logo and nav links */
     margin-left: 34px;
-    /* small left margin if you want */
     padding: 0;
   }
 
@@ -2042,8 +1819,6 @@ font-family: 'Amulya', sans-serif;
     height: 90px;
     min-height: 90px;
     margin-top: 50px;
-    /* border-bottom: 1.5px solid var(--gold-dark); */
-    /* Remove or comment out this line */
   }
 
   .nav-links-header li a {
@@ -2057,7 +1832,6 @@ font-family: 'Amulya', sans-serif;
     font-family: 'Bevellier', sans-serif;
     word-spacing: normal;
     letter-spacing: 0.12em;
-    /* Increase space between alphabets */
   }
 
   .nav-links-header li a:hover {
@@ -2081,7 +1855,6 @@ font-family: 'Amulya', sans-serif;
     width: fit-content;
     padding: 10px 20px;
     background-color: #061f0c;
-    /* links background*/
     text-decoration: none;
     border-radius: 5px;
   }
@@ -2106,7 +1879,6 @@ font-family: 'Amulya', sans-serif;
     }
   }
 
-  /* Intro Section */
 
   .intro {
     margin-left: 100px;
@@ -2115,7 +1887,6 @@ font-family: 'Amulya', sans-serif;
 
   .greeting {
     font-size: 3rem;
-    /* Smaller text for greeting */
     font-weight: bold;
     color: #e2c5c5;
     font-style: italic;
@@ -2124,7 +1895,6 @@ font-family: 'Amulya', sans-serif;
     font-family: 'Bevellier', sans-serif;
   }
 
-  /* Animated vertical sliding words for .fullname */
   .fullname {
     display: inline-block;
     position: relative;
@@ -2137,7 +1907,6 @@ font-family: 'Amulya', sans-serif;
     font-family: 'Anton', sans-serif;
     text-transform: uppercase;
     height: 1.2em;
-    /* Only show one word at a time */
     overflow: hidden;
     vertical-align: bottom;
     font-weight: bolder;
@@ -2177,13 +1946,11 @@ font-family: 'Amulya', sans-serif;
     }
   }
 
-  /* Optional: style each word if needed */
   .fullname>span>span {
     display: block;
     height: 1.2em;
   }
 
-  /*intro box*/
   .intro-box {
     width: 100%;
     max-width: none;
@@ -2195,18 +1962,13 @@ font-family: 'Amulya', sans-serif;
     gap: 5px;
     flex-wrap: wrap;
     margin-bottom: 10px;
-    /* Reduce from default or previous value */
     padding-bottom: 0;
-    /* Remove extra padding if any */
   }
 
   .name-role {
     width: 60%;
-    /* Adjust as needed */
     max-width: none;
-    /* Optional constraint */
     height: auto;
-    /* Or set a specific height if needed */
 
   }
 
@@ -2221,26 +1983,20 @@ font-family: 'Amulya', sans-serif;
   #tagline {
     display: inline-block;
     white-space: normal;
-    /* Allow wrapping */
     overflow-wrap: break-word;
     height: 3.6rem;
-    /* Adjust this to about 2 lines of your font size */
-    /* For example, if line-height = 1.8 and font-size = 2rem, then 2 * 1.8rem = 3.6rem */
   }
 
   .name-role .tagline {
     font-size: 4rem;
-    /* increase from default, try 2.5rem to 3rem */
     line-height: 1.2;
     font-size: 3rem;
     color: #e2c5c5;
-    /* or any subtle tone like #888 or #aaa */
     text-align: left;
     letter-spacing: 0.02em;
 
   }
 
-  /* Keyframe for typing effect: gradually reveal text width */
   .blink-caret {
     display: inline-block;
     animation: blink 1s steps(2, start) infinite;
@@ -2264,7 +2020,6 @@ font-family: 'Amulya', sans-serif;
   }
 
   @font-face {
-    /* Machine Learning in Practice */
     font-family: 'Marschel';
     src: url('/static/fonts/marschel-stencil.otf') format('opentype');
     font-weight: normal;
@@ -2273,7 +2028,6 @@ font-family: 'Amulya', sans-serif;
 
   .name-role .quote-text {
     font-size: 1.25rem;
-    /* adjust as needed: 1.1rem, 1.2rem, 1.3rem, etc. */
     line-height: 1.6;
   }
 
@@ -2287,14 +2041,10 @@ font-family: 'Amulya', sans-serif;
     font-family: 'Switzer', sans-serif;
     font-size: 1.1rem;
     margin-top: 0.5rem;
-    /* spacing under "Machine Learning in practice" */
     margin-left: 0;
-    /* align to left */
     max-width: none;
-    /* optional: keeps text from stretching too wide */
     line-height: 1.4;
     color: #d9c5a0;
-    /* optional: match your heading color if needed */
   }
 
   .intro-photo img {
@@ -2313,7 +2063,6 @@ font-family: 'Amulya', sans-serif;
     writing-mode: vertical-rl;
     transform: rotate(180deg);
     height: 430px;
-    /* try smaller if too tall */
     overflow: hidden;
     margin-right: 10px;
   }
@@ -2323,7 +2072,6 @@ font-family: 'Amulya', sans-serif;
     white-space: nowrap;
     animation: scrollUp 16s linear infinite;
     color: #e2c5c5;
-    /* choose whatever color fits your theme */
     font-weight: 400;
     font-size: 1.5rem;
     font-family: 'extra', sans-serif;
@@ -2340,7 +2088,6 @@ font-family: 'Amulya', sans-serif;
     }
   }
 
-  /* About Section */
 
   .about-container {
     padding-top: 40px;
@@ -2349,10 +2096,8 @@ font-family: 'Amulya', sans-serif;
     display: flex;
     gap: 40px;
     align-items: flex-start;
-    /* Optional: add some padding and border-radius for a card-like look */
   }
 
-  /* 11. Glass effect for About section */
   .about-section {
     padding-bottom: 60px;
     margin: 48px auto;
@@ -2457,7 +2202,6 @@ font-family: 'Amulya', sans-serif;
 
   .skills-window {
     max-height: 193px;
-    /* Show 5 skills at a time (adjust if needed) */
     overflow: hidden;
     position: relative;
   }
@@ -2497,7 +2241,6 @@ font-family: 'Amulya', sans-serif;
       color 0.2s,
       box-shadow 0.2s,
       transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    /* Add transform transition */
     box-shadow: 0 2px 12px rgba(255, 215, 0, 0.08);
     vertical-align: middle;
     align-self: flex-end;
@@ -2510,7 +2253,6 @@ font-family: 'Amulya', sans-serif;
     box-shadow: 0 4px 16px rgba(255, 215, 0, 0.18);
     text-decoration: none;
     transform: scale(1.07) translateY(-2px);
-    /* Add transform effect */
   }
 
   .skill-photo {
@@ -2522,7 +2264,6 @@ font-family: 'Amulya', sans-serif;
     vertical-align: middle;
   }
 
-  /* Work Section */
   #work {
     padding-left: 5vw;
     padding-right: 5vw;
@@ -2531,7 +2272,6 @@ font-family: 'Amulya', sans-serif;
     margin: 48px auto;
   }
 
-  /* Project cards column */
   .work-cards {
     display: flex;
     flex-direction: row;
@@ -2540,7 +2280,6 @@ font-family: 'Amulya', sans-serif;
     max-width: 100%;
     flex: 2 1 0;
     flex-wrap: wrap;
-    /* Allows wrapping on smaller screens */
     justify-content: flex-start;
     align-items: stretch;
   }
@@ -2575,35 +2314,12 @@ font-family: 'Amulya', sans-serif;
     margin-top: 15px;
   }
 
-  /* Glassmorphic description panel 
-  .work-description-glass {
-  background: rgba(30, 34, 38, 0.55);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 32px;
-  border: 1.5px solid rgba(255, 215, 0, 0.12);
-  padding: 28px 40px 24px 40px;
-  color: #e2c5c5;
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-  height: auto;
-  font-size: 1.15rem;
-  line-height: 1.7;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-*/
   .work-cards .card {
-    /*card style*/
     display: block;
     margin: 10px auto;
     min-width: 240px;
     max-width: 380px;
     width: 100%;
-    /* Increased width */
     flex-direction: row;
     gap: 28px;
     min-height: 500px;
@@ -2624,7 +2340,6 @@ font-family: 'Amulya', sans-serif;
     position: relative;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    /* Optional: subtle gradient border fade */
     box-shadow:
       0 0 0 8px rgba(40, 47, 53, 0.18) inset,
       0 8px 32px 0 rgba(31, 38, 135, 0.18),
@@ -2637,7 +2352,6 @@ font-family: 'Amulya', sans-serif;
     color: #e2c5c5;
     font-size: 1.08rem;
     padding: auto;
-    /* Increase from 0.9em */
     line-height: 1.7;
   }
 
@@ -2691,7 +2405,6 @@ font-family: 'Amulya', sans-serif;
     background-position: 100% 100%, 0 0;
   }
 
-  /* Card hover: scale and highlight hovered card */
   .card:hover {
     transform: scale(1.05);
     cursor: pointer;
@@ -2701,7 +2414,6 @@ font-family: 'Amulya', sans-serif;
     box-shadow: 0 8px 32px rgba(255, 215, 0, 0.18), 0 2px 12px rgba(0, 0, 0, 0.22);
   }
 
-  /* Blur and fade non-hovered cards only when hovering over the card container */
   .work-cards:has(.card:hover) .card:not(:hover) {
     filter: blur(3px);
     opacity: 0.5;
@@ -2709,7 +2421,6 @@ font-family: 'Amulya', sans-serif;
   }
 
   .work-description-glass.minimized {
-    /* Keep your sizing */
     width: 100%;
     max-width: 100vw;
     padding-left: 0;
@@ -2718,15 +2429,12 @@ font-family: 'Amulya', sans-serif;
     margin-right: -200px;
     margin-left: 0;
 
-    /* Frosted glass base */
     background: rgba(30, 34, 38, 0.45);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 
-    /* Rounded corners */
     border-radius: 28px;
 
-    /* Dual-tone border: subtle amber and deep indigo */
     border: 1px solid transparent;
     background-clip: padding-box;
     position: relative;
@@ -2739,28 +2447,12 @@ font-family: 'Amulya', sans-serif;
     inset: 0;
     border-radius: 28px;
 
-    /* Border thickness 
-    background: linear-gradient(
-    135deg,
-    rgba(182, 136, 76, 0.6),
-    rgba(49, 38, 135, 0.4)
-  );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-    mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-    -webkit-mask-composite: destination-out;
-    mask-composite: exclude;
-    */
     pointer-events: none;
     z-index: 1;
     padding-top: 0;
     margin-top: 0;
   }
 
-  /* Panel inner content sits above the gradient border */
   .work-description-glass.minimized>* {
     position: relative;
     z-index: 2;
@@ -2769,12 +2461,6 @@ font-family: 'Amulya', sans-serif;
   }
 
   .work-description-glass.minimized {
-    /* Warm amber glow 
-  box-shadow:
-  inset 0 0 4px rgba(182, 136, 76, 0.4),
-  0 0 24px rgba(182, 136, 76, 0.2),
-  0 2px 12px rgba(0, 0, 0, 0.2);
-  */
     background: transparent;
     box-shadow: none;
     border: none;
@@ -2804,17 +2490,13 @@ font-family: 'Amulya', sans-serif;
   }
 
   :root {
-    /* Size of circular carousel container (width=height) */
     --carousel-radius: 350px;
 
-    /* Size of each card */
     --carousel-card-width: 320px;
     --carousel-card-height: 420px;
 
-    /* Perspective depth */
     --carousel-perspective: 1800px;
 
-    /* Transition speed */
     --carousel-transition: 0.7s cubic-bezier(.4, 0, .2, 1);
 
     --color-primary-blue: #ffffff;
@@ -2876,7 +2558,6 @@ font-family: 'Amulya', sans-serif;
     transform-style: preserve-3d;
     border-radius: 32px;
     background: rgba(255, 255, 255, 0.05) !important;
-    /* semi-transparent glass tint */
     color: var(--color-white);
     transition:
       transform var(--carousel-transition),
@@ -2894,18 +2575,13 @@ font-family: 'Amulya', sans-serif;
     padding-left: 25px;
     box-sizing: border-box;
 
-    /* glass effect */
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
 
-    /* subtle inner glow and depth border */
     box-shadow:
       inset 0 0 12px rgba(255, 255, 255, 0.3),
-      /* inner highlight */
       0 0 20px rgba(255, 255, 255, 0.1);
-    /* outer glow */
 
-    /* faint border for glass edge */
     border: 1px solid rgba(255, 255, 255, 0.15);
   }
 
@@ -2947,15 +2623,12 @@ font-family: 'Amulya', sans-serif;
     white-space: normal;
   }
 
-  /* Arrows */
   .carousel-arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     background: rgba(255, 255, 255, 0.12);
-    /* lighter translucent circle */
     color: #b6884c;
-    /* gold accent */
     font-size: 1.8rem;
     border-radius: 50%;
     width: 54px;
@@ -2971,7 +2644,6 @@ font-family: 'Amulya', sans-serif;
       transform 0.2s ease,
       box-shadow 0.3s ease;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-    /* soft drop shadow */
     user-select: none;
     pointer-events: auto;
   }
@@ -2986,13 +2658,11 @@ font-family: 'Amulya', sans-serif;
 
   .carousel-arrow:hover {
     background: rgba(255, 215, 0, 0.2);
-    /* warm glow on hover */
     color: #fff;
     box-shadow: 0 6px 24px rgba(182, 136, 76, 0.5);
     transform: scale(1.3);
   }
 
-  /* Toggle button style (adjust or add to your existing button style) */
   .carousel-toggle-btn {
     position: static;
     top: 24px;
@@ -3010,7 +2680,6 @@ font-family: 'Amulya', sans-serif;
     transition: background 0.2s, box-shadow 0.2s;
     margin-left: auto;
     margin-bottom: 10px;
-    /* Shifts the button to the far right in a flex container */
     display: block;
   }
 
@@ -3025,20 +2694,14 @@ font-family: 'Amulya', sans-serif;
     object-fit: cover;
     border-radius: 24px;
 
-    /* glass effect */
     background: rgba(255, 255, 255, 0.1) !important;
-    /* semi-transparent tint */
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
 
-    /* subtle inner glow and soft outer glow */
     box-shadow:
       inset 0 0 2px rgba(255, 255, 255, 0.3),
-      /* inner highlight */
       0 8px 24px rgba(255, 215, 0, 0.08);
-    /* outer glow */
 
-    /* faint border for glass edge */
     border: 1px solid rgba(255, 255, 255, 0.15);
   }
 
@@ -3050,7 +2713,6 @@ font-family: 'Amulya', sans-serif;
     white-space: normal;
   }
 
-  /* Contact Section */
 
   .contact-section-box {
     background: rgba(30, 34, 38, 0.55);
@@ -3085,7 +2747,6 @@ font-family: 'Amulya', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Center children horizontally */
     justify-content: center;
     margin: 30px 24px;
     padding: 54px 24px;
@@ -3146,7 +2807,6 @@ font-family: 'Amulya', sans-serif;
       color 0.2s,
       box-shadow 0.2s,
       transform 0.5s cubic-bezier(0.2, 0, 0.1, 1);
-    /* Add transform transition */
     box-sizing: border-box;
     display: block
   }
@@ -3156,7 +2816,6 @@ font-family: 'Amulya', sans-serif;
     color: #232a26;
     box-shadow: 0 4px 16px rgba(255, 215, 0, 0.18);
     transform: scale(1.07) translateY(-2px);
-    /* Add transform effect */
   }
 
   .contact-success {

@@ -8,7 +8,6 @@ import math
 
 df=pd.read_csv(r"C:\\Users\\mihir\\Documents\\Websume\\models\\cardio_train.csv", sep=";")
 
-# Convert categorical features to numeric manually
 def encode_categories(df):
     encodings = {}
     for column in df.columns:
@@ -18,33 +17,26 @@ def encode_categories(df):
             df[column] = df[column].map(encodings[column])
     return df, encodings
 
-# Display initial information
 print(df.head())
 print(df.info())  
 print(df.describe())  
 print(df.isnull().sum())  
 print(df.dtypes)  
 
-# Convert age from days to years
 df["age"] = df["age"] // 365
 
-# Fill missing values with the median
 df.fillna(df.median(), inplace=True)
 
-# Drop the "id" column (modifies df in place)
 df.drop(columns=["id"], inplace=True)
 
-# Categorize age into bins
 df["age_category"] = pd.cut(
     df["age"],
     bins=[0, 12, 19, 29, 39, 49, 59, 69, 79, 120],
     labels=["Child", "Teen", "20s", "30s", "40s", "50s", "60s", "70s", "80+"]
 )
 
-# BMI calculation
 df["bmi"] = df["weight"] / ((df["height"] / 100) ** 2)
 
-# Expanded BMI categories based on WHO standards
 df["bmi_category"] = pd.cut(
     df["bmi"],
     bins=[0, 15, 16, 17, 18.5, 23, 25, 27.5, 30, 32.5, 35, 37.5, 40, 45, 50, 100],
@@ -66,7 +58,6 @@ df["bmi_category"] = pd.cut(
         "Super Obesity"
     ]
 )
-# Improved BP categorization based on systolic and diastolic values separately
 def categorize_bp(row):
     systolic = row["ap_hi"]
     diastolic = row["ap_lo"]
@@ -93,12 +84,9 @@ df = df[["age_category", "bmi", "bp_category", "health_risk", "lifestyle_risk", 
 
 print(df)
 
-# Drop NaN values created by binning
 df=df.dropna()
 
-# Visualizations--------------------
 
-# Convert categorical columns to numeric codes
 df_encoded, encodings = encode_categories(df)
 
 class_counts = df['cardio'].value_counts()
@@ -106,7 +94,6 @@ class_counts = df['cardio'].value_counts()
 print(class_counts)
 
 
-# Manual Train-Test Split
 def train_test_split_manual(data, test_size=0.2):
     data = data.sample(frac=1).reset_index(drop=True)
     split_idx = int((1 - test_size) * len(data))
@@ -142,7 +129,6 @@ def split_data(X, y, feature_idx, threshold):
 def majority_class(labels):
     return Counter(labels).most_common(1)[0][0]
 
-# -------- ID3 Tree Builder --------
 
 def build_tree(X, y, features, max_depth=None, min_gain=0.01, depth=0):
     if len(set(y)) == 1:
@@ -172,7 +158,6 @@ def build_tree(X, y, features, max_depth=None, min_gain=0.01, depth=0):
     right = build_tree(best_split[2], best_split[3], features, max_depth, min_gain, depth+1)
     return (best_feat, best_thresh, left, right)
 
-# -------- Prediction --------
 
 def predict(tree, x):
     while isinstance(tree, tuple):
@@ -180,7 +165,6 @@ def predict(tree, x):
         tree = left if x[feat_idx] <= thresh else right
     return tree
 
-# -------- Accuracy & Confusion Matrix --------
 
 def evaluate(tree, X, y):
     preds = [predict(tree, xi) for xi in X]
@@ -192,19 +176,16 @@ def evaluate(tree, X, y):
 
 
 
-# -------- Build & Test Tree --------
 
 tree = build_tree(X_train, y_train, features, max_depth=12, min_gain=0.01)
 accuracy, conf_matrix = evaluate(tree, X_test, y_test)
 
-# -------- Build & Test Tree --------
 
 print(f"Accuracy: {accuracy * 100:.2f}%")
 print("Confusion Matrix:")
 print(np.array(conf_matrix))
 
 
-# Calculate manual classification report
 
 def classification_report_manual(y_true, y_pred):
     labels = sorted(set(y_true))
@@ -227,7 +208,6 @@ def classification_report_manual(y_true, y_pred):
             "support": support
         }
     
-    # Print report (formatted)
     print("\nManual Classification Report:")
     print(f"{'Class':>7} {'Precision':>10} {'Recall':>10} {'F1-score':>10} {'Support':>10}")
     for cls, metrics in report.items():
@@ -238,17 +218,14 @@ classification_report_manual(y_test, y_pred)
 
 import pickle
 
-# Save the trained decision tree model to a file
 with open("cardio_model.pkl", "wb") as f:
     pickle.dump(tree, f)
 
 
 import pickle
 
-# Load the decision tree model from file
 with open("cardio_model.pkl", "rb") as f:
     loaded_tree = pickle.load(f)
 
-# Predict using the loaded tree (for example, on a single test example)
 sample_prediction = predict(loaded_tree, X_test[0])
 print("Predicted class:", sample_prediction)
