@@ -242,29 +242,29 @@ toggleBtn.addEventListener('click', () => {
 });
 
 // Dragging support
-carouselCardsContainer.addEventListener('mousedown', e => {
-  dragging = true;
-  dragStartX = e.clientX;
-});
+// carouselCardsContainer.addEventListener('mousedown', e => {
+//   dragging = true;
+//   dragStartX = e.clientX;
+// });
 
-window.addEventListener('mouseup', () => {
-  dragging = false;
-});
+// window.addEventListener('mouseup', () => {
+//   dragging = false;
+// });
 
-carouselCardsContainer.addEventListener('touchstart', e => {
-  dragging = true;
-  dragStartX = e.touches[0].clientX;
-});
-window.addEventListener('touchmove', e => {
-  if (!dragging) return;
-  const dx = e.touches[0].clientX - dragStartX;
-  angle += dx * -0.4;
-  dragStartX = e.touches[0].clientX;
-  renderCarousel();
-});
-window.addEventListener('touchend', () => {
-  dragging = false;
-});
+// carouselCardsContainer.addEventListener('touchstart', e => {
+//   dragging = true;
+//   dragStartX = e.touches[0].clientX;
+// });
+// window.addEventListener('touchmove', e => {
+//   if (!dragging) return;
+//   const dx = e.touches[0].clientX - dragStartX;
+//   angle += dx * -0.4;
+//   dragStartX = e.touches[0].clientX;
+//   renderCarousel();
+// });
+// window.addEventListener('touchend', () => {
+//   dragging = false;
+// });
 
 // Arrows
 arrowLeft.addEventListener('click', () => {
