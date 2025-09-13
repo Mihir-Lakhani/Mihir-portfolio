@@ -1,17 +1,13 @@
 import pickle
-
-# Load your saved model
 with open("cardio_model.pkl", "rb") as f:
     tree = pickle.load(f)
 
-# Predict function (from your previous code)
 def predict(tree, x):
     while isinstance(tree, tuple):
         feat_idx, thresh, left, right = tree
         tree = left if x[feat_idx] <= thresh else right
     return tree
 
-# Category encodings and helper functions
 age_category_labels = ["Child", "Teen", "20s", "30s", "40s", "50s", "60s", "70s", "80+"]
 age_category_encoding = {label: idx for idx, label in enumerate(age_category_labels)}
 bp_category_labels = [
@@ -89,7 +85,6 @@ for idx, (person, feats, pred) in enumerate(zip(all_people, all_features, all_pr
 results = []
 for person, feats, pred in zip(all_people, all_features, all_preds):
     results.append({"raw": person, "features": feats, "prediction": pred})
-
 
 from collections import Counter
 print("Prediction counts:", Counter(all_preds))
