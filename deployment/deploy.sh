@@ -26,7 +26,6 @@ done
 if [[ "${RAG_RETRIEVAL_MODE:-local_hybrid}" == "local_hybrid" ]]; then
   docker compose --env-file "$env_file" -f "$compose_file" up -d ollama
   docker compose --env-file "$env_file" -f "$compose_file" --profile maintenance run --rm model-init
-  docker compose --env-file "$env_file" -f "$compose_file" --profile maintenance run --rm index-volume-init
   docker compose --env-file "$env_file" -f "$compose_file" --profile maintenance run --rm indexer
 fi
 

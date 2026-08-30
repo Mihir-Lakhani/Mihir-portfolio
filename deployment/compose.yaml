@@ -29,26 +29,13 @@ services:
       ollama:
         condition: service_healthy
 
-  index-volume-init:
-    build:
-      context: ..
-      dockerfile: Dockerfile
-    profiles: ["maintenance"]
-    restart: "no"
-    user: "0:0"
-    entrypoint: ["sh", "-c"]
-    command: >
-      mkdir -p /app/instance/rag_local_index
-      && chown -R portfolio:portfolio /app/instance/rag_local_index
-    volumes:
-      - rag_local_index:/app/instance/rag_local_index
-
   indexer:
     build:
       context: ..
       dockerfile: Dockerfile
     profiles: ["maintenance"]
     restart: "no"
+    user: "0:0"
     env_file:
       - ${PORTFOLIO_ENV_FILE:-.env}
     environment:
