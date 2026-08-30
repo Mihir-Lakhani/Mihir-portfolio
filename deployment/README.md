@@ -84,10 +84,15 @@ docker compose --env-file deployment/.env -f deployment/compose.yaml --profile m
 docker compose --env-file deployment/.env -f deployment/compose.yaml restart portfolio
 ```
 
-Renew certificates monthly through cron or a systemd timer:
+Install the committed systemd timer once on the VM. It checks daily and renews
+only when the certificate is due:
 
 ```bash
-./deployment/renew_tls.sh
+sudo install -m 644 deployment/systemd/mihir-portfolio-certbot-renew.service /etc/systemd/system/
+sudo install -m 644 deployment/systemd/mihir-portfolio-certbot-renew.timer /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now mihir-portfolio-certbot-renew.timer
+systemctl list-timers mihir-portfolio-certbot-renew.timer
 ```
 
 Use the following when debugging without exposing secrets in shell history:

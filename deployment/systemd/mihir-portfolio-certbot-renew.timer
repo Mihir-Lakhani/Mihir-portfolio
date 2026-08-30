@@ -1,0 +1,11 @@
+[Unit]
+Description=Run portfolio TLS certificate renewal daily
+
+[Timer]
+OnCalendar=*-*-* 03:17:00
+RandomizedDelaySec=30m
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+
