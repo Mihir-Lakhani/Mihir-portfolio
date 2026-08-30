@@ -1,5 +1,9 @@
 .venv/
 .env
+deployment/.env
 instance/
+tmp/
+analysis/
+static/archive/
 __pycache__/
 *.py[cod]

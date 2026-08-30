@@ -1,0 +1,137 @@
+{
+  "version": "2026-08-30-profile-education-rag-project",
+  "sources": [
+    {
+      "id": "portfolio-background",
+      "path": "public/background.md",
+      "title": "Mihir Lakhani profile",
+      "url": "/#about",
+      "source_type": "background",
+      "project": "Portfolio",
+      "public": true,
+      "enabled": true
+    },
+    {
+      "id": "public-resume-summary",
+      "path": "public/resume_summary.md",
+      "title": "Public resume summary",
+      "url": "/static/My%20Resume.pdf",
+      "source_type": "resume",
+      "project": "Career summary",
+      "public": true,
+      "enabled": true
+    },
+    {
+      "id": "education-details",
+      "path": "public/education.md",
+      "title": "Education details",
+      "url": "/#about",
+      "source_type": "education",
+      "project": "Career summary",
+      "public": true,
+      "enabled": true
+    },
+    {
+      "id": "project-5g-handover",
+      "path": "public/projects/5g_mobility_risk_and_handover_decision_support.md",
+      "title": "5G Mobility Risk Prediction and Handover Decision Support",
+      "url": "https://github.com/Mihir-Lakhani/5G-Handover-Stability-Aware-ML",
+      "demo_url": "/mobility",
+      "demo_label": "Open Simulation",
+      "source_type": "project",
+      "project": "5G Mobility Risk Prediction and Handover Decision Support",
+      "public": true,
+      "enabled": true
+    },
+    {
+      "id": "project-cardio-risk-predictor",
+      "path": "public/projects/cardiovascular-disease-classification-experiments.md",
+      "title": "Cardiovascular Disease Classification Experiments",
+      "url": "/cardio",
+      "source_type": "project",
+      "project": "Cardiovascular Disease Classification Experiments",
+      "public": true,
+      "enabled": true
+    },
+    {
+      "id": "project-digital-twin-fleet",
+      "path": "public/projects/fleet_smart_vehicle_digital_twin.md",
+      "title": "Fleet Smart Vehicle Digital Twin Prototype",
+      "url": "https://github.com/Mihir-Lakhani/fleet-digital-twin-eclipse-ditto",
+      "source_type": "project",
+      "project": "Fleet Smart Vehicle Digital Twin Prototype",
+      "public": true,
+      "enabled": true
+    },
+    {
+      "id": "project-closed-loop-automation",
+      "path": "public/projects/closed-loop-sla-simulation.md",
+      "title": "Closed Loop SLA Violation Simulation",
+      "url": "/#work",
+      "source_type": "project",
+      "project": "Closed Loop SLA Violation Simulation",
+      "public": true,
+      "enabled": true
+    },
+    {
+      "id": "project-parkinsons-detection",
+      "path": "public/projects/parkinsons-speech-classification.md",
+      "title": "Parkinson's Speech Feature Classification",
+      "url": "https://github.com/Mihir-Lakhani/parkinsons-attndensenet-itdo",
+      "source_type": "project",
+      "project": "Parkinson's Speech Feature Classification",
+      "public": true,
+      "enabled": true
+    },
+    {
+      "id": "project-fraud-detector",
+      "path": "public/projects/fraud-transaction-classification.md",
+      "title": "Fraud Transaction Classification",
+      "url": "https://github.com/Mihir-Lakhani/fraud-detection-xgboost-shap",
+      "source_type": "project",
+      "project": "Fraud Transaction Classification",
+      "public": true,
+      "enabled": true
+    },
+    {
+      "id": "project-explainable-automl",
+      "path": "public/projects/explainable_automl.md",
+      "title": "Explainable AutoML System",
+      "url": "/#work",
+      "source_type": "project",
+      "project": "Explainable AutoML System",
+      "public": true,
+      "enabled": true
+    },
+    {
+      "id": "project-source-cited-rag-assistant",
+      "path": "public/projects/source_cited_rag_assistant.md",
+      "title": "Source-Cited RAG Assistant",
+      "url": "/#work",
+      "source_type": "project",
+      "project": "Source-Cited RAG Assistant",
+      "public": true,
+      "enabled": true
+    },
+    {
+      "id": "skills-and-tools",
+      "path": "public/skills.md",
+      "title": "Skills and tools",
+      "url": "/#about",
+      "source_type": "skills",
+      "project": "Portfolio",
+      "public": true,
+      "enabled": true
+    },
+    {
+      "id": "certifications-and-awards",
+      "path": "public/certifications.md",
+      "title": "Certifications and awards",
+      "url": "/#about",
+      "source_type": "certification",
+      "project": "Career summary",
+      "public": true,
+      "enabled": true
+    }
+  ]
+}

@@ -1,4 +1,6 @@
-from flask import Flask, request, render_template
+from pathlib import Path
+
+from flask import Flask, jsonify, request, render_template
 import pickle
 import matplotlib
 matplotlib.use('Agg')  # Use a non-GUI backend for server environments
@@ -8,11 +10,23 @@ import numpy as np
 import os
 from sklearn.metrics import confusion_matrix, roc_curve, auc, precision_recall_curve
 import seaborn as sns
+from backend.mobility import mobility_bp
+from rag.config import RagSettings
+from rag.local_index import load_local_index, validate_local_index
+from rag.routes import rag_bp
+from rag.sources import SourceRegistry
 
+PROJECT_ROOT = Path(__file__).resolve().parent
 app = Flask(__name__)
+if diagnostic_path := os.getenv("RAG_LOCAL_DIAGNOSTICS_PATH"):
+    app.config["RAG_LOCAL_DIAGNOSTICS_PATH"] = diagnostic_path
+if public_origin := os.getenv("PUBLIC_ORIGIN"):
+    app.config["PUBLIC_ORIGIN"] = public_origin.rstrip("/")
+app.register_blueprint(mobility_bp)
+app.register_blueprint(rag_bp)
 
 # Load your saved model
-with open("models/cardio_model.pkl", "rb") as f:
+with (PROJECT_ROOT / "models" / "cardio_model.pkl").open("rb") as f:
     tree = pickle.load(f)
 
 def predict(tree, x):
@@ -71,6 +85,30 @@ def encode_input(age, gender, height_cm, weight_kg, ap_hi, ap_lo, cholesterol, g
 def index():
     return render_template('index.html')
 
+
+@app.get("/healthz")
+def healthz():
+    """Report deployment readiness without leaking configuration details."""
+
+    try:
+        settings = RagSettings.from_environment()
+        settings.require_runtime_configuration()
+        if settings.retrieval_mode == "local_hybrid":
+            registry = SourceRegistry.from_file(PROJECT_ROOT / "knowledge" / "sources.json")
+            index_directory = Path(settings.local_index_directory)
+            if not index_directory.is_absolute():
+                index_directory = PROJECT_ROOT / index_directory
+            index = load_local_index(index_directory)
+            validate_local_index(
+                index,
+                PROJECT_ROOT / "knowledge",
+                registry,
+                settings.ollama_embedding_model,
+            )
+    except Exception:
+        return jsonify({"status": "unready"}), 503
+    return jsonify({"status": "ok", "retrieval_mode": settings.retrieval_mode})
+
 @app.route("/cardio", methods=["GET", "POST"])
 def cardio():
     prediction = None
@@ -101,7 +139,7 @@ def cardio():
     return render_template("cardio.html", prediction=prediction, show_graphs=show_graphs)
 
 def generate_cardio_graphs():
-    static_dir = os.path.join(os.getcwd(), "static")
+    static_dir = PROJECT_ROOT / "static"
 
     # Simulate data (replace with your real test data and predictions)
     y_true = np.random.choice([0, 1], size=100, p=[0.7, 0.3])
@@ -114,7 +152,7 @@ def generate_cardio_graphs():
     plt.bar(['Low Risk', 'At Risk'], [np.sum(y_pred==0), np.sum(y_pred==1)], color=['#4caf50', '#e53935'])
     plt.ylabel("Count")
     plt.tight_layout()
-    plt.savefig(os.path.join(static_dir, "cardio_pred_distribution.png"))
+    plt.savefig(static_dir / "cardio_pred_distribution.png")
     plt.close()
 
     # Age distribution (simulate)
@@ -125,7 +163,7 @@ def generate_cardio_graphs():
     plt.xlabel("Age")
     plt.ylabel("Count")
     plt.tight_layout()
-    plt.savefig(os.path.join(static_dir, "cardio_age_distribution.png"))
+    plt.savefig(static_dir / "cardio_age_distribution.png")
     plt.close()
 
     # BMI distribution (simulate)
@@ -136,7 +174,7 @@ def generate_cardio_graphs():
     plt.xlabel("BMI")
     plt.ylabel("Count")
     plt.tight_layout()
-    plt.savefig(os.path.join(static_dir, "cardio_bmi_distribution.png"))
+    plt.savefig(static_dir / "cardio_bmi_distribution.png")
     plt.close()
 
     # ROC Curve
@@ -152,7 +190,7 @@ def generate_cardio_graphs():
     plt.title('Receiver Operating Characteristic')
     plt.legend(loc="lower right")
     plt.tight_layout()
-    plt.savefig(os.path.join(static_dir, "cardio_roc_curve.png"))
+    plt.savefig(static_dir / "cardio_roc_curve.png")
     plt.close()
 
     # Precision-Recall Curve
@@ -163,7 +201,7 @@ def generate_cardio_graphs():
     plt.ylabel('Precision')
     plt.title('Precision-Recall Curve')
     plt.tight_layout()
-    plt.savefig(os.path.join(static_dir, "cardio_pr_curve.png"))
+    plt.savefig(static_dir / "cardio_pr_curve.png")
     plt.close()
 
 # Call this once at startup (or after model retrain)
@@ -180,4 +218,4 @@ def contact():
     return render_template('index.html', success=True)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80)
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", "8102")))

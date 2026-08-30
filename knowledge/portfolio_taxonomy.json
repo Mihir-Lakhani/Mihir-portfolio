@@ -1,0 +1,184 @@
+{
+  "version": "2026-08-30-profile-education-rag-project",
+  "description": "Curated navigation terms for approved File Search sources. These entries are retrieval hints only, never answer evidence.",
+  "concepts": [
+    {
+      "id": "mihir-profile",
+      "aliases": ["mihir", "mihir lakhani", "about mihir", "about himself", "who is mihir", "who is mihir lakhani", "career journey", "learning journey", "professional background", "as a person", "him as a person", "personal side", "personal interests", "outside technical work", "hobby", "hobbies", "story driven games"],
+      "source_ids": ["portfolio-background"]
+    },
+    {
+      "id": "education-details",
+      "aliases": ["education", "academic", "academics", "cgpa", "school", "college", "b tech", "btech", "computer networking", "class 10", "class 12", "10th", "12th"],
+      "source_ids": ["education-details"]
+    },
+    {
+      "id": "research-internship",
+      "aliases": ["internship", "research internship", "network digital twin", "network digital twin project"],
+      "source_ids": ["portfolio-background"]
+    },
+    {
+      "id": "portfolio-skills",
+      "aliases": ["skill", "skills", "technical skills", "tech stack"],
+      "source_ids": ["skills-and-tools"]
+    },
+    {
+      "id": "portfolio-resume",
+      "aliases": ["resume", "cv", "curriculum vitae", "professional experience"],
+      "source_ids": ["public-resume-summary"]
+    },
+    {
+      "id": "portfolio-certifications",
+      "aliases": ["certification", "certifications", "certificate", "certificates", "awards", "award", "recognition", "nokia campus connect"],
+      "source_ids": ["certifications-and-awards"]
+    },
+    {
+      "id": "five-g-mobility",
+      "kind": "project",
+      "aliases": ["5g", "5 g", "5g mobility", "handover", "handover project", "mobility risk", "mobility decision"],
+      "source_ids": ["project-5g-handover"]
+    },
+    {
+      "id": "cardiovascular-classification",
+      "kind": "project",
+      "aliases": ["cardio", "cardiovascular", "cardio project", "heart disease", "heart risk"],
+      "source_ids": ["project-cardio-risk-predictor"]
+    },
+    {
+      "id": "fleet-digital-twin",
+      "kind": "project",
+      "aliases": ["fleet", "fleet project", "fleet digital twin", "digital twin", "vehicle twin", "smart vehicle"],
+      "source_ids": ["project-digital-twin-fleet"]
+    },
+    {
+      "id": "closed-loop-sla",
+      "kind": "project",
+      "aliases": ["closed loop", "closed-loop", "sla simulation", "sla violation", "sla project"],
+      "source_ids": ["project-closed-loop-automation"]
+    },
+    {
+      "id": "parkinsons-speech",
+      "kind": "project",
+      "aliases": ["parkinson", "parkinson's", "parkinsons", "parkinsons project", "speech classification", "speech features"],
+      "source_ids": ["project-parkinsons-detection"]
+    },
+    {
+      "id": "fraud-transaction-classification",
+      "kind": "project",
+      "aliases": ["fraud", "fraud detection", "fraud detector", "fraud transaction", "transaction classification"],
+      "source_ids": ["project-fraud-detector"]
+    },
+    {
+      "id": "explainable-automl",
+      "kind": "project",
+      "aliases": ["automl", "auto ml", "explainable automl", "automated machine learning"],
+      "source_ids": ["project-explainable-automl"]
+    },
+    {
+      "id": "source-cited-rag-assistant",
+      "kind": "project",
+      "aliases": ["rag assistant", "source cited rag", "source-cited rag", "source cited rag assistant", "portfolio assistant", "ask about me", "retrieval augmented generation", "hybrid retrieval"],
+      "source_ids": ["project-source-cited-rag-assistant"]
+    },
+    {
+      "id": "docker",
+      "aliases": ["docker", "docker compose", "dockerfile", "dockerfiles", "container", "containers", "containerization", "containerisation", "containerized", "containerised"],
+      "source_ids": ["project-digital-twin-fleet"]
+    },
+    {
+      "id": "react",
+      "aliases": ["react", "reactjs", "react js"],
+      "source_ids": ["project-digital-twin-fleet"]
+    },
+    {
+      "id": "typescript",
+      "aliases": ["typescript", "type script"],
+      "source_ids": ["project-digital-twin-fleet"]
+    },
+    {
+      "id": "mongodb",
+      "aliases": ["mongodb", "mongo db", "document database"],
+      "source_ids": ["project-digital-twin-fleet"]
+    },
+    {
+      "id": "mqtt",
+      "aliases": ["mqtt", "mosquitto", "message broker"],
+      "source_ids": ["project-digital-twin-fleet"]
+    },
+    {
+      "id": "eclipse-ditto",
+      "aliases": ["eclipse ditto", "ditto gateway"],
+      "source_ids": ["project-digital-twin-fleet"]
+    },
+    {
+      "id": "iot-hardware",
+      "aliases": ["iot", "internet of things", "arduino", "tkinter", "pyserial", "serial control"],
+      "source_ids": ["project-digital-twin-fleet"]
+    },
+    {
+      "id": "kubernetes",
+      "aliases": ["kubernetes", "k8s"],
+      "source_ids": ["project-digital-twin-fleet"]
+    },
+    {
+      "id": "flask",
+      "aliases": ["flask", "flask api", "rest api"],
+      "source_ids": ["project-5g-handover", "project-digital-twin-fleet"]
+    },
+    {
+      "id": "networking",
+      "aliases": ["networking", "telecom", "telecommunications", "network kpi", "network kpis", "quality of service", "qos"],
+      "source_ids": ["project-5g-handover", "project-closed-loop-automation"]
+    },
+    {
+      "id": "shap",
+      "aliases": ["shap", "explainability", "explainable ai", "xai", "feature contribution"],
+      "source_ids": ["project-closed-loop-automation", "project-explainable-automl"]
+    },
+    {
+      "id": "random-forest",
+      "aliases": ["random forest", "randomforest"],
+      "source_ids": ["project-cardio-risk-predictor", "project-closed-loop-automation"]
+    },
+    {
+      "id": "decision-tree",
+      "aliases": ["decision tree", "id3", "information gain", "entropy", "graphviz"],
+      "source_ids": ["project-cardio-risk-predictor"]
+    },
+    {
+      "id": "xgboost",
+      "aliases": ["xgboost", "xg boost"],
+      "source_ids": ["project-cardio-risk-predictor"]
+    },
+    {
+      "id": "healthcare",
+      "aliases": ["healthcare", "medical", "clinical"],
+      "source_ids": ["project-cardio-risk-predictor", "project-parkinsons-detection"]
+    },
+    {
+      "id": "attention-densenet",
+      "aliases": ["attention densenet", "attentiondensenet", "dense attention", "itdo", "tasmanian devil optimization", "pytorch", "eeg", "raw audio"],
+      "source_ids": ["project-parkinsons-detection"]
+    },
+    {
+      "id": "smote",
+      "aliases": ["smote", "imbalanced learn", "imbalanced-learn"],
+      "source_ids": ["project-cardio-risk-predictor", "project-parkinsons-detection"]
+    },
+    {
+      "id": "histogram-gradient-boosting",
+      "aliases": ["histgradientboosting", "hist gradient boosting", "histogram gradient boosting", "class weighted", "class weighting", "threshold selection"],
+      "source_ids": ["project-fraud-detector"]
+    },
+    {
+      "id": "financial-transactions",
+      "aliases": ["financial transaction", "financial transactions", "bank transaction", "bank transactions", "transaction data"],
+      "source_ids": ["project-fraud-detector"]
+    },
+    {
+      "id": "automl-workflow",
+      "aliases": ["model selection", "hyperparameter tuning", "automated preprocessing", "data cleaning"],
+      "source_ids": ["project-explainable-automl"]
+    }
+  ]
+}

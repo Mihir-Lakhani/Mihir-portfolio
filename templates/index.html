@@ -10,12 +10,9 @@
     <link href="https://api.fontshare.com/v2/css?f[]=bevellier@900&display=swap" rel="stylesheet">
     <link href="https://api.fontshare.com/v2/css?f[]=nippo@700&display=swap" rel="stylesheet">
     <link href="https://api.fontshare.com/v2/css?f[]=anton@400&=author@701&f[]=tanker@400&display=swap" rel="stylesheet">
-
-
-    
-
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Open+Sans:wght@400;700&display=swap"
         rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
@@ -27,6 +24,11 @@
             <a href="#top" class="logo-link">
                 <img class="logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" />
             </a>
+            <button class="recruiter-toggle" id="recruiterModeToggle" type="button" aria-pressed="false"
+                aria-controls="recruiterMode">
+                <span class="recruiter-toggle-dot" aria-hidden="true"></span>
+                <span class="recruiter-toggle-text">Summarize</span>
+            </button>
             <button class="mobile-nav-toggle" aria-label="Open navigation"
                 onclick="document.body.classList.toggle('nav-open')">
                 <span></span>
@@ -48,167 +50,335 @@
         </div>
     </header>
 
-    <div class="home-bg">
-        <div class="intro">
-            <h1>
-                <span class="greeting"><span class="initial1">H</span>i, I am</span><br>
-                <span class="fullname">
-                    <span> Mihir Lakhani</span>
-                    <span> Coder</span>
-                    <span> Developer</span>
-                    <span> Programmer</span>
-                    <span> Mihir Lakhani</span>
-                </span>
-            </h1>
-        </div>
+    <aside class="social-dock" aria-label="Professional profiles">
+        <a href="https://www.linkedin.com/in/mihir-lakhani-149504327/" target="_blank" rel="noopener">
+            <img src="{{ url_for('static', filename='images/lkd.png') }}" alt="" aria-hidden="true">
+            <span>Linked_<em>In</em></span>
+        </a>
+        <a href="https://github.com/Mihir-Lakhani" target="_blank" rel="noopener">
+            <img src="{{ url_for('static', filename='images/github-dock.png') }}" alt="" aria-hidden="true">
+            <span>Git_<em>Hub</em></span>
+        </a>
+    </aside>
 
-        <div class="intro-box">
-            <div class="name-role">
-                <h5 class="tagline" id="tagline">
-                    <span class="highlight">Operational Machine Learning models with Digital Twin initiatives underway.
-                </h5>
-                <h6 class="quote-text">
-                    <span class="italic">
-                        "An AI system that doesn’t just predict SLA violations, but understands, explains, and prevents
-                        them before impact."
-                    </span><br>
-                    Hi, I’m Mihir, the guy behind this project. This is my technical portfolio that's not just a
-                    collection of experiments, but applied Machine Learning projects.
-                    These models aren't just demos; they run in production and make sense of their own decisions.
-                    Everything here reflects how I build, debug, and deliver with intent.<br>
-                    If you're into ML that's used, not just trained then you'll feel right at home.
-                </h6>
-            </div>
-
-            <div class="vertical-text-wrapper">
-                <div class="vertical-text">
-                    Machine Learning Enthusiast & AI Developer Solving Real-World Problems with Code, Data & Machine
-                    Learning
+    <section id="recruiterMode" class="recruiter-mode-panel" aria-labelledby="recruiterModeTitle" hidden>
+        <div class="recruiter-shell">
+            <div class="recruiter-head">
+                <div class="recruiter-intro">
+                    <p class="recruiter-eyebrow">Snapshot</p>
+                    <h1 id="recruiterModeTitle" data-shadow=".Summary">.Summary</h1>
+                    <p>
+                        I'm a B.Tech Computer Science and Engineering student specializing in Computer Networking
+                        at SRMIST. I build full-stack AI/ML systems and am developing practical MLOps skills for
+                        deploying, operating, securing, and optimizing AI applications.
+                    </p>
+                </div>
+                <div class="recruiter-actions" aria-label="Primary links">
+                    <a href="{{ url_for('static', filename='My Resume.pdf') }}" target="_blank" rel="noopener">View Resume <span aria-hidden="true">&#8599;</span></a>
+                    <a href="https://github.com/Mihir-Lakhani" target="_blank" rel="noopener">GitHub</a>
+                    <a href="https://www.linkedin.com/in/mihir-lakhani-149504327/" target="_blank" rel="noopener">LinkedIn</a>
                 </div>
             </div>
 
-            <div class="intro-photo">
-                <img src="{{ url_for('static', filename='images/mihir.jpg') }}" alt="Mihir Lakhani">
+            <div class="recruiter-metrics" aria-label="Portfolio highlights">
+                <div class="recruiter-metric">
+                    <span>Education</span>
+                    <strong>B.Tech CSE, Computer Networking</strong>
+                    <small>SRM Institute of Science and Technology, Kattankulathur</small>
+                </div>
+                <div class="recruiter-metric">
+                    <span>Research</span>
+                    <strong>Network Digital Twin Project</strong>
+                    <small>Jan-Jun 2025</small>
+                </div>
+                <div class="recruiter-metric">
+                    <span>Recognition</span>
+                    <strong>3rd Place, Nokia Campus Connect</strong>
+                </div>
+            </div>
+
+            <div class="recruiter-grid">
+                <div class="recruiter-primary">
+                    <div class="recruiter-block recruiter-block-wide">
+                        <div class="recruiter-block-head">
+                            <span>Selected Work</span>
+                            <button type="button" data-recruiter-exit data-recruiter-target="#work">Open Projects <span aria-hidden="true">&#8599;</span></button>
+                        </div>
+                        <div class="recruiter-project-list">
+                            <a class="recruiter-project" href="/mobility">
+                                <span class="recruiter-project-status">Decision Support</span>
+                                <h2>5G Handover with Stability-Aware ML</h2>
+                                <p>
+                                    I built a decision-support prototype that uses KPI history, prediction, trend
+                                    smoothing, and volatility control to recommend more stable 5G handover timing.
+                                </p>
+                                <span class="recruiter-project-stack">Python / ML pipeline / Flask / 5G simulation</span>
+                            </a>
+                            <a class="recruiter-project" href="/#work">
+                                <span class="recruiter-project-status">Nokia Top 3</span>
+                                <h2>Closed Loop Automation</h2>
+                                <p>
+                                    I built a telecom QoS risk prototype that classifies SLA violations from stored
+                                    KPI snapshots, explains predictions with SHAP, and simulates bounded corrective adjustments.
+                                </p>
+                                <span class="recruiter-project-stack">Python / Flask / SHAP / QoS analysis</span>
+                            </a>
+                            <a class="recruiter-project" href="https://github.com/Mihir-Lakhani/fleet-digital-twin-eclipse-ditto" target="_blank" rel="noopener">
+                                <span class="recruiter-project-status">Digital Twin</span>
+                                <h2>Fleet Smart Vehicle Digital Twin</h2>
+                                <p>
+                                    I built a full-stack learning prototype for managing vehicle twin records through
+                                    React, Flask, and MongoDB, with a separate local Arduino horn-control demonstration.
+                                </p>
+                                <span class="recruiter-project-stack">React / TypeScript / Flask / MongoDB / Docker</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <section class="recruiter-block recruiter-certifications" aria-labelledby="recruiterCertificationsTitle">
+                        <div class="recruiter-block-head">
+                            <span id="recruiterCertificationsTitle">Certifications</span>
+                        </div>
+                        <ul class="recruiter-certification-list">
+                            <li>
+                                <span>Oracle</span>
+                                <strong>OCI 2025 Generative AI Professional</strong>
+                            </li>
+                            <li>
+                                <span>Oracle</span>
+                                <strong>OCI 2025 Data Science Professional</strong>
+                            </li>
+                            <li>
+                                <span>University of Michigan / Coursera</span>
+                                <strong>Python for Everybody</strong>
+                            </li>
+                            <li>
+                                <span>Microsoft / Coursera</span>
+                                <strong>Microsoft AI and Machine Learning Engineering</strong>
+                            </li>
+                            <li>
+                                <span>IBM / Coursera</span>
+                                <strong>Machine Learning with Python</strong>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+
+                <div class="recruiter-side">
+                    <div class="recruiter-block">
+                        <div class="recruiter-block-head">
+                            <span>Featured System</span>
+                        </div>
+                        <p class="recruiter-feature-label">Source-Cited RAG Assistant</p>
+                        <p class="recruiter-feature-copy">I built an evidence-first assistant that retrieves approved public sources, validates citations, renders approved diagrams, and declines unsupported or private requests.</p>
+                        <button type="button" class="recruiter-feature-action" data-recruiter-exit data-recruiter-open-assistant>Ask About Me <span aria-hidden="true">&#8599;</span></button>
+                    </div>
+
+                    <div class="recruiter-block">
+                        <div class="recruiter-block-head">
+                            <span>Core Toolkit</span>
+                        </div>
+                        <div class="recruiter-skill-cloud" aria-label="Technical skills">
+                            <span>Python</span>
+                            <span>ML Pipelines</span>
+                            <span>RAG</span>
+                            <span>Agentic AI</span>
+                            <span>Flask</span>
+                            <span>React</span>
+                            <span>Docker</span>
+                            <span>MQTT</span>
+                            <span>MongoDB</span>
+                            <span>n8n</span>
+                        </div>
+                    </div>
+
+                    <div class="recruiter-block recruiter-contact">
+                        <div class="recruiter-block-head">
+                            <span>Get In Touch</span>
+                        </div>
+                        <p>I'm open to internships and early-career opportunities across machine learning, applied AI, and software development.</p>
+                        <div class="recruiter-contact-lines">
+                            <span>work.mihir454@gmail.com</span>
+                            <span>Udaipur, Rajasthan, India</span>
+                        </div>
+                        <button type="button" data-recruiter-exit data-recruiter-target="#contact">Message Me <span aria-hidden="true">&#8599;</span></button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <main id="top" class="home-bg">
+        <section class="intro" aria-labelledby="tagline">
+            <p class="hero-greeting" aria-label="Hi, I am Mihir">
+                <span class="hero-name" aria-hidden="true">M<span class="hero-name-i">I<span class="hero-prefix">Hi, I am</span></span>HIR LAKHANI</span>
+            </p>
+            <h1 class="tagline" id="tagline">THIS PORTFOLIO IS A RECORD OF THE PROJECTS I HAVE WORKED ON WHILE LEARNING MACHINE LEARNING, AI SYSTEMS, AND SOFTWARE DEVELOPMENT.</h1>
+        </section>
+        <div class="hero-actions" aria-label="Portfolio actions">
+            <button class="hero-action hero-action-primary" type="button" data-hero-about-assistant>
+                Ask About Me (RAG) <span aria-hidden="true">&#8599;</span>
+            </button>
+            <a class="hero-action" href="{{ url_for('static', filename='My Resume.pdf') }}" target="_blank" rel="noopener">
+                View Resume <span aria-hidden="true">&#8599;</span>
+            </a>
+        </div>
+        <div class="hero-portrait-reveal">
+            <img src="{{ url_for('static', filename='images/profile-portrait-decontaminated.png') }}" alt="Portrait of Mihir Lakhani">
+        </div>
+    </main>
 
     <section id="about" class="about-section">
-        <h3>About</h3>
+        <h3>.About</h3>
         <div class="about-container">
-            <ul class="lux-list">
-                <li><strong>🎓 B.Tech</strong> @ SRMIST – Computer Science, research-active.</li>
-                <li><strong>🧠 Built AutoML pipeline</strong> – model-specific preprocessing + SHAP explainability.</li>
-                <li><strong>📡 6G Network Research</strong> – AI for slicing + Digital Twin optimization.</li>
-                <li><strong>💻 Flask + Frontend Dev</strong> – built this portfolio from scratch.</li>
-                <li><strong>🏆 Nokia Campus Connect 2025</strong> – Top 3 in SLA violation prediction model.</li>
-            </ul>
-            <div class="skills-box">
-                <div class="skills-head">Skills</div>
-                <div class="skills-window">
-                    <ul id="skills-list">
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/python.png') }}" alt="Python">
-                            Python
-                        </li>
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/ml.png') }}" alt="Machine Learning">
-                            Machine Learning
-                        </li>
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/dl.png') }}" alt="Deep Learning">
-                            Deep Learning
-                        </li>
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/flask.png') }}" alt="Flask">
-                            Flask
-                        </li>
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/html.png') }}" alt="HTML">
-                            HTML
-                        </li>
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/css.png') }}" alt="CSS">
-                            CSS
-                        </li>
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/js.png') }}" alt="JavaScript">
-                            JavaScript
-                        </li>
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/dataviz.png') }}" alt="Data Visualization">
-                            Data Visualization
-                        </li>
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/sql.png') }}" alt="MySQL/PostgreSQL">
-                            MySQL/PostgreSQL
-                        </li>
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/git.png') }}" alt="Git & GitHub">
-                            Git
-                        </li>
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/github.png') }}" alt="GitHub">
-                            GitHub
-                        </li>
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/notion.png') }}" alt="Notion">
-                            Notion
-                        </li>
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/jupyter.png') }}" alt="Jupyter">
-                            Jupyter
-                        </li>
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/vscode.png') }}" alt="VS Code">
-                            VS Code
-                        </li>
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/ditto.png') }}" alt="Ditto">
-                            Ditto
-                        </li>
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/docker.png') }}" alt="Docker">
-                            Docker
-                        </li>
-                        <li>
-                            <img class="skill-photo" src="{{ url_for('static', filename='images/skills/kubernetes.png') }}" alt="Kubernetes">
-                            Kubernetes
-                        </li>
-                    </ul>
+            <div class="about-copy">
+                <h4 class="about-highlights-heading">Highlights</h4>
+                <ul class="lux-list">
+                    <li><strong>B.Tech Computer Science and Engineering student specializing in Computer Networking at SRMIST, building toward full-stack AI/ML engineering.</strong></li>
+                    <li><strong>AI/ML Research Intern on a Network Digital Twin Project, exploring 6G-oriented digital twins, SLA-breach prediction, explainability, and proactive network-control ideas.</strong></li>
+                    <li><strong>Presented the research work at Nokia Campus Connect 2025, earning third place, and earned first place in a section-level AutoCAD competition.</strong></li>
+                    <li><strong>Built the Source-Cited RAG Assistant to make approved portfolio material easier to explore with validated citations and approved diagrams.</strong></li>
+                    <li><strong>Growing practical MLOps skills alongside Python, Flask, React, data visualization, model evaluation, and explainable ML work.</strong></li>
+                </ul>
+                <div class="about-background-row">
+                    <div class="about-actions-row" style="display: flex; gap: 1px; align-items: center; margin-top: -10px;">
+                        <button class="expand-btn" onclick="toggleParagraph()">Read Full Background</button>
+                    </div>
+                    <p id="about-paragraph" class="about-full hidden"></p>
+                    <span id="type-cursor" style="display:none;">●</span>
                 </div>
-                <a href="{{ url_for('static', filename='My Resume.pdf') }}" class="download-resume-btn" target="_blank"
-                    style="align-self: flex-end; margin-top: 12px;">
-                    ⬇️ Download Resume
-                </a>
             </div>
-        </div>
-        <div class="about-background-row">
-            <div class="about-actions-row" style="display: flex; gap: 1px; align-items: center; margin-top: -10px;">
-                <button class="expand-btn" onclick="toggleParagraph()">Read Full Background ↓</button>
-            </div>
-            <p id="about-paragraph" class="about-full hidden"></p>
-            <span id="type-cursor" style="display:none;">●</span>
+            <aside class="about-side-rail" aria-label="Skills and portfolio assistant">
+                <div class="skills-box">
+                    <div class="skills-head">Skills</div>
+                    <div class="skills-window">
+                        <ul id="skills-list">
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/python.png') }}" alt="Python">
+                                Python
+                            </li>
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/ml.png') }}" alt="Machine Learning">
+                                Machine Learning
+                            </li>
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/dl.png') }}" alt="Deep Learning">
+                                Deep Learning
+                            </li>
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/flask.png') }}" alt="Flask">
+                                Flask
+                            </li>
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/html.png') }}" alt="HTML">
+                                HTML
+                            </li>
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/css.png') }}" alt="CSS">
+                                CSS
+                            </li>
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/js.png') }}" alt="JavaScript">
+                                JavaScript
+                            </li>
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/dataviz.png') }}" alt="Data Visualization">
+                                Data Visualization
+                            </li>
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/sql.png') }}" alt="MySQL/PostgreSQL">
+                                MySQL/PostgreSQL
+                            </li>
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/git.png') }}" alt="Git & GitHub">
+                                Git
+                            </li>
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/github.png') }}" alt="GitHub">
+                                GitHub
+                            </li>
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/notion.png') }}" alt="Notion">
+                                Notion
+                            </li>
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/jupyter.png') }}" alt="Jupyter">
+                                Jupyter
+                            </li>
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/vscode.png') }}" alt="VS Code">
+                                VS Code
+                            </li>
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/ditto.png') }}" alt="Ditto">
+                                Ditto
+                            </li>
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/docker.png') }}" alt="Docker">
+                                Docker
+                            </li>
+                            <li>
+                                <img class="skill-photo" src="{{ url_for('static', filename='images/skills/kubernetes.png') }}" alt="Kubernetes">
+                                Kubernetes
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="{{ url_for('static', filename='My Resume.pdf') }}" class="download-resume-btn" target="_blank">
+                        Download Resume
+                    </a>
+                </div>
+                <button class="about-chat-toggle" id="aboutChatToggle" type="button" aria-expanded="false" aria-controls="aboutChatPanel">
+                    Ask About Me (RAG) <span class="about-chat-toggle-mark" aria-hidden="true">+</span>
+                </button>
+                    <section class="about-chat-panel" id="aboutChatPanel" hidden aria-labelledby="aboutChatStatus">
+                        <div class="about-chat-header">
+                            <p class="about-chat-status" id="aboutChatStatus">Ask About Me</p>
+                            <p class="about-chat-detail">Answers are grounded in approved public portfolio sources and include the sources used.</p>
+                            <div class="about-chat-window-controls" aria-label="Assistant window controls">
+                                <button class="about-chat-maximize" type="button" aria-label="Maximize Ask About Me" aria-pressed="false" title="Maximize assistant">
+                                    <span class="about-chat-maximize-icon" aria-hidden="true"></span>
+                                </button>
+                                <button class="about-chat-close" type="button" aria-label="Close Ask About Me" title="Close assistant">&times;</button>
+                            </div>
+                        </div>
+                    <div class="about-chat-transcript" id="aboutChatTranscript" role="log" aria-live="polite" aria-relevant="additions text">
+                        <p class="about-chat-empty">Try asking about a project, skill, certification, or learning journey.</p>
+                    </div>
+                    <form class="about-chat-form" id="aboutChatForm">
+                        <label class="visually-hidden" for="aboutChatQuestion">Ask a question about Mihir's public work</label>
+                        <textarea id="aboutChatQuestion" name="question" rows="2" maxlength="2000" placeholder="Ask about a project, skill, or certification..." required></textarea>
+                        <div class="about-chat-form-footer">
+                            <p class="about-chat-feedback" id="aboutChatFeedback" aria-live="polite"></p>
+                            <button type="submit">Ask <span aria-hidden="true">&#8599;</span></button>
+                        </div>
+                    </form>
+                </section>
+            </aside>
         </div>
     </section>
 
 
     <section id="work">
-        <h3>Projects</h3>
-        <button class="carousel-toggle-btn" id="carouselToggleBtn">Expand</button>
-        <div class="work-flex-row" >
+        <h3>.Projects</h3>
+        <p class="projects-heading-note" id="projectsHeadingNote">
+            You can unroll and visit the projects to access the links and know more about them.
+        </p>
+        <p class="projects-heading-note" id="projectsLiveDemoNote">
+            Click the deployed project cards to see live demos of these models in action.
+        </p>
+        <button class="carousel-toggle-btn" id="carouselToggleBtn" type="button" aria-controls="projectArchive" aria-expanded="false">Unroll</button>
+        <div class="work-flex-row project-carousel-row" id="projectCarouselRow">
             <div class="work-description-glass" id="aboutWorkPanel">
                 <h4>About My Work</h4>
                 <p>
-                    My journey in machine learning began with building a decision-tree–based cardiovascular risk
-                    predictor, demonstrating interpretable AI on clinical datasets. Later, I developed a
-                    service-license agreement violation predictor that earned a top 3 finish at Nokia Campus Connect
-                    2025, tackling QoS risk proactively for 5G/6G networks. Currently, I’m architecting an AutoML
-                    pipeline that automates preprocessing, feature engineering, and model explainability, aimed at
-                    scalable, transparent ML workflows.
-                </p>
-                <p class="expand-prompt" style="margin-top: 10px;">
-                    You can expand and visit the cards to access some of the live project deployments.
+                    My machine-learning journey began with a decision-tree cardiovascular project built without
+                    machine-learning libraries, which made the fundamentals tangible. Later, as an AI/ML Research
+                    Intern on a Network Digital Twin Project, I explored 6G-oriented network digital twins,
+                    SLA-breach prediction, explainability, and proactive network-control ideas. That work led to
+                    the Closed Loop SLA Violation Simulation, presented at Nokia Campus Connect 2025, and helped
+                    shape the Fleet Smart Vehicle Digital Twin Prototype. Alongside these projects, I built a
+                    Source-Cited RAG Assistant that lets visitors explore approved public portfolio material with
+                    validated citations and approved diagrams.
                 </p>
             </div>
             <div class="projects-carousel" id="projectsCarousel">
@@ -219,137 +389,283 @@
         </div>
         <div class="work-flex-row">
             <div class="work-cards" id="projectsGrid" style="display:none;">
-                <a href="/cardio" class="card landscape-card">
+                <article class="card landscape-card project-gold-card"
+                    data-detail-path="/projects/5g-handover-stability-aware-ml" data-live-url="/mobility">
+                    <div class="card-img">
+                        <img src="{{ url_for('static', filename='images/handover.jpg') }}" alt="5G Handover Prediction">
+                    </div>
+                    <div class="card-content">
+                        <span class="project-linkedin-award" role="link" tabindex="0" aria-label="Open minor research document"
+                            data-document-url="{{ url_for('static', filename='Minor Research.pdf') }}">
+                            <img src="{{ url_for('static', filename='images/research-logo.png') }}" alt="Research">
+                            <span>Research paper for detailed info</span>
+                        </span>
+                        <h4>5G Handover with<br>Stability-Aware ML</h4>
+                        <p>An academic ML and simulation project that explores whether recent network KPIs can support
+                            earlier, more stable handover recommendations. It combines offline training, a Flask inference
+                            API, and an interactive browser simulation rather than controlling a live network.</p>
+                        <div class="project-card-footer">
+                            <span class="project-github-link" role="link" tabindex="0" aria-label="Open GitHub repository"
+                                data-github-url="https://github.com/Mihir-Lakhani/fraud-detection-xgboost-shap">
+                                <img src="{{ url_for('static', filename='images/github.png') }}" alt="GitHub">
+                            </span>
+                            <div class="project-tools-area">
+                                <div class="project-tools-marquee" aria-label="Tools and skills used">
+                                    <div class="project-tools-track">
+                                        <span>Python | Flask | 5G Handover Logic | Trend Smoothing | Volatility Control | Machine Learning</span>
+                                        <span aria-hidden="true">Python | Stability Scoring | 5G Handover Logic | Trend Smoothing | Volatility Control | Machine Learning</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article class="card landscape-card project-gold-card"
+                    data-detail-path="/projects/cardio-risk-predictor">
                     <div class="card-img">
                         <img src="{{ url_for('static', filename='images/cardio.png') }}" alt="Cardio Risk Predictor">
                     </div>
                     <div class="card-content">
                         <h4>Cardio Risk Predictor</h4>
-                        <p><br>A Machine Learning model that predicts heart disease risk using clinical and lifestyle
-                            data. Built using Decision Tree without using sklearn, Additionally this project
-                            demonstrates preprocessing pipelines, model tuning, and explainable AI techniques and some
-                            graphs for better understanding of the dataset.</p>
+                        <p><br>An exploratory cardiovascular classification project built from clinical and lifestyle
+                            records. I implemented a decision tree from scratch to learn preprocessing, evaluation, and
+                            data visualization; it is not medical advice or a clinical tool.</p>
+                        <div class="project-card-footer">
+                            <span class="project-github-link" role="link" tabindex="0" aria-label="Open GitHub repository"
+                                data-github-url="https://github.com/Mihir-Lakhani/Cardiovascular-Disease-Risk-Prediction">
+                                <img src="{{ url_for('static', filename='images/github.png') }}" alt="GitHub">
+                            </span>
+                            <div class="project-tools-area">
+                                <div class="project-tools-marquee" aria-label="Tools and skills used">
+                                    <div class="project-tools-track">
+                                        <span>Python | Flask | Custom Decision Tree | Pandas | Matplotlib | Seaborn | HTML | CSS | JavaScript</span>
+                                        <span aria-hidden="true">Python | Flask | Custom Decision Tree | Pandas | Matplotlib | Seaborn | HTML | CSS | JavaScript</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </a>
-                <a href="/fleet" class="card landscape-card">
+                </article>
+                <article class="card landscape-card" data-detail-path="/projects/digital-twin-fleet-smart-vehicle">
                     <div class="card-img">
                         <img src="{{ url_for('static', filename='images/fleet.png') }}" alt="Fleet Digital Twin">
                     </div>
                     <div class="card-content">
+                        <span class="project-linkedin-award" role="link" tabindex="0" aria-label="Open Digital Twin LinkedIn post"
+                            data-linkedin-url="https://www.linkedin.com/posts/mihir-lakhani-149504327_iot-digitaltwin-digitaltwin-ugcPost-7380667259914031105-uzkK?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFJ6h8kBi9beSnrQfD8FxD3yMEVp36bkH90">
+                            <img src="{{ url_for('static', filename='images/lkd.png') }}" alt="LinkedIn">
+                            <span>Completion proof</span>
+                        </span>
                         <h4>Digital Twin<br>Fleet Smart Vehicle</h4>
-                        <p><br>|----In Development----|<br>IoT digital twin platform using Eclipse Ditto and Kubernetes
-                            for real-time vehicle tracking and analytics. Multi-node orchestration with edge-cloud
-                            synchronization for intelligent fleet management solutions.</p>
+                        <p><br>A learning prototype for managing vehicle records through a React and TypeScript interface,
+                            Flask API, and MongoDB. A separate Python desktop controller sends serial commands to an Arduino
+                            horn circuit; the implemented path does not use Ditto or Kubernetes.</p>
+                        <div class="project-card-footer">
+                            <span class="project-github-link" role="link" tabindex="0" aria-label="Open GitHub repository"
+                                data-github-url="https://github.com/Mihir-Lakhani/fleet-digital-twin-eclipse-ditto">
+                                <img src="{{ url_for('static', filename='images/github.png') }}" alt="GitHub">
+                            </span>
+                            <div class="project-tools-area">
+                                <div class="project-tools-marquee" aria-label="Tools and skills used">
+                                    <div class="project-tools-track">
+                                        <span>Eclipse Ditto | Kubernetes | Docker | IoT Telemetry | Digital Twin | Edge Cloud Sync | Python</span>
+                                        <span aria-hidden="true">Eclipse Ditto | Kubernetes | Docker | IoT Telemetry | Digital Twin | Edge Cloud Sync | Python</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </a>
-                <a href="/parkinsons" class="card landscape-card">
+                </article>
+                <article class="card landscape-card" data-detail-path="/projects/parkinsons-disease-detection">
                     <div class="card-img">
                         <img src="{{ url_for('static', filename='images/parkinsons.png') }}"
                             alt="Parkinson's Disease Detection">
                     </div>
                     <div class="card-content">
                         <h4>Parkinson's Disease Detection</h4>
-                        <p><br>|----Deploying Soon----|<br>Novel ITDO Attention DenseNet framework for early Parkinson's
-                            detection using EEG signals. Combines advanced optimization with attention mechanisms for
-                            superior accuracy and clinical deployment readiness.</p>
+                        <p><br>A research pipeline that explores feature-mask search with an attention-based dense network
+                            on Parkinson's-related speech-feature records. It uses optional SMOTE resampling, fold-specific
+                            checkpoints, and classification reports to compare modeling choices.</p>
+                        <div class="project-card-footer">
+                            <span class="project-github-link" role="link" tabindex="0" aria-label="Open GitHub repository"
+                                data-github-url="https://github.com/Mihir-Lakhani/parkinsons-attndensenet-itdo">
+                                <img src="{{ url_for('static', filename='images/github.png') }}" alt="GitHub">
+                            </span>
+                            <div class="project-tools-area">
+                                <div class="project-tools-marquee" aria-label="Tools and skills used">
+                                    <div class="project-tools-track">
+                                        <span>Python | Deep Learning | DenseNet | Attention Mechanisms | EEG Signals | NumPy | Research Modeling</span>
+                                        <span aria-hidden="true">Python | Deep Learning | DenseNet | Attention Mechanisms | EEG Signals | NumPy | Research Modeling</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
-                </a>
-                <a href="/car" class="card landscape-card">
+                </article>
+                <article class="card landscape-card project-gold-card"
+                    data-detail-path="/projects/closed-loop-automation">
                     <div class="card-img">
                         <img src="{{ url_for('static', filename='images/sla.jpg') }}" alt="SLA Predictor">
                     </div>
                     <div class="card-content">
-                        <h4>SLA Violation Predictor</h4>
-                        <p><br>|----Deploying Soon----|<br>Real-time SLA violation prediction using ML on QoS logs.
-                            Delivers precise alerts with SHAP-based root-cause analysis. Optimized for low-latency
-                            telecom use. Demoed with closed-loop feedback at NOKIA Campus Connect '25.</p>
+                        <span class="project-linkedin-award" role="link" tabindex="0" aria-label="Open Nokia Campus Connect LinkedIn post"
+                            data-linkedin-url="https://www.linkedin.com/posts/mihir-lakhani-149504327_nokiacampusconnect2025-ai-machinelearning-ugcPost-7350119010799136768-wTyP?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFJ6h8kBi9beSnrQfD8FxD3yMEVp36bkH90">
+                            <img src="{{ url_for('static', filename='images/lkd.png') }}" alt="LinkedIn">
+                            <span>#3rd prize winner in NOKIA</span>
+                        </span>
+                        <h4>Closed Loop Automation</h4>
+                        <p><br>A Python/Jupyter experiment that classifies SLA-violation risk from stored network KPI
+                            snapshots. It uses SHAP to inspect a prediction and simulates bounded KPI adjustments in memory
+                            as a what-if exercise presented at Nokia Campus Connect 2025.</p>
+                        <div class="project-card-footer">
+                            <span class="project-github-link" role="link" tabindex="0" aria-label="Open GitHub repository"
+                                data-github-url="https://github.com/Mihir-Lakhani/fraud-detection-xgboost-shap">
+                                <img src="{{ url_for('static', filename='images/github.png') }}" alt="GitHub">
+                            </span>
+                            <div class="project-tools-area">
+                                <div class="project-tools-marquee" aria-label="Tools and skills used">
+                                    <div class="project-tools-track">
+                                        <span>Python | SHAP | QoS Logs | Telecom ML | Root Cause Analysis | Low Latency Alerts | Flask</span>
+                                        <span aria-hidden="true">Python | SHAP | QoS Logs | Telecom ML | Root Cause Analysis | Low Latency Alerts | Flask</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </a>
-                <a href="/fraud" class="card landscape-card">
+                </article>
+                <article class="card landscape-card" data-detail-path="/projects/fraud-transaction-detector">
                     <div class="card-img">
                         <img src="{{ url_for('static', filename='images/fraud.jpg') }}" alt="Stroke Classifier">
                     </div>
                     <div class="card-content">
                         <h4>Fraud Transaction Detector</h4>
-                        <p><br>|----Deploying Soon----|<br>Detects suspicious banking transactions in real time with
-                            high accuracy. Flags rare frauds with minimal false positives. Lightweight for on-device
-                            fintech deployment.</p>
+                        <p><br>An offline machine-learning experiment on a simulated transaction dataset. It engineers
+                            transaction features, uses class-weighted gradient boosting, and reports fraud-focused metrics
+                            on a held-out test split; it is not a live banking or fraud-prevention system.</p>
+                        <div class="project-card-footer">
+                            <span class="project-github-link" role="link" tabindex="0" aria-label="Open GitHub repository"
+                                data-github-url="https://github.com/Mihir-Lakhani/fraud-detection-xgboost-shap">
+                                <img src="{{ url_for('static', filename='images/github.png') }}" alt="GitHub">
+                            </span>
+                            <div class="project-tools-area">
+                                <div class="project-tools-marquee" aria-label="Tools and skills used">
+                                    <div class="project-tools-track">
+                                        <span>Python | XGBoost | SHAP | Pandas | Scikit-learn | Fraud Analytics | Model Explainability</span>
+                                        <span aria-hidden="true">Python | XGBoost | SHAP | Pandas | Scikit-learn | Fraud Analytics | Model Explainability</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </a>
+                </article>
 
-                <a href="/cardi" class="card landscape-card">
+                <article class="card landscape-card" data-detail-path="/projects/automl-system">
                     <div class="card-img">
                         <img src="{{ url_for('static', filename='images/automl.png') }}" alt="AutoML">
                     </div>
                     <div class="card-content">
                         <h4>AutoML System</h4>
-                        <p><br>|----In Development----|<br>Automated end-to-end ML pipeline with data cleaning, model
-                            selection, and hyperparameter tuning. Modular design supports scalable workflows.
-                            Model-specific preprocessing boosts accuracy. SHAP-based explainability ensures transparent
-                            predictions.</p>
+                        <p><br>An in-progress ML workflow exploring data preparation, model selection, hyperparameter
+                            tuning, and model-specific preprocessing. Explainability is planned through SHAP-style analysis;
+                            it is not yet presented as a completed production tool.</p>
+                        <div class="project-card-footer">
+                            <span class="project-github-link" role="link" tabindex="0" aria-label="Open GitHub repository"
+                                data-github-url="https://github.com/Mihir-Lakhani/fraud-detection-xgboost-shap">
+                                <img src="{{ url_for('static', filename='images/github.png') }}" alt="GitHub">
+                            </span>
+                            <div class="project-tools-area">
+                                <div class="project-tools-marquee" aria-label="Tools and skills used">
+                                    <div class="project-tools-track">
+                                        <span>Python | Pandas | Scikit-learn | Feature Engineering | Loading... | Loading... | Loading...</span>
+                                        <span aria-hidden="true">Loading... | Loading... | Loading... | Loading... | Loading... | Loading... | Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </a>
+                </article>
+            </div>
+        </div>
+        <div class="project-archive" id="projectArchive" hidden aria-label="Project archive">
+            <ol class="project-archive-index" id="projectArchiveIndex" aria-label="Projects"></ol>
+            <article class="project-archive-preview" id="projectArchivePreview" aria-live="polite"></article>
+        </div>
+        <article class="project-rag-feature" id="ragProjectFeature" aria-labelledby="ragProjectTitle">
+            <button class="project-rag-trigger" type="button" data-open-about-assistant aria-controls="aboutChatPanel">
+                <span class="project-rag-status">Source-Grounded</span>
+                <span class="project-rag-content">
+                    <span class="project-rag-title" id="ragProjectTitle">Source-Cited RAG Assistant</span>
+                    <span class="project-rag-copy">A portfolio assistant that searches reviewed public sources, shows validated citations, and renders only approved diagrams. It declines unsupported or private requests rather than inventing an answer.</span>
+                </span>
+                <span class="project-rag-cta">Open Ask About Me <span aria-hidden="true">&#8599;</span></span>
+            </button>
+        </article>
+    </section>
+
+    <section id="contact" class="contact-section content-section" aria-labelledby="contact-heading">
+        <div class="contact-shell">
+            <h3 id="contact-heading" class="contact-heading" data-shadow=".Contact">.Contact</h3>
+            <div class="contact-rule" aria-hidden="true"></div>
+
+            <div class="contact-stage">
+                <div class="contact-primary-action">
+                    <p class="contact-eyebrow">Start a conversation</p>
+                    <p class="contact-question">Open to learning and new opportunities.</p>
+                    <button class="contact-email-action" type="button" data-contact-open>
+                        <span>Email Me</span>
+                        <span class="contact-email-arrow" aria-hidden="true">&#8599;</span>
+                    </button>
+                </div>
+
+                <nav class="contact-social-rail" aria-label="Professional profiles">
+                    <p>Find me online</p>
+                    <a href="https://www.linkedin.com/in/mihir-lakhani-149504327/" target="_blank" rel="noopener">
+                        <img src="{{ url_for('static', filename='images/linkedin-contact.png') }}" alt="">
+                        <span>LinkedIn</span>
+                    </a>
+                    <a href="https://github.com/Mihir-Lakhani" target="_blank" rel="noopener">
+                        <img src="{{ url_for('static', filename='images/github.png') }}" alt="">
+                        <span>GitHub</span>
+                    </a>
+                </nav>
+            </div>
+
+            <div class="contact-footer">
+                <span>work.mihir454@gmail.com</span>
+                <span>Udaipur, Rajasthan</span>
             </div>
         </div>
     </section>
 
-    <div class="section-separator"></div>
-    <section id="contact" class="content-section">
-        <div class="contact-section-box">
-            <div class="contact-para">
-                <h3>Contact</h3>
-                <p>
-                    I’m always open to collaborating on impactful projects, discussing new opportunities, or simply
-                    exchanging ideas around AI, machine learning, and technology for good. Feel free to reach out through
-                    the following channels:
-                </p>
-                <div class="contact-social-icons">
-                    <a href="https://www.linkedin.com/in/mihir-lakhani-149504327/" target="_blank" aria-label="LinkedIn">
-                        <img src="{{ url_for('static', filename='images/lkd.png') }}" alt="LinkedIn">
-                    </a>
-                    <a href="https://github.com/Mihir-Lakhani" target="_blank" aria-label="GitHub">
-                        <img src="{{ url_for('static', filename='images/github.png') }}" alt="GitHub">
-                    </a>
-                </div>
-                <p>
-                    Alternatively, you can fill out the form below, and I’ll get back to you as soon as possible.
-                </p>
-            </div>
-            <div class="contact-form-container">
-                <form class="contact-form" action="https://formspree.io/f/mwpqwkap" method="POST">
-                    <input type="text" name="name" placeholder="Your Name" required>
-                    <input type="email" name="email" placeholder="Your Email" required>
-                    <textarea name="message" rows="4" placeholder="Your Message" required></textarea>
-                    <button type="submit" class="go-btn">Send Message</button>
-                </form>
+    <dialog id="contactDialog" class="contact-dialog" aria-labelledby="contact-dialog-title">
+        <div class="contact-dialog-content">
+            <button class="contact-dialog-close" type="button" data-contact-close aria-label="Close message form">&times;</button>
+            <p class="contact-dialog-eyebrow">Write a message</p>
+            <h4 id="contact-dialog-title">Message Me</h4>
 
-                <div id="form-success" style="display:none;" class="contact-success">
-                    Thank you! Your message has been sent.
+            <form class="contact-form" action="https://formspree.io/f/mwpqwkap" method="POST">
+                <label class="visually-hidden" for="contact-name">Your name</label>
+                <input id="contact-name" type="text" name="name" placeholder="Your Name" required>
+
+                <label class="visually-hidden" for="contact-email">Your email</label>
+                <input id="contact-email" type="email" name="email" placeholder="Your Email" required>
+
+                <label class="visually-hidden" for="contact-message">Your message</label>
+                <textarea id="contact-message" name="message" rows="5" placeholder="Your Message" required></textarea>
+
+                <div class="contact-form-actions">
+                    <button type="submit">Send Message <span aria-hidden="true">&#8599;</span></button>
+                    <p class="contact-form-status" aria-live="polite"></p>
                 </div>
-            </div>
-            <script>
-                document.querySelector('.contact-form').addEventListener('submit', function (e) {
-                    e.preventDefault();
-                    fetch(this.action, {
-                        method: 'POST',
-                        body: new FormData(this),
-                        headers: { 'Accept': 'application/json' }
-                    }).then(response => {
-                        if (response.ok) {
-                            document.getElementById('form-success').style.display = 'block';
-                            this.reset();
-                        }
-                    });
-                });
-            </script>
+            </form>
         </div>
-    </section>
+    </dialog>
 
-    <footer>
-        <p>📱+91 8290367088 &nbsp;&nbsp; 📍 Udaipur, Rajasthan</p>
-    </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11.12.0/dist/mermaid.min.js"></script>
+    <script>
+        window.mermaid?.initialize({ startOnLoad: false, securityLevel: 'strict' });
+    </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 

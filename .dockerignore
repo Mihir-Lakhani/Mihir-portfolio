@@ -1,0 +1,14 @@
+.git
+.github
+.venv
+.env
+instance
+tmp
+analysis
+static/archive
+before carousel roll
+tests
+__pycache__
+*.py[cod]
+*.log
+deployment/.env

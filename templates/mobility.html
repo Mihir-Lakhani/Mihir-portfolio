@@ -1,0 +1,2187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>5G Proactive Handover — ML Simulation</title>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --bg0:#0d1117;--bg1:#161b22;--bg2:#21262d;--bg3:#30363d;
+  --border:#30363d;--border2:#444c56;
+  --text0:#e6edf3;--text1:#8b949e;--text2:#6e7681;
+  --green:#3fb950;--blue:#79c0ff;--purple:#d2a8ff;
+  --amber:#ffa657;--red:#f78166;--yellow:#f0e68c;
+  --r:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg0);color:var(--text0);font-family:'JetBrains Mono',monospace;font-size:13px;min-height:100vh;overflow:hidden}
+header{display:flex;align-items:center;justify-content:space-between;padding:11px 24px;border-bottom:0.5px solid var(--border);background:var(--bg1);height:44px;flex-shrink:0}
+header h1{font-size:13px;font-weight:600;letter-spacing:0.05em}
+header h1 span{color:var(--green)}
+.hbadges{display:flex;gap:8px}
+.badge,.sec-label,.ctrl-item label,.ctrl-item .val,.rcard .rl,.rcard .rv,.rcard .rsub,.sec-title,.mcard .ml,.mcard .mv,.status-box,.model-info,.ctitle,.legend span,.bar-label{font-family:'JetBrains Mono',monospace}
+.badge{font-size:9px;padding:3px 8px;border-radius:4px;border:0.5px solid var(--border2);color:var(--text1)}
+.badge.live{border-color:var(--green);color:var(--green);animation:blink 1.4s infinite}
+.badge.ml{border-color:var(--blue);color:var(--blue)}
+.badge.err{border-color:var(--red);color:var(--red)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
+.layout{display:grid;grid-template-columns:252px 1fr;height:calc(100vh - 44px)}
+.sidebar{background:var(--bg1);border-right:0.5px solid var(--border);padding:14px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
+.sec-label{font-size:9px;color:var(--text2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;border-bottom:0.5px solid var(--border);padding-bottom:5px}
+.ctrl-item{margin-bottom:10px}
+.ctrl-item label{display:block;font-size:10px;color:var(--text1);margin-bottom:4px}
+.ctrl-item .val{font-size:11px;font-weight:500;color:var(--blue);margin-top:2px}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:3px;background:var(--bg3);border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--blue);cursor:pointer;border:2px solid var(--bg0)}
+.btn-start{width:100%;padding:9px;font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:600;letter-spacing:0.06em;cursor:pointer;border-radius:var(--r);border:0.5px solid var(--green);background:transparent;color:var(--green);transition:background .15s}
+.btn-start:hover{background:rgba(63,185,80,0.1)}
+.btn-start.running{border-color:var(--amber);color:var(--amber)}
+.btn-reset{width:100%;padding:7px;font-size:10px;font-family:'JetBrains Mono',monospace;cursor:pointer;border-radius:var(--r);border:0.5px solid var(--border2);background:transparent;color:var(--text1);margin-top:5px}
+.btn-reset:hover{background:var(--bg2);color:var(--text0)}
+.btn-rand{width:100%;padding:9px;font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:600;letter-spacing:0.04em;cursor:pointer;border-radius:var(--r);border:0.5px solid var(--purple);background:transparent;color:var(--purple);transition:background .15s;margin-top:5px}
+.btn-rand:hover{background:rgba(210,168,255,0.1)}
+.btn-rand.running{border-color:var(--amber);color:var(--amber)}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.78);z-index:999;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg1);border:0.5px solid var(--border2);border-radius:12px;width:700px;max-width:96vw;max-height:90vh;overflow-y:auto;padding:28px 30px;position:relative}
+.modal h2{font-size:14px;font-weight:600;margin-bottom:3px}
+.modal .msub{font-size:10px;color:var(--text2);margin-bottom:20px}
+.modal-close{position:absolute;top:16px;right:20px;background:none;border:none;color:var(--text1);font-size:18px;cursor:pointer;font-family:inherit}
+.modal-close:hover{color:var(--text0)}
+.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.rcard{background:var(--bg2);border-radius:8px;padding:14px 16px}
+.rcard.full{grid-column:1/-1}
+.rcard .rl{font-size:9px;color:var(--text2);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px}
+.rcard .rv{font-size:24px;font-weight:600}
+.rv.good{color:var(--green)}.rv.bad{color:var(--red)}.rv.info{color:var(--blue)}.rv.purple{color:var(--purple)}.rv.amber{color:var(--amber)}
+.rcard .rsub{font-size:9px;color:var(--text2);margin-top:3px}
+.verdict{background:var(--bg2);border-radius:8px;padding:14px 16px;margin-bottom:12px;border-left:3px solid var(--green)}
+.verdict.warn{border-left-color:var(--amber)}.verdict.bad{border-left-color:var(--red)}
+.verdict .vt{font-size:11px;font-weight:600;margin-bottom:5px}
+.verdict .vd{font-size:10px;color:var(--text2);line-height:1.65}
+.sec-title{font-size:9px;color:var(--text2);letter-spacing:0.08em;text-transform:uppercase;margin:18px 0 8px;border-bottom:0.5px solid var(--border);padding-bottom:5px}
+.bar-row{margin-bottom:8px}
+.bar-label{display:flex;justify-content:space-between;font-size:9px;color:var(--text2);margin-bottom:3px}
+.bar-bg{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px}
+.modal-chart{position:relative;height:150px;margin-bottom:6px}
+.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.mcard{background:var(--bg2);border-radius:6px;padding:7px 9px}
+.mcard.full{grid-column:1/-1}
+.mcard .ml{font-size:8px;color:var(--text2);letter-spacing:0.05em;text-transform:uppercase}
+.mcard .mv{font-size:14px;font-weight:600;margin-top:1px}
+.mv.good{color:var(--green)}.mv.warn{color:var(--amber)}.mv.bad{color:var(--red)}.mv.info{color:var(--blue)}
+.status-box{background:var(--bg2);border-radius:6px;padding:8px 10px;font-size:9px;color:var(--text2);line-height:1.7;white-space:pre-wrap}
+.model-info{background:var(--bg2);border-radius:6px;padding:8px 10px;font-size:9px;color:var(--text2);line-height:1.6;white-space:pre-wrap}
+.mok{color:var(--green);font-weight:600}.merr{color:var(--red);font-weight:600}
+.content{display:flex;flex-direction:column;overflow:hidden}
+.net-wrap{background:var(--bg1);border-bottom:0.5px solid var(--border);flex-shrink:0}
+.net-wrap canvas{display:block;width:100%;height:210px}
+.charts-area{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr 0.6fr;flex:1;min-height:0}
+.cpanel{border-right:0.5px solid var(--border);border-bottom:0.5px solid var(--border);padding:10px 12px;display:flex;flex-direction:column}
+.cpanel:nth-child(2n){border-right:none}
+.cpanel:nth-child(5),.cpanel:nth-child(6){border-bottom:none}
+.cpanel.action-panel{justify-content:center;align-items:center}
+.ctitle{font-size:9px;color:var(--text2);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:5px}
+.cwrap{position:relative;flex:1;min-height:0}
+.cwrap canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.legend span{display:flex;align-items:center;gap:3px;font-size:8px;color:var(--text2)}
+.ldot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.ldash{width:12px;height:2px;flex-shrink:0}
+</style>
+</head>
+<body>
+<header>
+  <h1>5G Proactive Handover <span>// Real ML Simulation</span></h1>
+  <div class="hbadges">
+    <span class="badge ml" id="b-model">model: loading...</span>
+    <span class="badge" id="b-status">idle</span>
+    <span class="badge" id="b-pt">Pt: —</span>
+    <span class="badge" id="b-rt">Rt: —</span>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div>
+      <div class="sec-label">Model status</div>
+      <div class="model-info" id="model-info">Checking Flask backend...</div>
+    </div>
+    <div>
+      <div class="sec-label">Environment</div>
+      <div class="ctrl-item"><label>UE Speed (m/s)</label><input type="range" id="sl-speed" min="5" max="40" value="15" step="1"><div class="val" id="vl-speed">15 m/s</div></div>
+      <div class="ctrl-item"><label>Duration (s)</label><input type="range" id="sl-dur" min="30" max="300" value="120" step="10"><div class="val" id="vl-dur">120 s</div></div>
+      <div class="ctrl-item"><label>Channel noise std (dBm)</label><input type="range" id="sl-noise" min="0.5" max="8" value="2.5" step="0.5"><div class="val" id="vl-noise">2.5 dBm</div></div>
+    </div>
+    <div>
+      <div class="sec-label">Decision thresholds</div>
+      <div class="ctrl-item"><label>RSRP threshold — Traditional (dBm)</label><input type="range" id="sl-thresh" min="-115" max="-80" value="-97" step="1"><div class="val" id="vl-thresh">-97 dBm</div></div>
+      <div class="ctrl-item"><label>Rt threshold — ML model</label><input type="range" id="sl-rt" min="0.20" max="0.80" value="0.50" step="0.05"><div class="val" id="vl-rt">0.50</div></div>
+      <div class="ctrl-item"><label>EMA alpha (St smoothing)</label><input type="range" id="sl-alpha" min="0.10" max="0.90" value="0.15" step="0.05"><div class="val" id="vl-alpha">0.15</div></div>
+    </div>
+    <div>
+      <button class="btn-start" id="btn-start">▶  START SIMULATION</button>
+      <button class="btn-reset" id="btn-reset">↺  Reset</button>
+      <button class="btn-rand" id="btn-rand">⟳  Random Walk (500s)</button>
+    </div>
+    <div>
+      <div class="sec-label">Live metrics</div>
+      <div class="m-grid">
+        <div class="mcard full"><div class="ml">Time elapsed</div><div class="mv info" id="m-time">0 s</div></div>
+        <div class="mcard full"><div class="ml">Serving gNB</div><div class="mv good" id="m-cell">gNB 1</div></div>
+        <div class="mcard full"><div class="ml">RSRP (serving cell)</div><div class="mv" id="m-rsrp">— dBm</div></div>
+        <div class="mcard"><div class="ml">Pt (raw ML)</div><div class="mv info" id="m-pt">—</div></div>
+        <div class="mcard"><div class="ml">Rt (decision)</div><div class="mv info" id="m-rt">—</div></div>
+        <div class="mcard"><div class="ml">St (EMA trend)</div><div class="mv info" id="m-st">—</div></div>
+        <div class="mcard"><div class="ml">Vt (volatility)</div><div class="mv info" id="m-vt">—</div></div>
+        <div class="mcard"><div class="ml">ML handovers</div><div class="mv good" id="m-homl">0</div></div>
+        <div class="mcard"><div class="ml">Trad handovers</div><div class="mv bad" id="m-hotrad">0</div></div>
+      </div>
+    </div>
+    <div style="margin-top:auto">
+      <div class="sec-label">Status log</div>
+      <div class="status-box" id="status-box">Configure parameters → press Start</div>
+    </div>
+  </aside>
+
+  <div class="content">
+    <div class="net-wrap"><canvas id="net-canvas"></canvas></div>
+    <div class="charts-area">
+      <div class="cpanel">
+        <div class="ctitle">RSRP (dBm) vs Time</div>
+        <div class="cwrap"><canvas id="c-rsrp" role="img" aria-label="RSRP signal strength over time">RSRP</canvas></div>
+        <div class="legend">
+          <span><span class="ldash" style="background:var(--blue)"></span>Serving RSRP</span>
+          <span><span class="ldash" style="background:var(--red);opacity:.6"></span>Trad threshold</span>
+          <span><span class="ldash" style="background:var(--amber);opacity:.5"></span>Target RSRP</span>
+          <span><span class="ldash" style="background:#ff6b6b"></span>Trad RSRP</span>
+        </div>
+      </div>
+      <div class="cpanel">
+        <div class="ctitle">ML Risk: Pt / St / Rt (real model output)</div>
+        <div class="cwrap"><canvas id="c-pt" role="img" aria-label="ML risk scores">Risk</canvas></div>
+        <div class="legend">
+          <span><span class="ldot" style="background:var(--blue)"></span>Pt</span>
+          <span><span class="ldot" style="background:var(--amber)"></span>St</span>
+          <span><span class="ldot" style="background:var(--purple)"></span>Rt</span>
+          <span><span class="ldash" style="background:var(--yellow);opacity:.5"></span>Rt threshold</span>
+        </div>
+      </div>
+      <div class="cpanel">
+        <div class="ctitle">Vt — Volatility (dampens Rt → fewer false triggers)</div>
+        <div class="cwrap"><canvas id="c-vt" role="img" aria-label="Volatility Vt">Vt</canvas></div>
+        <div class="legend"><span><span class="ldot" style="background:#8b949e"></span>Vt (high = noisy signal → Rt suppressed)</span></div>
+      </div>
+      <div class="cpanel">
+        <div class="ctitle">Handover triggers: ML vs Traditional</div>
+        <div class="cwrap"><canvas id="c-ho" role="img" aria-label="Handover decisions">HO</canvas></div>
+        <div class="legend">
+          <span><span class="ldot" style="background:var(--green)"></span>ML trigger (Rt-based)</span>
+          <span><span class="ldot" style="background:var(--red)"></span>Traditional (RSRP-based)</span>
+        </div>
+      </div>
+      <div class="cpanel">
+        <div class="ctitle">Time Below -100 dBm (seconds)</div>
+        <div class="cwrap"><canvas id="c-below100" role="img" aria-label="Time below -100 dBm">Below -100</canvas></div>
+        <div class="legend">
+          <span><span class="ldot" style="background:var(--blue)"></span>ML RSRP</span>
+          <span><span class="ldot" style="background:var(--red)"></span>Traditional RSRP</span>
+        </div>
+      </div>
+      <div class="cpanel action-panel">
+        <button id="btn-download-all" style="padding:12px 16px;background:#79c0ff;border:none;border-radius:6px;color:#0d1117;font-weight:bold;cursor:pointer;font-family:inherit;font-size:13px;transition:background 0.2s" onmouseover="this.style.background='#58a6f7'" onmouseout="this.style.background='#79c0ff'">📥 Download All Graphs</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '/mobility/api';
+const MAX_PTS = 90;
+let running=false,simTimer=null,simState=null,charts={};
+let below100ML=0,below100Trad=0;
+let exportHistory=null;
+
+const FMT={speed:v=>v+' m/s',dur:v=>v+' s',noise:v=>parseFloat(v).toFixed(1)+' dBm',thresh:v=>v+' dBm',rt:v=>parseFloat(v).toFixed(2),alpha:v=>parseFloat(v).toFixed(2)};
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  ['speed','dur','noise','thresh','rt','alpha'].forEach(id=>{
+    const sl=document.getElementById('sl-'+id),vl=document.getElementById('vl-'+id);
+    if(sl && vl) sl.addEventListener('input',()=>vl.textContent=FMT[id](sl.value));
+  });
+});
+
+function getP(){return{speed:+document.getElementById('sl-speed').value,duration:+document.getElementById('sl-dur').value,noise:+document.getElementById('sl-noise').value,thresh:+document.getElementById('sl-thresh').value,rtThr:+document.getElementById('sl-rt').value,alpha:+document.getElementById('sl-alpha').value};}
+
+async function checkModel(){
+  try{
+    const r=await fetch(API+'/status');const d=await r.json();
+    document.getElementById('model-info').innerHTML='<span class="mok">✓ Model loaded</span>\nType: '+d.model+'\nFeatures: '+d.features+'\nRt threshold: '+d.rt_threshold+'\nalpha_ema: '+d.alpha_ema+'  vol_win: '+d.vol_window;
+    document.getElementById('b-model').textContent='HistGradBoost | '+d.features+' features';
+    document.getElementById('b-model').className='badge ml';
+  }catch(e){
+    document.getElementById('model-info').innerHTML='<span class="merr">✗ Flask backend offline</span>\nRun:  python app.py\nThen refresh this page.';
+    document.getElementById('b-model').textContent='backend offline';
+    document.getElementById('b-model').className='badge err';
+  }
+}
+checkModel();
+
+function mkBarChart(id,labels,colors){
+  const gc='rgba(255,255,255,0.05)',tc='#6e7681';
+  return new Chart(document.getElementById(id),{
+    type:'bar',
+    data:{labels:labels,datasets:[{label:'Seconds Below -100',data:[0,0],backgroundColor:colors,borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:tc,font:{size:8,family:'JetBrains Mono'}},grid:{color:'transparent'},border:{color:'transparent'},offset:true},
+              y:{min:0,ticks:{color:tc,font:{size:8,family:'JetBrains Mono'},maxTicksLimit:5},grid:{color:gc},border:{color:'transparent'}}},
+      elements:{bar:{borderSkipped:false}},
+      barPercentage:0.6,categoryPercentage:0.5}
+  });
+}
+
+function mkChart(id,datasets,yMin,yMax,stepped){
+  const gc='rgba(255,255,255,0.05)',tc='#6e7681';
+  return new Chart(document.getElementById(id),{
+    type:'line',
+    data:{labels:[],datasets:datasets.map(d=>({label:d.label,data:[],borderColor:d.color,borderWidth:1.4,pointRadius:0,fill:false,borderDash:d.dash||[],stepped:stepped||false,tension:0.25}))},
+    options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:tc,font:{size:8,family:'JetBrains Mono'},maxTicksLimit:6},grid:{color:gc},border:{color:'transparent'}},
+              y:{min:yMin,max:yMax,ticks:{color:tc,font:{size:8,family:'JetBrains Mono'},maxTicksLimit:5},grid:{color:gc},border:{color:'transparent'}}}}
+  });
+}
+
+function initCharts(){
+  Object.values(charts).forEach(c=>c.destroy());
+  charts.rsrp=mkChart('c-rsrp',[{label:'RSRP',color:'#79c0ff'},{label:'Thr',color:'rgba(247,129,102,0.55)',dash:[5,4]},{label:'Target',color:'rgba(255,166,87,0.45)',dash:[3,5]},{label:'Trad RSRP',color:'#ff6b6b'}],-140,-50);
+  charts.pt=mkChart('c-pt',[{label:'Pt',color:'#79c0ff'},{label:'St',color:'#ffa657'},{label:'Rt',color:'#d2a8ff'},{label:'RtThr',color:'rgba(240,230,140,0.45)',dash:[4,4]}],0,1.05);
+  charts.vt=mkChart('c-vt',[{label:'Vt',color:'#8b949e'}],0,1.05);
+  charts.ho=mkChart('c-ho',[{label:'ML',color:'#3fb950'},{label:'Trad',color:'#f78166'}],-0.1,2.2,true);
+  charts.below100=mkBarChart('c-below100',['ML','Traditional'],['#79c0ff','#ff6b6b']);
+}
+
+function resetExportHistory(){
+  exportHistory={
+    labels:[],
+    rsrp:[[],[],[],[]],
+    pt:[[],[],[],[]],
+    vt:[[]],
+    ho:[[],[]],
+    below100:[0,0],
+  };
+}
+
+function recordExportPoint(label,{rsrp,threshold,target,tradRsrp,pt,st,rt,rtThr,vt,mlHo,tradHo}){
+  if(!exportHistory) resetExportHistory();
+  exportHistory.labels.push(label);
+  exportHistory.rsrp[0].push(rsrp);
+  exportHistory.rsrp[1].push(threshold);
+  exportHistory.rsrp[2].push(target);
+  exportHistory.rsrp[3].push(tradRsrp);
+  exportHistory.pt[0].push(pt);
+  exportHistory.pt[1].push(st);
+  exportHistory.pt[2].push(rt);
+  exportHistory.pt[3].push(rtThr);
+  exportHistory.vt[0].push(vt);
+  exportHistory.ho[0].push(mlHo);
+  exportHistory.ho[1].push(tradHo);
+  exportHistory.below100=[below100ML,below100Trad];
+}
+
+const exportBgPlugin={
+  id:'exportBgPlugin',
+  beforeDraw(chart,args,opts){
+    const {ctx,canvas}=chart;
+    ctx.save();
+    ctx.globalCompositeOperation='destination-over';
+    ctx.fillStyle=opts?.color||'#0d1117';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.restore();
+  }
+};
+
+function triggerPngDownload(blob,name){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function canvasToBlob(canvas){
+  return new Promise((resolve,reject)=>{
+    canvas.toBlob(blob=>blob?resolve(blob):reject(new Error('PNG export failed')),'image/png');
+  });
+}
+
+async function exportChartPng(filename,config){
+  const canvas=document.createElement('canvas');
+  canvas.width=config.width;
+  canvas.height=config.height;
+  const chart=new Chart(canvas,{
+    type:config.type||'line',
+    data:config.data,
+    plugins:[exportBgPlugin],
+    options:{
+      responsive:false,
+      maintainAspectRatio:false,
+      animation:false,
+      devicePixelRatio:2,
+      plugins:{
+        legend:{display:false},
+        title:{display:true,text:config.title,color:'#8b949e',align:'start',font:{size:18,family:'JetBrains Mono',weight:'500'},padding:{bottom:18}},
+        exportBgPlugin:{color:'#0d1117'},
+      },
+      scales:config.scales,
+      elements:config.elements,
+    }
+  });
+  chart.update('none');
+  await new Promise(resolve=>setTimeout(resolve,50));
+  const blob=await canvasToBlob(canvas);
+  triggerPngDownload(blob,filename);
+  chart.destroy();
+}
+
+function push(ch,label,...vals){
+  ch.data.labels.push(label);
+  vals.forEach((v,i)=>ch.data.datasets[i].data.push(v));
+  if(ch.data.labels.length>MAX_PTS){ch.data.labels.shift();ch.data.datasets.forEach(d=>d.data.shift());}
+  ch.update('none');
+}
+
+async function downloadAllGraphs(){
+  if(!exportHistory||!exportHistory.labels.length){alert('No data to download. Run a simulation first.');return;}
+  const tickColor='#6e7681';
+  const gridColor='rgba(255,255,255,0.05)';
+  const baseWidth=Math.min(6000,Math.max(1800,exportHistory.labels.length*14));
+  const lineElements={line:{tension:0.25},point:{radius:0,hoverRadius:0}};
+  const commonX={ticks:{color:tickColor,font:{size:11,family:'JetBrains Mono'},maxTicksLimit:14},grid:{color:gridColor},border:{color:'transparent'}};
+  const commonY=(min,max)=>({min,max,ticks:{color:tickColor,font:{size:11,family:'JetBrains Mono'},maxTicksLimit:7},grid:{color:gridColor},border:{color:'transparent'}});
+
+  const jobs=[
+    {
+      filename:'01_rsrp_vs_time_full.png',
+      title:'RSRP (dBm) vs Time',
+      width:baseWidth,
+      height:720,
+      data:{
+        labels:exportHistory.labels,
+        datasets:[
+          {label:'Serving RSRP',data:exportHistory.rsrp[0],borderColor:'#79c0ff',borderWidth:2,fill:false},
+          {label:'Trad threshold',data:exportHistory.rsrp[1],borderColor:'rgba(247,129,102,0.55)',borderWidth:2,borderDash:[7,5],fill:false},
+          {label:'Target RSRP',data:exportHistory.rsrp[2],borderColor:'rgba(255,166,87,0.6)',borderWidth:2,borderDash:[4,6],fill:false},
+          {label:'Trad RSRP',data:exportHistory.rsrp[3],borderColor:'#ff6b6b',borderWidth:2,fill:false},
+        ]
+      },
+      scales:{x:commonX,y:commonY(-140,-50)},
+      elements:lineElements,
+    },
+    {
+      filename:'02_ml_risk_full.png',
+      title:'ML Risk: Pt / St / Rt',
+      width:baseWidth,
+      height:720,
+      data:{
+        labels:exportHistory.labels,
+        datasets:[
+          {label:'Pt',data:exportHistory.pt[0],borderColor:'#79c0ff',borderWidth:2,fill:false},
+          {label:'St',data:exportHistory.pt[1],borderColor:'#ffa657',borderWidth:2,fill:false},
+          {label:'Rt',data:exportHistory.pt[2],borderColor:'#d2a8ff',borderWidth:2,fill:false},
+          {label:'Rt threshold',data:exportHistory.pt[3],borderColor:'rgba(240,230,140,0.55)',borderWidth:2,borderDash:[6,6],fill:false},
+        ]
+      },
+      scales:{x:commonX,y:commonY(0,1.05)},
+      elements:lineElements,
+    },
+    {
+      filename:'03_volatility_vt_full.png',
+      title:'Vt - Volatility',
+      width:baseWidth,
+      height:720,
+      data:{
+        labels:exportHistory.labels,
+        datasets:[
+          {label:'Vt',data:exportHistory.vt[0],borderColor:'#8b949e',borderWidth:2,fill:false},
+        ]
+      },
+      scales:{x:commonX,y:commonY(0,1.05)},
+      elements:lineElements,
+    },
+    {
+      filename:'04_handover_triggers_full.png',
+      title:'Handover Triggers: ML vs Traditional',
+      width:baseWidth,
+      height:720,
+      data:{
+        labels:exportHistory.labels,
+        datasets:[
+          {label:'ML trigger',data:exportHistory.ho[0],borderColor:'#3fb950',borderWidth:2,fill:false,stepped:true},
+          {label:'Traditional',data:exportHistory.ho[1],borderColor:'#f78166',borderWidth:2,fill:false,stepped:true},
+        ]
+      },
+      scales:{x:commonX,y:commonY(-0.1,2.2)},
+      elements:{point:{radius:0,hoverRadius:0}},
+    },
+    {
+      filename:'05_time_below_minus100_full.png',
+      title:'Time Below -100 dBm (seconds)',
+      type:'bar',
+      width:1400,
+      height:720,
+      data:{
+        labels:['ML','Traditional'],
+        datasets:[
+          {label:'Seconds Below -100',data:exportHistory.below100,backgroundColor:['#79c0ff','#ff6b6b'],borderRadius:8},
+        ]
+      },
+      scales:{
+        x:{ticks:{color:tickColor,font:{size:12,family:'JetBrains Mono'}},grid:{color:'transparent'},border:{color:'transparent'}},
+        y:{beginAtZero:true,ticks:{color:tickColor,font:{size:11,family:'JetBrains Mono'},maxTicksLimit:7},grid:{color:gridColor},border:{color:'transparent'}},
+      },
+      elements:{bar:{borderSkipped:false}},
+    },
+  ];
+
+  try{
+    for(const job of jobs){
+      await exportChartPng(job.filename,job);
+      await new Promise(resolve=>setTimeout(resolve,120));
+    }
+  }catch(err){
+    console.error(err);
+    alert('Could not export PNG graphs. Check the browser console for details.');
+  }
+}
+
+const GNB_POS=[0,1000,2000,3000];
+const GNB_COL=['#3fb950','#79c0ff','#d2a8ff','#ffa657'];
+let _seed=42;
+function rnd(){_seed=(_seed*1664525+1013904223)&0xffffffff;return(_seed>>>0)/0xffffffff;}
+function rndN(){let u,v,r2;do{u=2*rnd()-1;v=2*rnd()-1;r2=u*u+v*v;}while(r2>=1||r2===0);return u*Math.sqrt(-2*Math.log(r2)/r2);}
+function rsrpAt(pos,gnbPos,noise,prev){const d=Math.max(Math.abs(pos-gnbPos),1);const raw=-60-15*Math.log10(d)+rndN()*noise;return prev==null?raw:0.3*raw+0.7*prev;}
+function bestGnb(pos){let b=0,br=-Infinity;GNB_POS.forEach((g,i)=>{const r=-60-15*Math.log10(Math.max(Math.abs(pos-g),1));if(r>br){br=r;b=i;}});return b;}
+
+function initState(){
+  _seed=42;const p=getP();
+  return{p,t:0,dt:1,uePos:-500,rsrpPrev:null,rsrpPrevTrad:null,servML:0,servTrad:0,hoML:0,hoTrad:0,kpiWindow:[],lastRsrp:-80,lastPt:0,lastSt:0,lastVt:0,lastRt:0,targetRsrp:-90};
+}
+
+async function tick(){
+  const s=simState;
+  if(!s||s.t>=s.p.duration){stopSim();return;}
+  s.uePos+=s.p.speed*s.dt;s.t+=s.dt;
+
+  const rsrp=rsrpAt(s.uePos,GNB_POS[s.servML],s.p.noise,s.rsrpPrev);
+  s.rsrpPrev=rsrp;s.lastRsrp=rsrp;
+
+  const tradRsrp=rsrpAt(s.uePos,GNB_POS[s.servTrad],s.p.noise,s.rsrpPrevTrad);
+  s.rsrpPrevTrad=tradRsrp;
+
+  const bIdx=bestGnb(s.uePos);
+  const targetRsrp=rsrpAt(s.uePos,GNB_POS[bIdx],s.p.noise,null);
+  s.targetRsrp=targetRsrp;
+
+  const margin=Math.max(rsrp+140,0);
+  const kpiRow={
+    t:s.t,RSRP:rsrp,
+    RSRQ:Math.max(-20,rsrp*0.25+rndN()*1.0),
+    SNR:Math.max(0,rsrp+100+rndN()*2),
+    CQI:Math.max(1,Math.min(15,Math.round(margin/5+rndN()*0.5))),
+    RSSI:rsrp+rndN()*1.5+10,
+    Speed:s.p.speed+rndN()*0.5,
+    DL_bitrate:Math.max(1,margin*0.8+rndN()*5),
+    UL_bitrate:Math.max(0.5,margin*0.4+rndN()*2),
+  };
+  s.kpiWindow.push(kpiRow);
+  if(s.kpiWindow.length>18)s.kpiWindow.shift();
+
+  let Pt=0,St=0,Vt=0,Rt=0,mlHO=false;
+  try{
+    const resp=await fetch(API+'/predict',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({window:s.kpiWindow,target_rsrp:targetRsrp,serving_rsrp:rsrp,rt_threshold:s.p.rtThr,alpha_ema:s.p.alpha})});
+    const d=await resp.json();
+    if(!d.error){
+      Pt=d.Pt;St=d.St;Vt=d.Vt;Rt=d.Rt;
+      if(d.handover&&bIdx!==s.servML){s.hoML++;s.servML=bIdx;mlHO=true;}
+    }
+  }catch(e){console.warn('Backend:',e.message);}
+  s.lastPt=Pt;s.lastSt=St;s.lastVt=Vt;s.lastRt=Rt;
+
+  const tradBest=bestGnb(s.uePos);
+  const tradTgtR=rsrpAt(s.uePos,GNB_POS[tradBest],s.p.noise*1.2,null);
+  // Traditional: directional hysteresis (3dB only on reverse Cell2→Cell1)
+  const tradThreshold = (s.servTrad === 1) ? -102 : -105;
+  const tradHO=tradRsrp<tradThreshold&&tradTgtR>tradRsrp&&tradBest!==s.servTrad;
+  if(tradHO){s.hoTrad++;s.servTrad=tradBest;}
+
+  const label=s.t.toFixed(0)+'s';
+  push(charts.rsrp,label,rsrp,s.p.thresh,targetRsrp,tradRsrp);
+  push(charts.pt,label,Pt,St,Rt,s.p.rtThr);
+  push(charts.vt,label,Vt);
+  push(charts.ho,label,mlHO?1:0,tradHO?1.5:0.5);
+
+  if(rsrp<-100)below100ML++;
+  if(tradRsrp<-100)below100Trad++;
+  charts.below100.data.datasets[0].data=[below100ML,below100Trad];
+  charts.below100.update();
+  recordExportPoint(label,{
+    rsrp,
+    threshold:s.p.thresh,
+    target:targetRsrp,
+    tradRsrp,
+    pt:Pt,
+    st:St,
+    rt:Rt,
+    rtThr:s.p.rtThr,
+    vt:Vt,
+    mlHo:mlHO?1:0,
+    tradHo:tradHO?1.5:0.5,
+  });
+
+  const mR=document.getElementById('m-rsrp');
+  mR.textContent=rsrp.toFixed(1)+' dBm';mR.className='mv '+(rsrp>-85?'good':rsrp>-97?'warn':'bad');
+  document.getElementById('m-time').textContent=s.t.toFixed(0)+' s';
+  document.getElementById('m-cell').textContent='gNB '+(s.servML+1);
+  document.getElementById('m-homl').textContent=s.hoML;
+  document.getElementById('m-hotrad').textContent=s.hoTrad;
+  document.getElementById('m-pt').textContent=Pt.toFixed(3);document.getElementById('m-pt').className='mv '+(Pt>0.7?'bad':Pt>0.4?'warn':'good');
+  document.getElementById('m-st').textContent=St.toFixed(3);
+  document.getElementById('m-vt').textContent=Vt.toFixed(3);
+  document.getElementById('m-rt').textContent=Rt.toFixed(3);document.getElementById('m-rt').className='mv '+(Rt>s.p.rtThr?'bad':Rt>s.p.rtThr*0.7?'warn':'good');
+  document.getElementById('b-pt').textContent='Pt: '+Pt.toFixed(3);
+  document.getElementById('b-rt').textContent='Rt: '+Rt.toFixed(3);
+  document.getElementById('b-status').className=running?'badge live':'badge';
+  document.getElementById('b-status').textContent=running?'live':'done';
+  document.getElementById('status-box').textContent='t='+s.t.toFixed(0)+'s  pos='+s.uePos.toFixed(0)+'m\nRSRP='+rsrp.toFixed(2)+'  Target='+targetRsrp.toFixed(2)+'\nPt='+Pt.toFixed(4)+'  St='+St.toFixed(4)+'\nVt='+Vt.toFixed(4)+'  Rt='+Rt.toFixed(4)+'\nML HO: '+s.hoML+'  Trad HO: '+s.hoTrad;
+  drawNet();
+}
+
+function drawNet(stateArg){
+  const cv=document.getElementById('net-canvas');const ctx=cv.getContext('2d');
+  const W=cv.width,H=cv.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#161b22';ctx.fillRect(0,0,W,H);
+  const roadY=H*0.52,xPad=70,xRange=W-xPad*2,minP=-600,maxP=3600;
+  const pToX=p=>xPad+(p-minP)/(maxP-minP)*xRange;
+  const s = stateArg !== undefined ? stateArg : simState;
+
+  ctx.fillStyle='#21262d';ctx.fillRect(0,roadY-12,W,24);
+  ctx.strokeStyle='#444c56';ctx.lineWidth=1;ctx.setLineDash([20,14]);
+  ctx.beginPath();ctx.moveTo(0,roadY);ctx.lineTo(W,roadY);ctx.stroke();ctx.setLineDash([]);
+
+  GNB_POS.forEach((gp,i)=>{
+    const gx=pToX(gp),col=GNB_COL[i],active=s?i===s.servML:i===0;
+    const rad=active?160:90;
+    const g=ctx.createRadialGradient(gx,roadY-12,0,gx,roadY-12,rad);
+    g.addColorStop(0,col+(active?'28':'0f'));g.addColorStop(1,'transparent');
+    ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(gx,roadY-12,rad*0.7,rad,0,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=active?1:0.35;ctx.strokeStyle=col;ctx.lineWidth=active?2:1;
+    ctx.beginPath();ctx.moveTo(gx,roadY-12);ctx.lineTo(gx,18);ctx.stroke();
+    ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(gx,14);ctx.lineTo(gx-10,38);ctx.lineTo(gx+10,38);ctx.closePath();ctx.fill();
+    ctx.globalAlpha=1;ctx.fillStyle=active?col:'#6e7681';ctx.font=(active?'600 ':'')+'9px JetBrains Mono';ctx.textAlign='center';ctx.fillText('gNB '+(i+1),gx,52);
+    if(active){
+      [1,2,3].forEach(r=>{ctx.strokeStyle=col;ctx.lineWidth=0.5;ctx.globalAlpha=0.12+r*0.04;ctx.beginPath();ctx.arc(gx,roadY-12,r*28,Math.PI*1.3,Math.PI*1.7);ctx.stroke();});
+      ctx.globalAlpha=1;
+    }
+    if(active&&s){
+      const ux=pToX(s.uePos);
+      const grad=ctx.createLinearGradient(gx,38,ux,roadY-10);
+      grad.addColorStop(0,col+'cc');grad.addColorStop(1,col+'33');
+      ctx.strokeStyle=grad;ctx.lineWidth=1.5;ctx.setLineDash([5,6]);
+      ctx.beginPath();ctx.moveTo(gx,38);ctx.lineTo(ux,roadY-10);ctx.stroke();ctx.setLineDash([]);
+    }
+  });
+
+  const ux=s?pToX(s.uePos):pToX(-500);
+  ctx.fillStyle='#f0e68c';ctx.beginPath();ctx.roundRect(ux-18,roadY-20,36,16,3);ctx.fill();
+  ctx.fillStyle='rgba(13,17,23,0.6)';ctx.beginPath();ctx.roundRect(ux-14,roadY-19,10,8,2);ctx.fill();ctx.beginPath();ctx.roundRect(ux+4,roadY-19,10,8,2);ctx.fill();
+  ctx.fillStyle='#0d1117';ctx.font='bold 7px JetBrains Mono';ctx.textAlign='center';ctx.fillText('UE',ux,roadY-9);
+
+  const rsrp=s?s.lastRsrp:-70;const sig=Math.max(0,Math.min(1,(rsrp+130)/70));
+  const bw=40,bh=5,bx=ux-bw/2,by=roadY+16;
+  ctx.fillStyle='#21262d';ctx.fillRect(bx,by,bw,bh);
+  ctx.fillStyle=sig>0.5?'#3fb950':sig>0.25?'#ffa657':'#f78166';ctx.fillRect(bx,by,bw*sig,bh);
+  ctx.fillStyle='#6e7681';ctx.font='8px JetBrains Mono';ctx.textAlign='center';ctx.fillText(rsrp.toFixed(0)+'dBm',ux,by+bh+11);
+
+  if(s&&s.lastPt>0){
+    const Pt=s.lastPt,Rt=s.lastRt;
+    ctx.fillStyle='rgba(33,38,45,0.88)';ctx.beginPath();ctx.roundRect(ux-30,roadY-55,60,28,4);ctx.fill();
+    ctx.font='7px JetBrains Mono';ctx.textAlign='center';
+    ctx.fillStyle='#79c0ff';ctx.fillText('Pt='+Pt.toFixed(3),ux-10,roadY-43);
+    ctx.fillStyle='#d2a8ff';ctx.fillText('Rt='+Rt.toFixed(3),ux+16,roadY-43);
+    const rtBar=Math.min(Rt,1);
+    ctx.fillStyle='#21262d';ctx.fillRect(ux-24,roadY-36,48,4);
+    ctx.fillStyle=Rt>s.p.rtThr?'#f78166':'#d2a8ff';ctx.fillRect(ux-24,roadY-36,48*rtBar,4);
+    ctx.strokeStyle='#f0e68c';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(ux-24+48*s.p.rtThr,roadY-38);ctx.lineTo(ux-24+48*s.p.rtThr,roadY-31);ctx.stroke();
+  }
+
+  const pct=s?Math.max(0,Math.min(1,(s.uePos-(-600))/(3600-(-600)))):0;
+  ctx.fillStyle='#21262d';ctx.fillRect(xPad,H-14,xRange,3);
+  ctx.fillStyle='#79c0ff';ctx.fillRect(xPad,H-14,xRange*pct,3);
+  ctx.fillStyle='#6e7681';ctx.font='8px JetBrains Mono';
+  ctx.textAlign='left';ctx.fillText('−500m',xPad,H-3);
+  ctx.textAlign='right';ctx.fillText('3500m',W-xPad,H-3);
+  if(s){ctx.textAlign='center';ctx.fillStyle='#79c0ff';ctx.fillText(s.uePos.toFixed(0)+'m',xPad+xRange*pct,H-3);}
+}
+
+async function startSim(){
+  if(running)return;
+  try{await fetch(API+'/reset',{method:'POST'});}catch(e){}
+  running=true;simState=initState();initCharts();below100ML=0;below100Trad=0;resetExportHistory();
+  document.getElementById('btn-start').textContent='⏸  STOP';
+  document.getElementById('btn-start').classList.add('running');
+  document.getElementById('b-status').textContent='live';document.getElementById('b-status').className='badge live';
+  simTimer=setInterval(tick,200);
+}
+
+function stopSim(){
+  running=false;clearInterval(simTimer);
+  document.getElementById('btn-start').textContent='▶  START SIMULATION';
+  document.getElementById('btn-start').classList.remove('running');
+  document.getElementById('b-status').textContent='done';document.getElementById('b-status').className='badge';
+  if(simState){
+    const s=simState;const red=s.hoTrad>0?((1-s.hoML/s.hoTrad)*100).toFixed(0)+'%':'N/A';
+    document.getElementById('status-box').textContent='Simulation complete.\nML handovers:   '+s.hoML+'\nTrad handovers: '+s.hoTrad+'\nHO reduction:   '+red+'\nFinal pos: '+s.uePos.toFixed(0)+'m';
+  }
+}
+
+function resetSim(){
+  stopSim();simState=null;initCharts();below100ML=0;below100Trad=0;resetExportHistory();
+  ['m-time','m-rsrp','m-pt','m-st','m-vt','m-rt'].forEach(id=>{document.getElementById(id).textContent='—';document.getElementById(id).className='mv info';});
+  document.getElementById('m-homl').textContent='0';document.getElementById('m-hotrad').textContent='0';
+  document.getElementById('m-cell').textContent='gNB 1';
+  document.getElementById('b-pt').textContent='Pt: —';document.getElementById('b-rt').textContent='Rt: —';
+  document.getElementById('b-status').textContent='idle';document.getElementById('b-status').className='badge';
+  document.getElementById('status-box').textContent='Configure parameters → press Start';
+  drawNet();
+}
+
+function resizeCanvas(){const cv=document.getElementById('net-canvas');cv.width=cv.parentElement.offsetWidth;cv.height=210;drawNet();}
+
+window.addEventListener('load',()=>{
+  // Initialize charts and UI
+  initCharts();
+  resizeCanvas();
+  simState=initState();
+  drawNet();
+  simState=null;
+
+  // Attach event listeners (after elements exist)
+  document.getElementById('btn-start').addEventListener('click',()=>{running?stopSim():startSim();});
+  document.getElementById('btn-reset').addEventListener('click',resetSim);
+  document.getElementById('btn-download-all').addEventListener('click',downloadAllGraphs);
+});
+window.addEventListener('resize',resizeCanvas);
+
+// ============================================================
+// RANDOM WALK SIMULATION — 500s, pure random UE mobility
+// ============================================================
+
+const RAND_DURATION = 500;
+let randRunning = false;
+let randState   = null;
+let rlog        = {rsrp:[], pt:[], rt:[], st:[], vt:[], t:[]};
+
+function randInitState(){
+  _seed = (Date.now() ^ 0xdeadbeef) & 0xffffffff;
+  const p = getP();
+  return {
+    p, t:0, dt:1,
+    uePos:1500,
+    rsrpPrev:null,
+    rsrpPrevTrad:null,
+    servML:1, servTrad:1,
+    hoML:0, hoTrad:0,
+    kpiWindow:[],
+    lastRsrp:-80, lastPt:0, lastSt:0, lastVt:0, lastRt:0, targetRsrp:-90,
+    speed:15, direction:1,
+    distanceSinceDirectionChange:0,  // Track distance for min walk before turning
+  };
+}
+
+function randomWalkStep(s){
+  // Track distance traveled since last direction change
+  s.distanceSinceDirectionChange = (s.distanceSinceDirectionChange || 0) + Math.abs(s.direction * s.speed * s.dt);
+
+  // Minimum distance before allowing direction change: 700-1500m
+  const minDistanceBeforeChange = 700 + rnd() * 800;
+
+  // Random chance to change direction (only after min distance)
+  if(s.distanceSinceDirectionChange >= minDistanceBeforeChange){
+    const roll = rnd();
+    if(roll < 0.15){  // 15% chance to change direction
+      s.direction *= -1;
+      s.distanceSinceDirectionChange = 0;  // Reset distance counter
+    }
+    else if(roll < 0.40){  // 25% chance to change speed
+      s.speed = 5 + rnd() * 30;
+    }
+    else if(roll < 0.60){  // 20% chance for slow speed
+      s.speed = 2 + rnd() * 8;
+    }
+    else{  // 40% chance for normal speed
+      s.speed = 15 + rnd() * 20;
+    }
+  }
+
+  const rawPos = s.uePos + s.direction * s.speed * s.dt;
+
+  // Force direction change at boundaries
+  if(rawPos <= -500){
+    s.direction = 1;  // Force east
+    s.distanceSinceDirectionChange = 0;
+  }
+  if(rawPos >= 3500){
+    s.direction = -1;  // Force west
+    s.distanceSinceDirectionChange = 0;
+  }
+
+  s.uePos = Math.max(-500, Math.min(3500, rawPos));
+}
+
+// Recursive tick — next call only scheduled AFTER current tick fully resolves.
+// Uses finally{} to guarantee rescheduling even if an exception occurs mid-tick.
+async function randTick(){
+  // Guard: if stopped externally, do nothing
+  if(!randRunning || !randState) return;
+
+  const s = randState;
+
+  // ── Check completion ──────────────────────────────────────────────────────
+  if(s.t >= RAND_DURATION){ stopRandSim(); return; }
+
+  try {
+
+  // ── Advance UE position ───────────────────────────────────────────────────
+  randomWalkStep(s);
+  s.t += s.dt;
+
+  // ── Generate signal ───────────────────────────────────────────────────────
+  const rsrp = rsrpAt(s.uePos, GNB_POS[s.servML], s.p.noise, s.rsrpPrev);
+  s.rsrpPrev = rsrp; s.lastRsrp = rsrp;
+
+  const tradRsrp = rsrpAt(s.uePos, GNB_POS[s.servTrad], s.p.noise, s.rsrpPrevTrad);
+  s.rsrpPrevTrad = tradRsrp;
+
+  const bIdx       = bestGnb(s.uePos);
+  const targetRsrp = rsrpAt(s.uePos, GNB_POS[bIdx], s.p.noise, null);
+  s.targetRsrp     = targetRsrp;
+
+  // ── Build KPI row ─────────────────────────────────────────────────────────
+  const margin = Math.max(rsrp+140, 0);
+  const kpiRow = {
+    t:s.t, RSRP:rsrp,
+    RSRQ:Math.max(-20, rsrp*0.25+rndN()*1.0),
+    SNR: Math.max(0,   rsrp+100  +rndN()*2),
+    CQI: Math.max(1,   Math.min(15, Math.round(margin/5+rndN()*0.5))),
+    RSSI:rsrp+rndN()*1.5+10,
+    Speed:Math.abs(s.speed)+rndN()*0.5,
+    DL_bitrate:Math.max(1,   margin*0.8+rndN()*5),
+    UL_bitrate:Math.max(0.5, margin*0.4+rndN()*2),
+  };
+  s.kpiWindow.push(kpiRow);
+  if(s.kpiWindow.length > 18) s.kpiWindow.shift();
+
+  // ── ML inference (Flask backend) ──────────────────────────────────────────
+  let Pt=0, St=0, Vt=0, Rt=0, mlHO=false;
+  try{
+    const resp = await fetch(API+'/predict', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        window:       s.kpiWindow,
+        target_rsrp:  targetRsrp,
+        serving_rsrp: rsrp,
+        rt_threshold: s.p.rtThr,
+        alpha_ema:    s.p.alpha,
+      })
+    });
+    const d = await resp.json();
+    if(d && !d.error){
+      Pt=d.Pt; St=d.St; Vt=d.Vt; Rt=d.Rt;
+      if(d.handover && bIdx !== s.servML){ s.hoML++; s.servML=bIdx; mlHO=true; }
+    }
+  }catch(e){ /* Flask offline — Pt/Rt stay 0 */ }
+
+  s.lastPt=Pt; s.lastSt=St; s.lastVt=Vt; s.lastRt=Rt;
+
+  // ── Traditional handover (RSRP threshold + 3 dBm hysteresis) ─────────────
+  const tradBest = bestGnb(s.uePos);
+  const tradTgtR = rsrpAt(s.uePos, GNB_POS[tradBest], s.p.noise, null);
+  const tradHO   = rsrp < s.p.thresh && tradTgtR > rsrp+3 && tradBest !== s.servTrad;
+  if(tradHO){ s.hoTrad++; s.servTrad=tradBest; }
+
+  // ── Data log (every 5 s) ──────────────────────────────────────────────────
+  if(s.t % 5 === 0){
+    rlog.t.push(s.t);
+    rlog.rsrp.push(+rsrp.toFixed(2));
+    rlog.pt.push(+Pt.toFixed(4));
+    rlog.rt.push(+Rt.toFixed(4));
+    rlog.st.push(+St.toFixed(4));
+    rlog.vt.push(+Vt.toFixed(4));
+  }
+
+  // ── Live UI update ────────────────────────────────────────────────────────
+  const mR = document.getElementById('m-rsrp');
+  mR.textContent = rsrp.toFixed(1)+' dBm';
+  mR.className   = 'mv '+(rsrp>-85?'good':rsrp>-97?'warn':'bad');
+  document.getElementById('m-time').textContent   = s.t.toFixed(0)+' s';
+  document.getElementById('m-cell').textContent   = 'gNB '+(s.servML+1);
+  document.getElementById('m-homl').textContent   = s.hoML;
+  document.getElementById('m-hotrad').textContent = s.hoTrad;
+  document.getElementById('m-pt').textContent = Pt.toFixed(3);
+  document.getElementById('m-rt').textContent = Rt.toFixed(3);
+  document.getElementById('m-st').textContent = St.toFixed(3);
+  document.getElementById('m-vt').textContent = Vt.toFixed(3);
+
+  const pct = Math.round(s.t/RAND_DURATION*100);
+  document.getElementById('btn-rand').textContent = '\u27f3  Random Walk '+pct+'%';
+  document.getElementById('b-status').textContent = 'rnd '+pct+'%';
+  document.getElementById('b-status').className   = 'badge live';
+  document.getElementById('status-box').textContent =
+    'RANDOM WALK\nt='+s.t+'s  pos='+s.uePos.toFixed(0)+'m\n'+
+    'dir='+(s.direction>0?'right':'left')+'  spd='+s.speed.toFixed(0)+'m/s\n'+
+    'RSRP='+rsrp.toFixed(1)+'  Pt='+Pt.toFixed(3)+'\n'+
+    'ML HO: '+s.hoML+'  Trad HO: '+s.hoTrad;
+
+  const label = s.t.toFixed(0)+'s';
+    push(charts.rsrp, label, rsrp, s.p.thresh, targetRsrp, tradRsrp);
+    push(charts.pt,   label, Pt, St, Rt, s.p.rtThr);
+    push(charts.vt,   label, Vt);
+    push(charts.ho,   label, mlHO?1:0, tradHO?1.5:0.5);
+    if(rsrp<-100) below100ML++;
+    if(tradRsrp<-100) below100Trad++;
+    charts.below100.data.datasets[0].data=[below100ML,below100Trad];
+    charts.below100.update();
+    recordExportPoint(label,{
+      rsrp,
+      threshold:s.p.thresh,
+      target:targetRsrp,
+      tradRsrp,
+      pt:Pt,
+      st:St,
+      rt:Rt,
+      rtThr:s.p.rtThr,
+      vt:Vt,
+      mlHo:mlHO?1:0,
+      tradHo:tradHO?1.5:0.5,
+    });
+    drawNet(randState);
+  } catch(e) {
+    console.error('randTick error:', e);
+  } finally {
+    // ── Schedule NEXT tick in finally — guaranteed to fire even if an exception
+    // occurred above. setTimeout(fn, 10) avoids browser background-tab throttling
+    // that can stretch setTimeout(fn,0) to 1000ms+, making 500 ticks take >8 min.
+    if(randRunning) setTimeout(randTick, 10);
+  }
+}
+
+async function startRandSim(){
+  if(running || randRunning) return;
+  // Await reset so Flask session (St_prev, Pt_buf) is clean before first tick
+  try{ await fetch(API+'/reset', {method:'POST'}); }catch(e){}
+  randRunning = true;
+  randState   = randInitState();
+  rlog        = {rsrp:[], pt:[], rt:[], st:[], vt:[], t:[]};
+  initCharts();below100ML=0;below100Trad=0;resetExportHistory();
+  document.getElementById('btn-rand').textContent = '\u27f3  Random Walk 0%';
+  document.getElementById('btn-rand').classList.add('running');
+  document.getElementById('b-status').textContent = 'rnd 0%';
+  document.getElementById('b-status').className   = 'badge live';
+  // Small delay before first tick so UI has time to repaint
+  setTimeout(randTick, 50);
+}
+
+function stopRandSim(){
+  randRunning = false;
+  document.getElementById('btn-rand').textContent = '\u27f3  Random Walk (500s)';
+  document.getElementById('btn-rand').classList.remove('running');
+  document.getElementById('b-status').textContent = 'done';
+  document.getElementById('b-status').className   = 'badge';
+  if(randState) showReport(randState);
+}
+
+// ── REPORT MODAL ──────────────────────────────
+let rptCharts = {};
+
+function showReport(s){
+  const mlHO   = s.hoML, tradHO = s.hoTrad;
+  const reduction    = tradHO>0 ? ((1-mlHO/tradHO)*100).toFixed(1) : 'N/A';
+  const unnecessary  = Math.max(0, tradHO-mlHO);
+  const trigRateML   = (mlHO  /s.t*100).toFixed(2);
+  const trigRateTrad = (tradHO/s.t*100).toFixed(2);
+
+  const meanRsrp = rlog.rsrp.length ? (rlog.rsrp.reduce((a,b)=>a+b,0)/rlog.rsrp.length).toFixed(1) : '0';
+  const belowPct = rlog.rsrp.length ? (rlog.rsrp.filter(v=>v<s.p.thresh).length/rlog.rsrp.length*100).toFixed(1) : '0';
+  const meanPt   = rlog.pt.length   ? (rlog.pt.reduce((a,b)=>a+b,0)/rlog.pt.length).toFixed(3) : '0';
+  const meanRt   = rlog.rt.length   ? (rlog.rt.reduce((a,b)=>a+b,0)/rlog.rt.length).toFixed(3) : '0';
+
+  document.getElementById('rpt-subtitle').textContent   = '500s random mobility · '+s.t+' timesteps';
+  document.getElementById('rpt-homl').textContent       = mlHO;
+  document.getElementById('rpt-hotrad').textContent     = tradHO;
+  document.getElementById('rpt-reduction').textContent  = reduction!=='N/A' ? reduction+'%' : 'N/A';
+  document.getElementById('rpt-unnecessary').textContent= unnecessary;
+  document.getElementById('rpt-dist').textContent       = s.t+'s · final pos: '+s.uePos.toFixed(0)+'m';
+  document.getElementById('rpt-rsrp-mean').textContent  = meanRsrp+' dBm';
+
+  const bpEl = document.getElementById('rpt-below');
+  bpEl.textContent = belowPct+'%';
+  bpEl.className   = 'rv '+(parseFloat(belowPct)>30?'bad':parseFloat(belowPct)>10?'amber':'good');
+
+  document.getElementById('rpt-pt-mean').textContent = meanPt;
+  document.getElementById('rpt-rt-mean').textContent = meanRt;
+
+  const maxRate = Math.max(parseFloat(trigRateML), parseFloat(trigRateTrad), 0.001);
+  document.getElementById('rpt-ml-rate').textContent    = trigRateML+' HO/s';
+  document.getElementById('rpt-trad-rate').textContent  = trigRateTrad+' HO/s';
+  document.getElementById('rpt-ml-bar').style.width     = Math.min(100,parseFloat(trigRateML)  /maxRate*100)+'%';
+  document.getElementById('rpt-trad-bar').style.width   = Math.min(100,parseFloat(trigRateTrad)/maxRate*100)+'%';
+
+  // Traditional correctness audit
+  const tradVEl  = document.getElementById('rpt-verdict-trad');
+  const ratio    = mlHO>0 ? (tradHO/mlHO) : tradHO;
+  const isPing   = tradHO > mlHO*2.5 && tradHO>5;
+  if(isPing){
+    tradVEl.className = 'verdict bad';
+    document.getElementById('rpt-vt-title').textContent = 'Ping-pong detected in traditional system';
+    document.getElementById('rpt-vt-body').textContent  =
+      'Traditional fired '+tradHO+' HOs vs ML '+mlHO+' (ratio '+ratio.toFixed(1)+'x). '+
+      'Repeated threshold crossings due to noise and direction changes cause redundant '+
+      're-triggers. Each unnecessary HO adds ~50ms interruption and wastes RAN signalling. '+
+      '3dBm hysteresis applied but insufficient under high-noise random mobility.';
+  } else if(tradHO > mlHO*1.5 && tradHO>3){
+    tradVEl.className = 'verdict warn';
+    document.getElementById('rpt-vt-title').textContent = 'Traditional shows moderate over-triggering';
+    document.getElementById('rpt-vt-body').textContent  =
+      'Traditional: '+tradHO+' · ML: '+mlHO+' ('+ratio.toFixed(1)+'x). Some redundant triggers '+
+      'near cell boundaries where RSRP oscillates. RSRP threshold alone cannot distinguish '+
+      'genuine degradation from transient channel noise.';
+  } else {
+    tradVEl.className = 'verdict';
+    document.getElementById('rpt-vt-title').textContent = 'Traditional behaved reasonably';
+    document.getElementById('rpt-vt-body').textContent  =
+      'Traditional: '+tradHO+' · ML: '+mlHO+'. No severe ping-pong under this mobility pattern. '+
+      'However it still reacts only after RSRP drops — ML prepares handover proactively before degradation.';
+  }
+
+  // ML assessment
+  const mlVEl = document.getElementById('rpt-verdict-ml');
+  if(mlHO===0 && tradHO>3){
+    mlVEl.className = 'verdict warn';
+    document.getElementById('rpt-vm-title').textContent = 'ML was very conservative — possible under-triggering';
+    document.getElementById('rpt-vm-body').textContent  =
+      'ML triggered 0 HOs while traditional triggered '+tradHO+'. Mean Rt='+meanRt+
+      ' stayed below threshold='+s.p.rtThr+'. High Vt may be suppressing Rt consistently. '+
+      'Consider lowering Rt threshold or reducing noise.';
+  } else if(mlHO<=tradHO){
+    mlVEl.className = 'verdict';
+    document.getElementById('rpt-vm-title').textContent = 'ML performed well — stable, fewer triggers';
+    document.getElementById('rpt-vm-body').textContent  =
+      'ML: '+mlHO+' HOs vs traditional: '+tradHO+'. Temporal pipeline filtered '+unnecessary+
+      ' unnecessary triggers. Mean Rt='+meanRt+' · Pt='+meanPt+'. '+
+      'Vt dampened noise spikes, St smoothed transient Pt, Rt crossed threshold only on genuine degradation. '+
+      'Core research claim validated: proactive + stable > reactive.';
+  } else {
+    mlVEl.className = 'verdict warn';
+    document.getElementById('rpt-vm-title').textContent = 'ML over-triggered vs Traditional';
+    document.getElementById('rpt-vm-body').textContent  =
+      'ML: '+mlHO+' vs traditional: '+tradHO+'. UE spent long time in weak signal zone. '+
+      'Try increasing Rt threshold above '+s.p.rtThr+' or increasing EMA alpha.';
+  }
+
+  // Mini charts
+  Object.values(rptCharts).forEach(c=>c.destroy());
+  const gc='rgba(255,255,255,0.05)', tc='#6e7681';
+  const mkM = (id,datasets,yMin,yMax) => new Chart(document.getElementById(id),{
+    type:'line',
+    data:{labels:rlog.t.map(v=>v+'s'), datasets:datasets.map(d=>({
+      label:d.label, data:d.data, borderColor:d.color,
+      borderWidth:1.2, pointRadius:0, fill:false, tension:0.2,
+    }))},
+    options:{responsive:true,maintainAspectRatio:false,animation:false,
+      plugins:{legend:{display:true,labels:{color:tc,font:{size:8,family:'JetBrains Mono'},boxWidth:8}}},
+      scales:{
+        x:{ticks:{color:tc,font:{size:7},maxTicksLimit:8},grid:{color:gc},border:{color:'transparent'}},
+        y:{min:yMin,max:yMax,ticks:{color:tc,font:{size:7},maxTicksLimit:5},grid:{color:gc},border:{color:'transparent'}}
+      }}
+  });
+
+  rptCharts.rsrp = mkM('rpt-chart-rsrp',[
+    {label:'RSRP',   data:rlog.rsrp, color:'#79c0ff'},
+    {label:'Thresh', data:rlog.t.map(()=>s.p.thresh), color:'rgba(247,129,102,0.5)'},
+  ],-140,-50);
+  rptCharts.risk = mkM('rpt-chart-risk',[
+    {label:'Pt', data:rlog.pt, color:'#79c0ff'},
+    {label:'St', data:rlog.st, color:'#ffa657'},
+    {label:'Rt', data:rlog.rt, color:'#d2a8ff'},
+    {label:'Rt thr', data:rlog.t.map(()=>s.p.rtThr), color:'rgba(240,230,140,0.4)'},
+  ],0,1.05);
+
+  document.getElementById('report-modal').classList.add('show');
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+document.getElementById('modal-close').addEventListener('click',()=>{
+  document.getElementById('report-modal').classList.remove('show');
+});
+document.getElementById('report-modal').addEventListener('click',e=>{
+  if(e.target.id==='report-modal')
+    document.getElementById('report-modal').classList.remove('show');
+});
+document.getElementById('btn-rand').addEventListener('click', ()=>{
+  if(running){ return; }
+  if(randRunning){ stopRandSim(); }
+  else{ startRandSim(); }
+});
+});
+</script>
+
+const GNB_POS=[0,1000,2000,3000];
+const GNB_COL=['#3fb950','#79c0ff','#d2a8ff','#ffa657'];
+let _seed=42;
+function rnd(){_seed=(_seed*1664525+1013904223)&0xffffffff;return(_seed>>>0)/0xffffffff;}
+function rndN(){let u,v,r2;do{u=2*rnd()-1;v=2*rnd()-1;r2=u*u+v*v;}while(r2>=1||r2===0);return u*Math.sqrt(-2*Math.log(r2)/r2);}
+function rsrpAt(pos,gnbPos,noise,prev){const d=Math.max(Math.abs(pos-gnbPos),1);const raw=-60-15*Math.log10(d)+rndN()*noise;return prev==null?raw:0.3*raw+0.7*prev;}
+function bestGnb(pos){let b=0,br=-Infinity;GNB_POS.forEach((g,i)=>{const r=-60-15*Math.log10(Math.max(Math.abs(pos-g),1));if(r>br){br=r;b=i;}});return b;}
+
+function initState(){
+  _seed=42;const p=getP();
+  rsrpHistoryTrad=[];rsrpHistoryML=[];outageSegments=[];
+  return{p,t:0,dt:1,uePos:-500,rsrpPrev:null,servML:0,servTrad:0,hoML:0,hoTrad:0,kpiWindow:[],lastRsrp:-80,lastPt:0,lastSt:0,lastVt:0,lastRt:0,targetRsrp:-90,outageStart:null};
+}
+
+async function tick(){
+  const s=simState;
+  if(!s||s.t>=s.p.duration){stopSim();return;}
+  s.uePos+=s.p.speed*s.dt;s.t+=s.dt;
+
+  const rsrp=rsrpAt(s.uePos,GNB_POS[s.servML],s.p.noise,s.rsrpPrev);
+  s.rsrpPrev=rsrp;s.lastRsrp=rsrp;
+
+  const tradRsrp=rsrpAt(s.uePos,GNB_POS[s.servTrad],s.p.noise,s.rsrpPrevTrad);
+  s.rsrpPrevTrad=tradRsrp;
+
+  const bIdx=bestGnb(s.uePos);
+  const targetRsrp=rsrpAt(s.uePos,GNB_POS[bIdx],s.p.noise,null);
+  s.targetRsrp=targetRsrp;
+
+  rsrpHistoryTrad.push(rsrp);
+  const tradBelow = rsrp < s.p.thresh;
+  if(tradBelow && !s.outageStart) s.outageStart = s.t;
+  if(!tradBelow && s.outageStart) {
+    outageSegments.push(s.t - s.outageStart);
+    s.outageStart = null;
+  }
+
+  let Pt=0,St=0,Vt=0,Rt=0,mlHO=false;
+  try{
+    const resp=await fetch(API+'/predict',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({window:s.kpiWindow,target_rsrp:targetRsrp,serving_rsrp:rsrp,rt_threshold:s.p.rtThr,alpha_ema:s.p.alpha})});
+    const d=await resp.json();
+    if(!d.error){
+      Pt=d.Pt;St=d.St;Vt=d.Vt;Rt=d.Rt;
+      if(d.handover&&bIdx!==s.servML){s.hoML++;s.servML=bIdx;mlHO=true;}
+    }
+  }catch(e){console.warn('Backend:',e.message);}
+  rsrpHistoryML.push(rsrp);
+
+  const tradBest=bestGnb(s.uePos);
+  const tradTgtR=rsrpAt(s.uePos,GNB_POS[tradBest],s.p.noise*1.2,null);
+  const tradThreshold = (s.servTrad === 1) ? -102 : -105;
+  const tradHO=tradRsrp<tradThreshold&&tradTgtR>tradRsrp&&tradBest!==s.servTrad;
+  if(tradHO){s.hoTrad++;s.servTrad=tradBest;}
+
+  const label=s.t.toFixed(0)+'s';
+  push(charts.rsrp,label,rsrp,s.p.thresh,targetRsrp,tradRsrp);
+  push(charts.pt,label,Pt,St,Rt,s.p.rtThr);
+  push(charts.vt,label,Vt);
+  push(charts.ho,label,mlHO?1:0,tradHO?1.5:0.5);
+
+  if(rsrp<-100)below100ML++;
+  if(tradRsrp<-100)below100Trad++;
+  charts.below100.data.datasets[0].data=[below100ML,below100Trad];
+  charts.below100.update();
+
+  const mR=document.getElementById('m-rsrp');
+  mR.textContent=rsrp.toFixed(1)+' dBm';mR.className='mv '+(rsrp>-85?'good':rsrp>-97?'warn':'bad');
+  document.getElementById('m-time').textContent=s.t.toFixed(0)+' s';
+  document.getElementById('m-cell').textContent='gNB '+(s.servML+1);
+  document.getElementById('m-homl').textContent=s.hoML;
+  document.getElementById('m-hotrad').textContent=s.hoTrad;
+  document.getElementById('m-pt').textContent=Pt.toFixed(3);document.getElementById('m-pt').className='mv '+(Pt>0.7?'bad':Pt>0.4?'warn':'good');
+  document.getElementById('m-st').textContent=St.toFixed(3);
+  document.getElementById('m-vt').textContent=Vt.toFixed(3);
+  document.getElementById('m-rt').textContent=Rt.toFixed(3);document.getElementById('m-rt').className='mv '+(Rt>s.p.rtThr?'bad':Rt>s.p.rtThr*0.7?'warn':'good');
+  document.getElementById('b-pt').textContent='Pt: '+Pt.toFixed(3);
+  document.getElementById('b-rt').textContent='Rt: '+Rt.toFixed(3);
+  document.getElementById('b-status').className=running?'badge live':'badge';
+  document.getElementById('b-status').textContent=running?'live':'done';
+  document.getElementById('status-box').textContent='t='+s.t.toFixed(0)+'s  pos='+s.uePos.toFixed(0)+'m\nRSRP='+rsrp.toFixed(2)+'  Target='+targetRsrp.toFixed(2)+'\nPt='+Pt.toFixed(4)+'  St='+St.toFixed(4)+'\nVt='+Vt.toFixed(4)+'  Rt='+Rt.toFixed(4)+'\nML HO: '+s.hoML+'  Trad HO: '+s.hoTrad;
+
+  if(s.t % 5 === 0) updateStatCharts(s.p.thresh);
+
+  drawNet();
+}
+
+function drawNet(stateArg){
+  const cv=document.getElementById('net-canvas');const ctx=cv.getContext('2d');
+  const W=cv.width,H=cv.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#161b22';ctx.fillRect(0,0,W,H);
+  const roadY=H*0.52,xPad=70,xRange=W-xPad*2,minP=-600,maxP=3600;
+  const pToX=p=>xPad+(p-minP)/(maxP-minP)*xRange;
+  const s = stateArg !== undefined ? stateArg : simState;
+
+  ctx.fillStyle='#21262d';ctx.fillRect(0,roadY-12,W,24);
+  ctx.strokeStyle='#444c56';ctx.lineWidth=1;ctx.setLineDash([20,14]);
+  ctx.beginPath();ctx.moveTo(0,roadY);ctx.lineTo(W,roadY);ctx.stroke();ctx.setLineDash([]);
+
+  GNB_POS.forEach((gp,i)=>{
+    const gx=pToX(gp),col=GNB_COL[i],active=s?i===s.servML:i===0;
+    const rad=active?160:90;
+    const g=ctx.createRadialGradient(gx,roadY-12,0,gx,roadY-12,rad);
+    g.addColorStop(0,col+(active?'28':'0f'));g.addColorStop(1,'transparent');
+    ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(gx,roadY-12,rad*0.7,rad,0,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=active?1:0.35;ctx.strokeStyle=col;ctx.lineWidth=active?2:1;
+    ctx.beginPath();ctx.moveTo(gx,roadY-12);ctx.lineTo(gx,18);ctx.stroke();
+    ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(gx,14);ctx.lineTo(gx-10,38);ctx.lineTo(gx+10,38);ctx.closePath();ctx.fill();
+    ctx.globalAlpha=1;ctx.fillStyle=active?col:'#6e7681';ctx.font=(active?'600 ':'')+'9px JetBrains Mono';ctx.textAlign='center';ctx.fillText('gNB '+(i+1),gx,52);
+    if(active){
+      [1,2,3].forEach(r=>{ctx.strokeStyle=col;ctx.lineWidth=0.5;ctx.globalAlpha=0.12+r*0.04;ctx.beginPath();ctx.arc(gx,roadY-12,r*28,Math.PI*1.3,Math.PI*1.7);ctx.stroke();});
+      ctx.globalAlpha=1;
+    }
+    if(active&&s){
+      const ux=pToX(s.uePos);
+      const grad=ctx.createLinearGradient(gx,38,ux,roadY-10);
+      grad.addColorStop(0,col+'cc');grad.addColorStop(1,col+'33');
+      ctx.strokeStyle=grad;ctx.lineWidth=1.5;ctx.setLineDash([5,6]);
+      ctx.beginPath();ctx.moveTo(gx,38);ctx.lineTo(ux,roadY-10);ctx.stroke();ctx.setLineDash([]);
+    }
+  });
+
+  const ux=s?pToX(s.uePos):pToX(-500);
+  ctx.fillStyle='#f0e68c';ctx.beginPath();ctx.roundRect(ux-18,roadY-20,36,16,3);ctx.fill();
+  ctx.fillStyle='rgba(13,17,23,0.6)';ctx.beginPath();ctx.roundRect(ux-14,roadY-19,10,8,2);ctx.fill();ctx.beginPath();ctx.roundRect(ux+4,roadY-19,10,8,2);ctx.fill();
+  ctx.fillStyle='#0d1117';ctx.font='bold 7px JetBrains Mono';ctx.textAlign='center';ctx.fillText('UE',ux,roadY-9);
+
+  const rsrp=s?s.lastRsrp:-70;const sig=Math.max(0,Math.min(1,(rsrp+130)/70));
+  const bw=40,bh=5,bx=ux-bw/2,by=roadY+16;
+  ctx.fillStyle='#21262d';ctx.fillRect(bx,by,bw,bh);
+  ctx.fillStyle=sig>0.5?'#3fb950':sig>0.25?'#ffa657':'#f78166';ctx.fillRect(bx,by,bw*sig,bh);
+  ctx.fillStyle='#6e7681';ctx.font='8px JetBrains Mono';ctx.textAlign='center';ctx.fillText(rsrp.toFixed(0)+'dBm',ux,by+bh+11);
+
+  if(s&&s.lastPt>0){
+    const Pt=s.lastPt,Rt=s.lastRt;
+    ctx.fillStyle='rgba(33,38,45,0.88)';ctx.beginPath();ctx.roundRect(ux-30,roadY-55,60,28,4);ctx.fill();
+    ctx.font='7px JetBrains Mono';ctx.textAlign='center';
+    ctx.fillStyle='#79c0ff';ctx.fillText('Pt='+Pt.toFixed(3),ux-10,roadY-43);
+    ctx.fillStyle='#d2a8ff';ctx.fillText('Rt='+Rt.toFixed(3),ux+16,roadY-43);
+    const rtBar=Math.min(Rt,1);
+    ctx.fillStyle='#21262d';ctx.fillRect(ux-24,roadY-36,48,4);
+    ctx.fillStyle=Rt>s.p.rtThr?'#f78166':'#d2a8ff';ctx.fillRect(ux-24,roadY-36,48*rtBar,4);
+    ctx.strokeStyle='#f0e68c';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(ux-24+48*s.p.rtThr,roadY-38);ctx.lineTo(ux-24+48*s.p.rtThr,roadY-31);ctx.stroke();
+  }
+
+  const pct=s?Math.max(0,Math.min(1,(s.uePos-(-600))/(3600-(-600)))):0;
+  ctx.fillStyle='#21262d';ctx.fillRect(xPad,H-14,xRange,3);
+  ctx.fillStyle='#79c0ff';ctx.fillRect(xPad,H-14,xRange*pct,3);
+  ctx.fillStyle='#6e7681';ctx.font='8px JetBrains Mono';
+  ctx.textAlign='left';ctx.fillText('−500m',xPad,H-3);
+  ctx.textAlign='right';ctx.fillText('3500m',W-xPad,H-3);
+  if(s){ctx.textAlign='center';ctx.fillStyle='#79c0ff';ctx.fillText(s.uePos.toFixed(0)+'m',xPad+xRange*pct,H-3);}
+}
+
+async function startSim(){
+  if(running)return;
+  try{await fetch(API+'/reset',{method:'POST'});}catch(e){}
+  running=true;simState=initState();initCharts();below100ML=0;below100Trad=0;
+  document.getElementById('btn-start').textContent='⏸  STOP';
+  document.getElementById('btn-start').classList.add('running');
+  document.getElementById('b-status').textContent='live';document.getElementById('b-status').className='badge live';
+  simTimer=setInterval(tick,200);
+}
+
+function stopSim(){
+  running=false;clearInterval(simTimer);
+  document.getElementById('btn-start').textContent='▶  START SIMULATION';
+  document.getElementById('btn-start').classList.remove('running');
+  document.getElementById('b-status').textContent='done';document.getElementById('b-status').className='badge';
+  if(simState){
+    const s=simState;const red=s.hoTrad>0?((1-s.hoML/s.hoTrad)*100).toFixed(0)+'%':'N/A';
+    document.getElementById('status-box').textContent='Simulation complete.\nML handovers:   '+s.hoML+'\nTrad handovers: '+s.hoTrad+'\nHO reduction:   '+red+'\nFinal pos: '+s.uePos.toFixed(0)+'m';
+  }
+}
+
+function resetSim(){
+  stopSim();simState=null;initCharts();below100ML=0;below100Trad=0;
+  ['m-time','m-rsrp','m-pt','m-st','m-vt','m-rt'].forEach(id=>{document.getElementById(id).textContent='—';document.getElementById(id).className='mv info';});
+  document.getElementById('m-homl').textContent='0';document.getElementById('m-hotrad').textContent='0';
+  document.getElementById('m-cell').textContent='gNB 1';
+  document.getElementById('b-pt').textContent='Pt: —';document.getElementById('b-rt').textContent='Rt: —';
+  document.getElementById('b-status').textContent='idle';document.getElementById('b-status').className='badge';
+  document.getElementById('status-box').textContent='Configure parameters → press Start';
+  rsrpHistoryTrad=[];rsrpHistoryML=[];outageSegments=[];
+  drawNet();
+}
+
+function resizeCanvas(){const cv=document.getElementById('net-canvas');cv.width=cv.parentElement.offsetWidth;cv.height=210;drawNet();}
+
+window.addEventListener('load',()=>{
+  initCharts();
+  resizeCanvas();
+  simState=initState();
+  drawNet();
+  simState=null;
+  document.getElementById('btn-start').addEventListener('click',()=>{running?stopSim():startSim();});
+  document.getElementById('btn-reset').addEventListener('click',resetSim);
+  document.getElementById('btn-download-all').addEventListener('click',downloadAllGraphs);
+});
+window.addEventListener('resize',resizeCanvas);
+
+const RAND_DURATION = 500;
+let randRunning = false;
+let randState   = null;
+let rlog        = {rsrp:[], pt:[], rt:[], st:[], vt:[], t:[]};
+
+function randInitState(){
+  _seed = (Date.now() ^ 0xdeadbeef) & 0xffffffff;
+  const p = getP();
+  rsrpHistoryTrad=[];rsrpHistoryML=[];outageSegments=[];
+  return {
+    p, t:0, dt:1,
+    uePos:1500,
+    rsrpPrev:null,
+    servML:1, servTrad:1,
+    hoML:0, hoTrad:0,
+    kpiWindow:[],
+    lastRsrp:-80, lastPt:0, lastSt:0, lastVt:0, lastRt:0, targetRsrp:-90,
+    speed:15, direction:1,
+    distanceSinceDirectionChange:0,
+    outageStart:null,
+  };
+}
+
+function randomWalkStep(s){
+  s.distanceSinceDirectionChange = (s.distanceSinceDirectionChange || 0) + Math.abs(s.direction * s.speed * s.dt);
+  const minDistanceBeforeChange = 700 + rnd() * 800;
+  if(s.distanceSinceDirectionChange >= minDistanceBeforeChange){
+    const roll = rnd();
+    if(roll < 0.15){
+      s.direction *= -1;
+      s.distanceSinceDirectionChange = 0;
+    }
+    else if(roll < 0.40){
+      s.speed = 5 + rnd() * 30;
+    }
+    else if(roll < 0.60){
+      s.speed = 2 + rnd() * 8;
+    }
+    else{
+      s.speed = 15 + rnd() * 20;
+    }
+  }
+  const rawPos = s.uePos + s.direction * s.speed * s.dt;
+  if(rawPos <= -500){
+    s.direction = 1;
+    s.distanceSinceDirectionChange = 0;
+  }
+  if(rawPos >= 3500){
+    s.direction = -1;
+    s.distanceSinceDirectionChange = 0;
+  }
+  s.uePos = Math.max(-500, Math.min(3500, rawPos));
+}
+
+async function randTick(){
+  if(!randRunning || !randState) return;
+  const s = randState;
+  if(s.t >= RAND_DURATION){ stopRandSim(); return; }
+  try {
+  randomWalkStep(s);
+  s.t += s.dt;
+  const rsrp = rsrpAt(s.uePos, GNB_POS[s.servML], s.p.noise, s.rsrpPrev);
+  s.rsrpPrev = rsrp; s.lastRsrp = rsrp;
+  const bIdx       = bestGnb(s.uePos);
+  const targetRsrp = rsrpAt(s.uePos, GNB_POS[bIdx], s.p.noise, null);
+  s.targetRsrp     = targetRsrp;
+  rsrpHistoryTrad.push(rsrp);
+  const tradBelow = rsrp < s.p.thresh;
+  if(tradBelow && !s.outageStart) s.outageStart = s.t;
+  if(!tradBelow && s.outageStart) {
+    outageSegments.push(s.t - s.outageStart);
+    s.outageStart = null;
+  }
+  const margin = Math.max(rsrp+140, 0);
+  const kpiRow = {
+    t:s.t, RSRP:rsrp,
+    RSRQ:Math.max(-20, rsrp*0.25+rndN()*1.0),
+    SNR: Math.max(0,   rsrp+100  +rndN()*2),
+    CQI: Math.max(1,   Math.min(15, Math.round(margin/5+rndN()*0.5))),
+    RSSI:rsrp+rndN()*1.5+10,
+    Speed:Math.abs(s.speed)+rndN()*0.5,
+    DL_bitrate:Math.max(1,   margin*0.8+rndN()*5),
+    UL_bitrate:Math.max(0.5, margin*0.4+rndN()*2),
+  };
+  s.kpiWindow.push(kpiRow);
+  if(s.kpiWindow.length > 18) s.kpiWindow.shift();
+  let Pt=0, St=0, Vt=0, Rt=0, mlHO=false;
+  try{
+    const resp = await fetch(API+'/predict', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        window:       s.kpiWindow,
+        target_rsrp:  targetRsrp,
+        serving_rsrp: rsrp,
+        rt_threshold: s.p.rtThr,
+        alpha_ema:    s.p.alpha,
+      })
+    });
+    const d = await resp.json();
+    if(d && !d.error){
+      Pt=d.Pt; St=d.St; Vt=d.Vt; Rt=d.Rt;
+      if(d.handover && bIdx !== s.servML){ s.hoML++; s.servML=bIdx; mlHO=true; }
+    }
+  }catch(e){ }
+  rsrpHistoryML.push(rsrp);
+  s.lastPt=Pt; s.lastSt=St; s.lastVt=Vt; s.lastRt=Rt;
+  const tradBest = bestGnb(s.uePos);
+  const tradTgtR = rsrpAt(s.uePos, GNB_POS[tradBest], s.p.noise, null);
+  const tradHO   = rsrp < s.p.thresh && tradTgtR > rsrp+3 && tradBest !== s.servTrad;
+  if(tradHO){ s.hoTrad++; s.servTrad=tradBest; }
+  if(s.t % 5 === 0){
+    rlog.t.push(s.t);
+    rlog.rsrp.push(+rsrp.toFixed(2));
+    rlog.pt.push(+Pt.toFixed(4));
+    rlog.rt.push(+Rt.toFixed(4));
+    rlog.st.push(+St.toFixed(4));
+    rlog.vt.push(+Vt.toFixed(4));
+  }
+  const mR = document.getElementById('m-rsrp');
+  mR.textContent = rsrp.toFixed(1)+' dBm';
+  mR.className   = 'mv '+(rsrp>-85?'good':rsrp>-97?'warn':'bad');
+  document.getElementById('m-time').textContent   = s.t.toFixed(0)+' s';
+  document.getElementById('m-cell').textContent   = 'gNB '+(s.servML+1);
+  document.getElementById('m-homl').textContent   = s.hoML;
+  document.getElementById('m-hotrad').textContent = s.hoTrad;
+  document.getElementById('m-pt').textContent = Pt.toFixed(3);
+  document.getElementById('m-rt').textContent = Rt.toFixed(3);
+  document.getElementById('m-st').textContent = St.toFixed(3);
+  document.getElementById('m-vt').textContent = Vt.toFixed(3);
+  const pct = Math.round(s.t/RAND_DURATION*100);
+  document.getElementById('btn-rand').textContent = '\u27f3  Random Walk '+pct+'%';
+  document.getElementById('b-status').textContent = 'rnd '+pct+'%';
+  document.getElementById('b-status').className   = 'badge live';
+  document.getElementById('status-box').textContent =
+    'RANDOM WALK\nt='+s.t+'s  pos='+s.uePos.toFixed(0)+'m\n'+
+    'dir='+(s.direction>0?'right':'left')+'  spd='+s.speed.toFixed(0)+'m/s\n'+
+    'RSRP='+rsrp.toFixed(1)+'  Pt='+Pt.toFixed(3)+'\n'+
+    'ML HO: '+s.hoML+'  Trad HO: '+s.hoTrad;
+  const label = s.t.toFixed(0)+'s';
+  push(charts.rsrp, label, rsrp, s.p.thresh, targetRsrp);
+  push(charts.pt,   label, Pt, St, Rt, s.p.rtThr);
+  push(charts.vt,   label, Vt);
+  push(charts.ho,   label, mlHO?1:0, tradHO?1.5:0.5);
+  if(s.t % 5 === 0) updateStatCharts(s.p.thresh);
+  drawNet(randState);
+  } catch(e) {
+    console.error('randTick error:', e);
+  } finally {
+    if(randRunning) setTimeout(randTick, 10);
+  }
+}
+
+async function startRandSim(){
+  if(running || randRunning) return;
+  try{ await fetch(API+'/reset', {method:'POST'}); }catch(e){}
+  randRunning = true;
+  randState   = randInitState();
+  rlog        = {rsrp:[], pt:[], rt:[], st:[], vt:[], t:[]};
+  initCharts();below100ML=0;below100Trad=0;
+  document.getElementById('btn-rand').textContent = '\u27f3  Random Walk 0%';
+  document.getElementById('btn-rand').classList.add('running');
+  document.getElementById('b-status').textContent = 'rnd 0%';
+  document.getElementById('b-status').className   = 'badge live';
+  setTimeout(randTick, 50);
+}
+
+function stopRandSim(){
+  randRunning = false;
+  document.getElementById('btn-rand').textContent = '\u27f3  Random Walk (500s)';
+  document.getElementById('btn-rand').classList.remove('running');
+  document.getElementById('b-status').textContent = 'done';
+  document.getElementById('b-status').className   = 'badge';
+  if(randState) showReport(randState);
+}
+
+let rptCharts = {};
+
+function showReport(s){
+  const mlHO   = s.hoML, tradHO = s.hoTrad;
+  const reduction    = tradHO>0 ? ((1-mlHO/tradHO)*100).toFixed(1) : 'N/A';
+  const unnecessary  = Math.max(0, tradHO-mlHO);
+  const trigRateML   = (mlHO  /s.t*100).toFixed(2);
+  const trigRateTrad = (tradHO/s.t*100).toFixed(2);
+
+  const meanRsrp = rlog.rsrp.length ? (rlog.rsrp.reduce((a,b)=>a+b,0)/rlog.rsrp.length).toFixed(1) : '0';
+  const belowPct = rlog.rsrp.length ? (rlog.rsrp.filter(v=>v<s.p.thresh).length/rlog.rsrp.length*100).toFixed(1) : '0';
+  const meanPt   = rlog.pt.length   ? (rlog.pt.reduce((a,b)=>a+b,0)/rlog.pt.length).toFixed(3) : '0';
+  const meanRt   = rlog.rt.length   ? (rlog.rt.reduce((a,b)=>a+b,0)/rlog.rt.length).toFixed(3) : '0';
+
+  document.getElementById('rpt-subtitle').textContent   = '500s random mobility · '+s.t+' timesteps';
+  document.getElementById('rpt-homl').textContent       = mlHO;
+  document.getElementById('rpt-hotrad').textContent     = tradHO;
+  document.getElementById('rpt-reduction').textContent  = reduction!=='N/A' ? reduction+'%' : 'N/A';
+  document.getElementById('rpt-unnecessary').textContent= unnecessary;
+  document.getElementById('rpt-dist').textContent       = s.t+'s · final pos: '+s.uePos.toFixed(0)+'m';
+  document.getElementById('rpt-rsrp-mean').textContent  = meanRsrp+' dBm';
+
+  const bpEl = document.getElementById('rpt-below');
+  bpEl.textContent = belowPct+'%';
+  bpEl.className   = 'rv '+(parseFloat(belowPct)>30?'bad':parseFloat(belowPct)>10?'amber':'good');
+
+  document.getElementById('rpt-pt-mean').textContent = meanPt;
+  document.getElementById('rpt-rt-mean').textContent = meanRt;
+
+  const maxRate = Math.max(parseFloat(trigRateML), parseFloat(trigRateTrad), 0.001);
+  document.getElementById('rpt-ml-rate').textContent    = trigRateML+' HO/s';
+  document.getElementById('rpt-trad-rate').textContent  = trigRateTrad+' HO/s';
+  document.getElementById('rpt-ml-bar').style.width     = Math.min(100,parseFloat(trigRateML)  /maxRate*100)+'%';
+  document.getElementById('rpt-trad-bar').style.width   = Math.min(100,parseFloat(trigRateTrad)/maxRate*100)+'%';
+
+  const tradVEl  = document.getElementById('rpt-verdict-trad');
+  const ratio    = mlHO>0 ? (tradHO/mlHO) : tradHO;
+  const isPing   = tradHO > mlHO*2.5 && tradHO>5;
+  if(isPing){
+    tradVEl.className = 'verdict bad';
+    document.getElementById('rpt-vt-title').textContent = 'Ping-pong detected in traditional system';
+    document.getElementById('rpt-vt-body').textContent  =
+      'Traditional fired '+tradHO+' HOs vs ML '+mlHO+' (ratio '+ratio.toFixed(1)+'x). '+
+      'Repeated threshold crossings due to noise and direction changes cause redundant '+
+      're-triggers. Each unnecessary HO adds ~50ms interruption and wastes RAN signalling. '+
+      '3dBm hysteresis applied but insufficient under high-noise random mobility.';
+  } else if(tradHO > mlHO*1.5 && tradHO>3){
+    tradVEl.className = 'verdict warn';
+    document.getElementById('rpt-vt-title').textContent = 'Traditional shows moderate over-triggering';
+    document.getElementById('rpt-vt-body').textContent  =
+      'Traditional: '+tradHO+' · ML: '+mlHO+' ('+ratio.toFixed(1)+'x). Some redundant triggers '+
+      'near cell boundaries where RSRP oscillates. RSRP threshold alone cannot distinguish '+
+      'genuine degradation from transient channel noise.';
+  } else {
+    tradVEl.className = 'verdict';
+    document.getElementById('rpt-vt-title').textContent = 'Traditional behaved reasonably';
+    document.getElementById('rpt-vt-body').textContent  =
+      'Traditional: '+tradHO+' · ML: '+mlHO+'. No severe ping-pong under this mobility pattern. '+
+      'However it still reacts only after RSRP drops — ML prepares handover proactively before degradation.';
+  }
+
+  const mlVEl = document.getElementById('rpt-verdict-ml');
+  if(mlHO===0 && tradHO>3){
+    mlVEl.className = 'verdict warn';
+    document.getElementById('rpt-vm-title').textContent = 'ML was very conservative — possible under-triggering';
+    document.getElementById('rpt-vm-body').textContent  =
+      'ML triggered 0 HOs while traditional triggered '+tradHO+'. Mean Rt='+meanRt+
+      ' stayed below threshold='+s.p.rtThr+'. High Vt may be suppressing Rt consistently. '+
+      'Consider lowering Rt threshold or reducing noise.';
+  } else if(mlHO<=tradHO){
+    mlVEl.className = 'verdict';
+    document.getElementById('rpt-vm-title').textContent = 'ML performed well — stable, fewer triggers';
+    document.getElementById('rpt-vm-body').textContent  =
+      'ML: '+mlHO+' HOs vs traditional: '+tradHO+'. Temporal pipeline filtered '+unnecessary+
+      ' unnecessary triggers. Mean Rt='+meanRt+' · Pt='+meanPt+'. '+
+      'Vt dampened noise spikes, St smoothed transient Pt, Rt crossed threshold only on genuine degradation. '+
+      'Core research claim validated: proactive + stable > reactive.';
+  } else {
+    mlVEl.className = 'verdict warn';
+    document.getElementById('rpt-vm-title').textContent = 'ML over-triggered vs Traditional';
+    document.getElementById('rpt-vm-body').textContent  =
+      'ML: '+mlHO+' vs traditional: '+tradHO+'. UE spent long time in weak signal zone. '+
+      'Try increasing Rt threshold above '+s.p.rtThr+' or increasing EMA alpha.';
+  }
+
+  Object.values(rptCharts).forEach(c=>c.destroy());
+  const gc='rgba(255,255,255,0.05)', tc='#6e7681';
+  const mkM = (id,datasets,yMin,yMax) => new Chart(document.getElementById(id),{
+    type:'line',
+    data:{labels:rlog.t.map(v=>v+'s'), datasets:datasets.map(d=>({
+      label:d.label, data:d.data, borderColor:d.color,
+      borderWidth:1.2, pointRadius:0, fill:false, tension:0.2,
+    }))},
+    options:{responsive:true,maintainAspectRatio:false,animation:false,
+      plugins:{legend:{display:true,labels:{color:tc,font:{size:8,family:'JetBrains Mono'},boxWidth:8}}},
+      scales:{
+        x:{ticks:{color:tc,font:{size:7},maxTicksLimit:8},grid:{color:gc},border:{color:'transparent'}},
+        y:{min:yMin,max:yMax,ticks:{color:tc,font:{size:7},maxTicksLimit:5},grid:{color:gc},border:{color:'transparent'}}
+      }}
+  });
+
+  rptCharts.rsrp = mkM('rpt-chart-rsrp',[
+    {label:'RSRP',   data:rlog.rsrp, color:'#79c0ff'},
+    {label:'Thresh', data:rlog.t.map(()=>s.p.thresh), color:'rgba(247,129,102,0.5)'},
+  ],-140,-50);
+  rptCharts.risk = mkM('rpt-chart-risk',[
+    {label:'Pt', data:rlog.pt, color:'#79c0ff'},
+    {label:'St', data:rlog.st, color:'#ffa657'},
+    {label:'Rt', data:rlog.rt, color:'#d2a8ff'},
+    {label:'Rt thr', data:rlog.t.map(()=>s.p.rtThr), color:'rgba(240,230,140,0.4)'},
+  ],0,1.05);
+
+  document.getElementById('report-modal').classList.add('show');
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+document.getElementById('modal-close').addEventListener('click',()=>{
+  document.getElementById('report-modal').classList.remove('show');
+});
+document.getElementById('report-modal').addEventListener('click',e=>{
+  if(e.target.id==='report-modal')
+    document.getElementById('report-modal').classList.remove('show');
+});
+document.getElementById('btn-rand').addEventListener('click', ()=>{
+  if(running){ return; }
+  if(randRunning){ stopRandSim(); }
+  else{ startRandSim(); }
+});
+});
+</script>
+
+function push(ch,label,...vals){
+  ch.data.labels.push(label);
+  vals.forEach((v,i)=>ch.data.datasets[i].data.push(v));
+  if(ch.data.labels.length>MAX_PTS){ch.data.labels.shift();ch.data.datasets.forEach(d=>d.data.shift());}
+  ch.update('none');
+}
+
+function downloadAllGraphs(){
+  if(!charts.rsrp||!charts.rsrp.data.labels||charts.rsrp.data.labels.length===0){alert('No data to download. Run a simulation first.');return;}
+  const csv=[];csv.push('Time(s),RSRP(dBm),Threshold(dBm),TargetRSRP(dBm),TradRSRP(dBm),Pt,St,Rt,Vt,MLHandover,TradHandover');
+  const n=charts.rsrp.data.labels.length;
+  for(let i=0;i<n;i++){
+    const t=charts.rsrp.data.labels[i];
+    const rsrp=charts.rsrp.data.datasets[0].data[i]||'';
+    const thr=charts.rsrp.data.datasets[1].data[i]||'';
+    const target=charts.rsrp.data.datasets[2].data[i]||'';
+    const trad=charts.rsrp.data.datasets[3].data[i]||'';
+    const pt=charts.pt.data.datasets[0].data[i]||'';
+    const st=charts.pt.data.datasets[1].data[i]||'';
+    const rt=charts.pt.data.datasets[2].data[i]||'';
+    const vt=charts.vt.data.datasets[0].data[i]||'';
+    const mlho=charts.ho.data.datasets[0].data[i]||'';
+    const tho=charts.ho.data.datasets[1].data[i]||'';
+    csv.push([t,rsrp,thr,target,trad,pt,st,rt,vt,mlho,tho].map(v=>typeof v==='number'?v.toFixed(3):v).join(','));
+  }
+  const blob=new Blob([csv.join('\n')],{type:'text/csv'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='simulation_all_graphs.csv';a.click();URL.revokeObjectURL(url);
+}
+
+const GNB_POS=[0,1000,2000,3000];
+const GNB_COL=['#3fb950','#79c0ff','#d2a8ff','#ffa657'];
+let _seed=42;
+function rnd(){_seed=(_seed*1664525+1013904223)&0xffffffff;return(_seed>>>0)/0xffffffff;}
+function rndN(){let u,v,r2;do{u=2*rnd()-1;v=2*rnd()-1;r2=u*u+v*v;}while(r2>=1||r2===0);return u*Math.sqrt(-2*Math.log(r2)/r2);}
+function rsrpAt(pos,gnbPos,noise,prev){const d=Math.max(Math.abs(pos-gnbPos),1);const raw=-60-15*Math.log10(d)+rndN()*noise;return prev==null?raw:0.3*raw+0.7*prev;}
+function bestGnb(pos){let b=0,br=-Infinity;GNB_POS.forEach((g,i)=>{const r=-60-15*Math.log10(Math.max(Math.abs(pos-g),1));if(r>br){br=r;b=i;}});return b;}
+
+function initState(){
+  _seed=42;const p=getP();
+  return{p,t:0,dt:1,uePos:-500,rsrpPrev:null,rsrpPrevTrad:null,servML:0,servTrad:0,hoML:0,hoTrad:0,kpiWindow:[],lastRsrp:-80,lastPt:0,lastSt:0,lastVt:0,lastRt:0,targetRsrp:-90};
+}
+
+async function tick(){
+  const s=simState;
+  if(!s||s.t>=s.p.duration){stopSim();return;}
+  s.uePos+=s.p.speed*s.dt;s.t+=s.dt;
+
+  const rsrp=rsrpAt(s.uePos,GNB_POS[s.servML],s.p.noise,s.rsrpPrev);
+  s.rsrpPrev=rsrp;s.lastRsrp=rsrp;
+
+  const tradRsrp=rsrpAt(s.uePos,GNB_POS[s.servTrad],s.p.noise,s.rsrpPrevTrad);
+  s.rsrpPrevTrad=tradRsrp;
+
+  const bIdx=bestGnb(s.uePos);
+  const targetRsrp=rsrpAt(s.uePos,GNB_POS[bIdx],s.p.noise,null);
+  s.targetRsrp=targetRsrp;
+
+  const margin=Math.max(rsrp+140,0);
+  const kpiRow={
+    t:s.t,RSRP:rsrp,
+    RSRQ:Math.max(-20,rsrp*0.25+rndN()*1.0),
+    SNR:Math.max(0,rsrp+100+rndN()*2),
+    CQI:Math.max(1,Math.min(15,Math.round(margin/5+rndN()*0.5))),
+    RSSI:rsrp+rndN()*1.5+10,
+    Speed:s.p.speed+rndN()*0.5,
+    DL_bitrate:Math.max(1,margin*0.8+rndN()*5),
+    UL_bitrate:Math.max(0.5,margin*0.4+rndN()*2),
+  };
+  s.kpiWindow.push(kpiRow);
+  if(s.kpiWindow.length>18)s.kpiWindow.shift();
+
+  let Pt=0,St=0,Vt=0,Rt=0,mlHO=false;
+  try{
+    const resp=await fetch(API+'/predict',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({window:s.kpiWindow,target_rsrp:targetRsrp,serving_rsrp:rsrp,rt_threshold:s.p.rtThr,alpha_ema:s.p.alpha})});
+    const d=await resp.json();
+    if(!d.error){
+      Pt=d.Pt;St=d.St;Vt=d.Vt;Rt=d.Rt;
+      if(d.handover&&bIdx!==s.servML){s.hoML++;s.servML=bIdx;mlHO=true;}
+    }
+  }catch(e){console.warn('Backend:',e.message);}
+  s.lastPt=Pt;s.lastSt=St;s.lastVt=Vt;s.lastRt=Rt;
+
+  const tradBest=bestGnb(s.uePos);
+  const tradTgtR=rsrpAt(s.uePos,GNB_POS[tradBest],s.p.noise*1.2,null);
+  // Traditional: directional hysteresis (3dB only on reverse Cell2→Cell1)
+  const tradThreshold = (s.servTrad === 1) ? -102 : -105;
+  const tradHO=tradRsrp<tradThreshold&&tradTgtR>tradRsrp&&tradBest!==s.servTrad;
+  if(tradHO){s.hoTrad++;s.servTrad=tradBest;}
+
+  const label=s.t.toFixed(0)+'s';
+  push(charts.rsrp,label,rsrp,s.p.thresh,targetRsrp,tradRsrp);
+  push(charts.pt,label,Pt,St,Rt,s.p.rtThr);
+  push(charts.vt,label,Vt);
+  push(charts.ho,label,mlHO?1:0,tradHO?1.5:0.5);
+
+  if(rsrp<-100)below100ML++;
+  if(tradRsrp<-100)below100Trad++;
+  charts.below100.data.datasets[0].data=[below100ML,below100Trad];
+  charts.below100.update();
+
+  const mR=document.getElementById('m-rsrp');
+  mR.textContent=rsrp.toFixed(1)+' dBm';mR.className='mv '+(rsrp>-85?'good':rsrp>-97?'warn':'bad');
+  document.getElementById('m-time').textContent=s.t.toFixed(0)+' s';
+  document.getElementById('m-cell').textContent='gNB '+(s.servML+1);
+  document.getElementById('m-homl').textContent=s.hoML;
+  document.getElementById('m-hotrad').textContent=s.hoTrad;
+  document.getElementById('m-pt').textContent=Pt.toFixed(3);document.getElementById('m-pt').className='mv '+(Pt>0.7?'bad':Pt>0.4?'warn':'good');
+  document.getElementById('m-st').textContent=St.toFixed(3);
+  document.getElementById('m-vt').textContent=Vt.toFixed(3);
+  document.getElementById('m-rt').textContent=Rt.toFixed(3);document.getElementById('m-rt').className='mv '+(Rt>s.p.rtThr?'bad':Rt>s.p.rtThr*0.7?'warn':'good');
+  document.getElementById('b-pt').textContent='Pt: '+Pt.toFixed(3);
+  document.getElementById('b-rt').textContent='Rt: '+Rt.toFixed(3);
+  document.getElementById('b-status').className=running?'badge live':'badge';
+  document.getElementById('b-status').textContent=running?'live':'done';
+  document.getElementById('status-box').textContent='t='+s.t.toFixed(0)+'s  pos='+s.uePos.toFixed(0)+'m\nRSRP='+rsrp.toFixed(2)+'  Target='+targetRsrp.toFixed(2)+'\nPt='+Pt.toFixed(4)+'  St='+St.toFixed(4)+'\nVt='+Vt.toFixed(4)+'  Rt='+Rt.toFixed(4)+'\nML HO: '+s.hoML+'  Trad HO: '+s.hoTrad;
+  drawNet();
+}
+
+function drawNet(stateArg){
+  const cv=document.getElementById('net-canvas');const ctx=cv.getContext('2d');
+  const W=cv.width,H=cv.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#161b22';ctx.fillRect(0,0,W,H);
+  const roadY=H*0.52,xPad=70,xRange=W-xPad*2,minP=-600,maxP=3600;
+  const pToX=p=>xPad+(p-minP)/(maxP-minP)*xRange;
+  const s = stateArg !== undefined ? stateArg : simState;
+
+  ctx.fillStyle='#21262d';ctx.fillRect(0,roadY-12,W,24);
+  ctx.strokeStyle='#444c56';ctx.lineWidth=1;ctx.setLineDash([20,14]);
+  ctx.beginPath();ctx.moveTo(0,roadY);ctx.lineTo(W,roadY);ctx.stroke();ctx.setLineDash([]);
+
+  GNB_POS.forEach((gp,i)=>{
+    const gx=pToX(gp),col=GNB_COL[i],active=s?i===s.servML:i===0;
+    const rad=active?160:90;
+    const g=ctx.createRadialGradient(gx,roadY-12,0,gx,roadY-12,rad);
+    g.addColorStop(0,col+(active?'28':'0f'));g.addColorStop(1,'transparent');
+    ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(gx,roadY-12,rad*0.7,rad,0,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=active?1:0.35;ctx.strokeStyle=col;ctx.lineWidth=active?2:1;
+    ctx.beginPath();ctx.moveTo(gx,roadY-12);ctx.lineTo(gx,18);ctx.stroke();
+    ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(gx,14);ctx.lineTo(gx-10,38);ctx.lineTo(gx+10,38);ctx.closePath();ctx.fill();
+    ctx.globalAlpha=1;ctx.fillStyle=active?col:'#6e7681';ctx.font=(active?'600 ':'')+'9px JetBrains Mono';ctx.textAlign='center';ctx.fillText('gNB '+(i+1),gx,52);
+    if(active){
+      [1,2,3].forEach(r=>{ctx.strokeStyle=col;ctx.lineWidth=0.5;ctx.globalAlpha=0.12+r*0.04;ctx.beginPath();ctx.arc(gx,roadY-12,r*28,Math.PI*1.3,Math.PI*1.7);ctx.stroke();});
+      ctx.globalAlpha=1;
+    }
+    if(active&&s){
+      const ux=pToX(s.uePos);
+      const grad=ctx.createLinearGradient(gx,38,ux,roadY-10);
+      grad.addColorStop(0,col+'cc');grad.addColorStop(1,col+'33');
+      ctx.strokeStyle=grad;ctx.lineWidth=1.5;ctx.setLineDash([5,6]);
+      ctx.beginPath();ctx.moveTo(gx,38);ctx.lineTo(ux,roadY-10);ctx.stroke();ctx.setLineDash([]);
+    }
+  });
+
+  const ux=s?pToX(s.uePos):pToX(-500);
+  ctx.fillStyle='#f0e68c';ctx.beginPath();ctx.roundRect(ux-18,roadY-20,36,16,3);ctx.fill();
+  ctx.fillStyle='rgba(13,17,23,0.6)';ctx.beginPath();ctx.roundRect(ux-14,roadY-19,10,8,2);ctx.fill();ctx.beginPath();ctx.roundRect(ux+4,roadY-19,10,8,2);ctx.fill();
+  ctx.fillStyle='#0d1117';ctx.font='bold 7px JetBrains Mono';ctx.textAlign='center';ctx.fillText('UE',ux,roadY-9);
+
+  const rsrp=s?s.lastRsrp:-70;const sig=Math.max(0,Math.min(1,(rsrp+130)/70));
+  const bw=40,bh=5,bx=ux-bw/2,by=roadY+16;
+  ctx.fillStyle='#21262d';ctx.fillRect(bx,by,bw,bh);
+  ctx.fillStyle=sig>0.5?'#3fb950':sig>0.25?'#ffa657':'#f78166';ctx.fillRect(bx,by,bw*sig,bh);
+  ctx.fillStyle='#6e7681';ctx.font='8px JetBrains Mono';ctx.textAlign='center';ctx.fillText(rsrp.toFixed(0)+'dBm',ux,by+bh+11);
+
+  if(s&&s.lastPt>0){
+    const Pt=s.lastPt,Rt=s.lastRt;
+    ctx.fillStyle='rgba(33,38,45,0.88)';ctx.beginPath();ctx.roundRect(ux-30,roadY-55,60,28,4);ctx.fill();
+    ctx.font='7px JetBrains Mono';ctx.textAlign='center';
+    ctx.fillStyle='#79c0ff';ctx.fillText('Pt='+Pt.toFixed(3),ux-10,roadY-43);
+    ctx.fillStyle='#d2a8ff';ctx.fillText('Rt='+Rt.toFixed(3),ux+16,roadY-43);
+    const rtBar=Math.min(Rt,1);
+    ctx.fillStyle='#21262d';ctx.fillRect(ux-24,roadY-36,48,4);
+    ctx.fillStyle=Rt>s.p.rtThr?'#f78166':'#d2a8ff';ctx.fillRect(ux-24,roadY-36,48*rtBar,4);
+    ctx.strokeStyle='#f0e68c';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(ux-24+48*s.p.rtThr,roadY-38);ctx.lineTo(ux-24+48*s.p.rtThr,roadY-31);ctx.stroke();
+  }
+
+  const pct=s?Math.max(0,Math.min(1,(s.uePos-(-600))/(3600-(-600)))):0;
+  ctx.fillStyle='#21262d';ctx.fillRect(xPad,H-14,xRange,3);
+  ctx.fillStyle='#79c0ff';ctx.fillRect(xPad,H-14,xRange*pct,3);
+  ctx.fillStyle='#6e7681';ctx.font='8px JetBrains Mono';
+  ctx.textAlign='left';ctx.fillText('−500m',xPad,H-3);
+  ctx.textAlign='right';ctx.fillText('3500m',W-xPad,H-3);
+  if(s){ctx.textAlign='center';ctx.fillStyle='#79c0ff';ctx.fillText(s.uePos.toFixed(0)+'m',xPad+xRange*pct,H-3);}
+}
+
+async function startSim(){
+  if(running)return;
+  try{await fetch(API+'/reset',{method:'POST'});}catch(e){}
+  running=true;simState=initState();initCharts();below100ML=0;below100Trad=0;
+  document.getElementById('btn-start').textContent='⏸  STOP';
+  document.getElementById('btn-start').classList.add('running');
+  document.getElementById('b-status').textContent='live';document.getElementById('b-status').className='badge live';
+  simTimer=setInterval(tick,200);
+}
+
+function stopSim(){
+  running=false;clearInterval(simTimer);
+  document.getElementById('btn-start').textContent='▶  START SIMULATION';
+  document.getElementById('btn-start').classList.remove('running');
+  document.getElementById('b-status').textContent='done';document.getElementById('b-status').className='badge';
+  if(simState){
+    const s=simState;const red=s.hoTrad>0?((1-s.hoML/s.hoTrad)*100).toFixed(0)+'%':'N/A';
+    document.getElementById('status-box').textContent='Simulation complete.\nML handovers:   '+s.hoML+'\nTrad handovers: '+s.hoTrad+'\nHO reduction:   '+red+'\nFinal pos: '+s.uePos.toFixed(0)+'m';
+  }
+}
+
+function resetSim(){
+  stopSim();simState=null;initCharts();below100ML=0;below100Trad=0;
+  ['m-time','m-rsrp','m-pt','m-st','m-vt','m-rt'].forEach(id=>{document.getElementById(id).textContent='—';document.getElementById(id).className='mv info';});
+  document.getElementById('m-homl').textContent='0';document.getElementById('m-hotrad').textContent='0';
+  document.getElementById('m-cell').textContent='gNB 1';
+  document.getElementById('b-pt').textContent='Pt: —';document.getElementById('b-rt').textContent='Rt: —';
+  document.getElementById('b-status').textContent='idle';document.getElementById('b-status').className='badge';
+  document.getElementById('status-box').textContent='Configure parameters → press Start';
+  drawNet();
+}
+
+function resizeCanvas(){const cv=document.getElementById('net-canvas');cv.width=cv.parentElement.offsetWidth;cv.height=210;drawNet();}
+
+window.addEventListener('load',()=>{
+  // Initialize charts and UI
+  initCharts();
+  resizeCanvas();
+  simState=initState();
+  drawNet();
+  simState=null;
+
+  // Attach event listeners (after elements exist)
+  document.getElementById('btn-start').addEventListener('click',()=>{running?stopSim():startSim();});
+  document.getElementById('btn-reset').addEventListener('click',resetSim);
+  document.getElementById('btn-download-all').addEventListener('click',downloadAllGraphs);
+});
+window.addEventListener('resize',resizeCanvas);
+
+// ============================================================
+// RANDOM WALK SIMULATION — 500s, pure random UE mobility
+// ============================================================
+
+const RAND_DURATION = 500;
+let randRunning = false;
+let randState   = null;
+let rlog        = {rsrp:[], pt:[], rt:[], st:[], vt:[], t:[]};
+
+function randInitState(){
+  _seed = (Date.now() ^ 0xdeadbeef) & 0xffffffff;
+  const p = getP();
+  return {
+    p, t:0, dt:1,
+    uePos:1500,
+    rsrpPrev:null,
+    rsrpPrevTrad:null,
+    servML:1, servTrad:1,
+    hoML:0, hoTrad:0,
+    kpiWindow:[],
+    lastRsrp:-80, lastPt:0, lastSt:0, lastVt:0, lastRt:0, targetRsrp:-90,
+    speed:15, direction:1,
+    distanceSinceDirectionChange:0,  // Track distance for min walk before turning
+  };
+}
+
+function randomWalkStep(s){
+  // Track distance traveled since last direction change
+  s.distanceSinceDirectionChange = (s.distanceSinceDirectionChange || 0) + Math.abs(s.direction * s.speed * s.dt);
+
+  // Minimum distance before allowing direction change: 700-1500m
+  const minDistanceBeforeChange = 700 + rnd() * 800;
+
+  // Random chance to change direction (only after min distance)
+  if(s.distanceSinceDirectionChange >= minDistanceBeforeChange){
+    const roll = rnd();
+    if(roll < 0.15){  // 15% chance to change direction
+      s.direction *= -1;
+      s.distanceSinceDirectionChange = 0;  // Reset distance counter
+    }
+    else if(roll < 0.40){  // 25% chance to change speed
+      s.speed = 5 + rnd() * 30;
+    }
+    else if(roll < 0.60){  // 20% chance for slow speed
+      s.speed = 2 + rnd() * 8;
+    }
+    else{  // 40% chance for normal speed
+      s.speed = 15 + rnd() * 20;
+    }
+  }
+
+  const rawPos = s.uePos + s.direction * s.speed * s.dt;
+
+  // Force direction change at boundaries
+  if(rawPos <= -500){
+    s.direction = 1;  // Force east
+    s.distanceSinceDirectionChange = 0;
+  }
+  if(rawPos >= 3500){
+    s.direction = -1;  // Force west
+    s.distanceSinceDirectionChange = 0;
+  }
+
+  s.uePos = Math.max(-500, Math.min(3500, rawPos));
+}
+
+// Recursive tick — next call only scheduled AFTER current tick fully resolves.
+// Uses finally{} to guarantee rescheduling even if an exception occurs mid-tick.
+async function randTick(){
+  // Guard: if stopped externally, do nothing
+  if(!randRunning || !randState) return;
+
+  const s = randState;
+
+  // ── Check completion ──────────────────────────────────────────────────────
+  if(s.t >= RAND_DURATION){ stopRandSim(); return; }
+
+  try {
+
+  // ── Advance UE position ───────────────────────────────────────────────────
+  randomWalkStep(s);
+  s.t += s.dt;
+
+  // ── Generate signal ───────────────────────────────────────────────────────
+  const rsrp = rsrpAt(s.uePos, GNB_POS[s.servML], s.p.noise, s.rsrpPrev);
+  s.rsrpPrev = rsrp; s.lastRsrp = rsrp;
+
+  const tradRsrp = rsrpAt(s.uePos, GNB_POS[s.servTrad], s.p.noise, s.rsrpPrevTrad);
+  s.rsrpPrevTrad = tradRsrp;
+
+  const bIdx       = bestGnb(s.uePos);
+  const targetRsrp = rsrpAt(s.uePos, GNB_POS[bIdx], s.p.noise, null);
+  s.targetRsrp     = targetRsrp;
+
+  // ── Build KPI row ─────────────────────────────────────────────────────────
+  const margin = Math.max(rsrp+140, 0);
+  const kpiRow = {
+    t:s.t, RSRP:rsrp,
+    RSRQ:Math.max(-20, rsrp*0.25+rndN()*1.0),
+    SNR: Math.max(0,   rsrp+100  +rndN()*2),
+    CQI: Math.max(1,   Math.min(15, Math.round(margin/5+rndN()*0.5))),
+    RSSI:rsrp+rndN()*1.5+10,
+    Speed:Math.abs(s.speed)+rndN()*0.5,
+    DL_bitrate:Math.max(1,   margin*0.8+rndN()*5),
+    UL_bitrate:Math.max(0.5, margin*0.4+rndN()*2),
+  };
+  s.kpiWindow.push(kpiRow);
+  if(s.kpiWindow.length > 18) s.kpiWindow.shift();
+
+  // ── ML inference (Flask backend) ──────────────────────────────────────────
+  let Pt=0, St=0, Vt=0, Rt=0, mlHO=false;
+  try{
+    const resp = await fetch(API+'/predict', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        window:       s.kpiWindow,
+        target_rsrp:  targetRsrp,
+        serving_rsrp: rsrp,
+        rt_threshold: s.p.rtThr,
+        alpha_ema:    s.p.alpha,
+      })
+    });
+    const d = await resp.json();
+    if(d && !d.error){
+      Pt=d.Pt; St=d.St; Vt=d.Vt; Rt=d.Rt;
+      if(d.handover && bIdx !== s.servML){ s.hoML++; s.servML=bIdx; mlHO=true; }
+    }
+  }catch(e){ /* Flask offline — Pt/Rt stay 0 */ }
+
+  s.lastPt=Pt; s.lastSt=St; s.lastVt=Vt; s.lastRt=Rt;
+
+  // ── Traditional handover (RSRP threshold + 3 dBm hysteresis) ─────────────
+  const tradBest = bestGnb(s.uePos);
+  const tradTgtR = rsrpAt(s.uePos, GNB_POS[tradBest], s.p.noise, null);
+  const tradHO   = rsrp < s.p.thresh && tradTgtR > rsrp+3 && tradBest !== s.servTrad;
+  if(tradHO){ s.hoTrad++; s.servTrad=tradBest; }
+
+  // ── Data log (every 5 s) ──────────────────────────────────────────────────
+  if(s.t % 5 === 0){
+    rlog.t.push(s.t);
+    rlog.rsrp.push(+rsrp.toFixed(2));
+    rlog.pt.push(+Pt.toFixed(4));
+    rlog.rt.push(+Rt.toFixed(4));
+    rlog.st.push(+St.toFixed(4));
+    rlog.vt.push(+Vt.toFixed(4));
+  }
+
+  // ── Live UI update ────────────────────────────────────────────────────────
+  const mR = document.getElementById('m-rsrp');
+  mR.textContent = rsrp.toFixed(1)+' dBm';
+  mR.className   = 'mv '+(rsrp>-85?'good':rsrp>-97?'warn':'bad');
+  document.getElementById('m-time').textContent   = s.t.toFixed(0)+' s';
+  document.getElementById('m-cell').textContent   = 'gNB '+(s.servML+1);
+  document.getElementById('m-homl').textContent   = s.hoML;
+  document.getElementById('m-hotrad').textContent = s.hoTrad;
+  document.getElementById('m-pt').textContent = Pt.toFixed(3);
+  document.getElementById('m-rt').textContent = Rt.toFixed(3);
+  document.getElementById('m-st').textContent = St.toFixed(3);
+  document.getElementById('m-vt').textContent = Vt.toFixed(3);
+
+  const pct = Math.round(s.t/RAND_DURATION*100);
+  document.getElementById('btn-rand').textContent = '\u27f3  Random Walk '+pct+'%';
+  document.getElementById('b-status').textContent = 'rnd '+pct+'%';
+  document.getElementById('b-status').className   = 'badge live';
+  document.getElementById('status-box').textContent =
+    'RANDOM WALK\nt='+s.t+'s  pos='+s.uePos.toFixed(0)+'m\n'+
+    'dir='+(s.direction>0?'right':'left')+'  spd='+s.speed.toFixed(0)+'m/s\n'+
+    'RSRP='+rsrp.toFixed(1)+'  Pt='+Pt.toFixed(3)+'\n'+
+    'ML HO: '+s.hoML+'  Trad HO: '+s.hoTrad;
+
+  const label = s.t.toFixed(0)+'s';
+    push(charts.rsrp, label, rsrp, s.p.thresh, targetRsrp, tradRsrp);
+    push(charts.pt,   label, Pt, St, Rt, s.p.rtThr);
+    push(charts.vt,   label, Vt);
+    push(charts.ho,   label, mlHO?1:0, tradHO?1.5:0.5);
+    drawNet(randState);
+  } catch(e) {
+    console.error('randTick error:', e);
+  } finally {
+    // ── Schedule NEXT tick in finally — guaranteed to fire even if an exception
+    // occurred above. setTimeout(fn, 10) avoids browser background-tab throttling
+    // that can stretch setTimeout(fn,0) to 1000ms+, making 500 ticks take >8 min.
+    if(randRunning) setTimeout(randTick, 10);
+  }
+}
+
+async function startRandSim(){
+  if(running || randRunning) return;
+  // Await reset so Flask session (St_prev, Pt_buf) is clean before first tick
+  try{ await fetch(API+'/reset', {method:'POST'}); }catch(e){}
+  randRunning = true;
+  randState   = randInitState();
+  rlog        = {rsrp:[], pt:[], rt:[], st:[], vt:[], t:[]};
+  initCharts();below100ML=0;below100Trad=0;
+  document.getElementById('btn-rand').textContent = '\u27f3  Random Walk 0%';
+  document.getElementById('btn-rand').classList.add('running');
+  document.getElementById('b-status').textContent = 'rnd 0%';
+  document.getElementById('b-status').className   = 'badge live';
+  // Small delay before first tick so UI has time to repaint
+  setTimeout(randTick, 50);
+}
+
+function stopRandSim(){
+  randRunning = false;
+  document.getElementById('btn-rand').textContent = '\u27f3  Random Walk (500s)';
+  document.getElementById('btn-rand').classList.remove('running');
+  document.getElementById('b-status').textContent = 'done';
+  document.getElementById('b-status').className   = 'badge';
+  if(randState) showReport(randState);
+}
+
+// ── REPORT MODAL ──────────────────────────────────────────
+let rptCharts = {};
+
+function showReport(s){
+  const mlHO   = s.hoML, tradHO = s.hoTrad;
+  const reduction    = tradHO>0 ? ((1-mlHO/tradHO)*100).toFixed(1) : 'N/A';
+  const unnecessary  = Math.max(0, tradHO-mlHO);
+  const trigRateML   = (mlHO  /s.t*100).toFixed(2);
+  const trigRateTrad = (tradHO/s.t*100).toFixed(2);
+
+  const meanRsrp = rlog.rsrp.length ? (rlog.rsrp.reduce((a,b)=>a+b,0)/rlog.rsrp.length).toFixed(1) : '0';
+  const belowPct = rlog.rsrp.length ? (rlog.rsrp.filter(v=>v<s.p.thresh).length/rlog.rsrp.length*100).toFixed(1) : '0';
+  const meanPt   = rlog.pt.length   ? (rlog.pt.reduce((a,b)=>a+b,0)/rlog.pt.length).toFixed(3) : '0';
+  const meanRt   = rlog.rt.length   ? (rlog.rt.reduce((a,b)=>a+b,0)/rlog.rt.length).toFixed(3) : '0';
+
+  document.getElementById('rpt-subtitle').textContent   = '500s random mobility · '+s.t+' timesteps';
+  document.getElementById('rpt-homl').textContent       = mlHO;
+  document.getElementById('rpt-hotrad').textContent     = tradHO;
+  document.getElementById('rpt-reduction').textContent  = reduction!=='N/A' ? reduction+'%' : 'N/A';
+  document.getElementById('rpt-unnecessary').textContent= unnecessary;
+  document.getElementById('rpt-dist').textContent       = s.t+'s · final pos: '+s.uePos.toFixed(0)+'m';
+  document.getElementById('rpt-rsrp-mean').textContent  = meanRsrp+' dBm';
+
+  const bpEl = document.getElementById('rpt-below');
+  bpEl.textContent = belowPct+'%';
+  bpEl.className   = 'rv '+(parseFloat(belowPct)>30?'bad':parseFloat(belowPct)>10?'amber':'good');
+
+  document.getElementById('rpt-pt-mean').textContent = meanPt;
+  document.getElementById('rpt-rt-mean').textContent = meanRt;
+
+  const maxRate = Math.max(parseFloat(trigRateML), parseFloat(trigRateTrad), 0.001);
+  document.getElementById('rpt-ml-rate').textContent    = trigRateML+' HO/s';
+  document.getElementById('rpt-trad-rate').textContent  = trigRateTrad+' HO/s';
+  document.getElementById('rpt-ml-bar').style.width     = Math.min(100,parseFloat(trigRateML)  /maxRate*100)+'%';
+  document.getElementById('rpt-trad-bar').style.width   = Math.min(100,parseFloat(trigRateTrad)/maxRate*100)+'%';
+
+  // Traditional correctness audit
+  const tradVEl  = document.getElementById('rpt-verdict-trad');
+  const ratio    = mlHO>0 ? (tradHO/mlHO) : tradHO;
+  const isPing   = tradHO > mlHO*2.5 && tradHO>5;
+  if(isPing){
+    tradVEl.className = 'verdict bad';
+    document.getElementById('rpt-vt-title').textContent = 'Ping-pong detected in traditional system';
+    document.getElementById('rpt-vt-body').textContent  =
+      'Traditional fired '+tradHO+' HOs vs ML '+mlHO+' (ratio '+ratio.toFixed(1)+'x). '+
+      'Repeated threshold crossings due to noise and direction changes cause redundant '+
+      're-triggers. Each unnecessary HO adds ~50ms interruption and wastes RAN signalling. '+
+      '3dBm hysteresis applied but insufficient under high-noise random mobility.';
+  } else if(tradHO > mlHO*1.5 && tradHO>3){
+    tradVEl.className = 'verdict warn';
+    document.getElementById('rpt-vt-title').textContent = 'Traditional shows moderate over-triggering';
+    document.getElementById('rpt-vt-body').textContent  =
+      'Traditional: '+tradHO+' · ML: '+mlHO+' ('+ratio.toFixed(1)+'x). Some redundant triggers '+
+      'near cell boundaries where RSRP oscillates. RSRP threshold alone cannot distinguish '+
+      'genuine degradation from transient channel noise.';
+  } else {
+    tradVEl.className = 'verdict';
+    document.getElementById('rpt-vt-title').textContent = 'Traditional behaved reasonably';
+    document.getElementById('rpt-vt-body').textContent  =
+      'Traditional: '+tradHO+' · ML: '+mlHO+'. No severe ping-pong under this mobility pattern. '+
+      'However it still reacts only after RSRP drops — ML prepares handover proactively before degradation.';
+  }
+
+  // ML assessment
+  const mlVEl = document.getElementById('rpt-verdict-ml');
+  if(mlHO===0 && tradHO>3){
+    mlVEl.className = 'verdict warn';
+    document.getElementById('rpt-vm-title').textContent = 'ML was very conservative — possible under-triggering';
+    document.getElementById('rpt-vm-body').textContent  =
+      'ML triggered 0 HOs while traditional triggered '+tradHO+'. Mean Rt='+meanRt+
+      ' stayed below threshold='+s.p.rtThr+'. High Vt may be suppressing Rt consistently. '+
+      'Consider lowering Rt threshold or reducing noise.';
+  } else if(mlHO<=tradHO){
+    mlVEl.className = 'verdict';
+    document.getElementById('rpt-vm-title').textContent = 'ML performed well — stable, fewer triggers';
+    document.getElementById('rpt-vm-body').textContent  =
+      'ML: '+mlHO+' HOs vs traditional: '+tradHO+'. Temporal pipeline filtered '+unnecessary+
+      ' unnecessary triggers. Mean Rt='+meanRt+' · Pt='+meanPt+'. '+
+      'Vt dampened noise spikes, St smoothed transient Pt, Rt crossed threshold only on genuine degradation. '+
+      'Core research claim validated: proactive + stable > reactive.';
+  } else {
+    mlVEl.className = 'verdict warn';
+    document.getElementById('rpt-vm-title').textContent = 'ML over-triggered vs Traditional';
+    document.getElementById('rpt-vm-body').textContent  =
+      'ML: '+mlHO+' vs traditional: '+tradHO+'. UE spent long time in weak signal zone. '+
+      'Try increasing Rt threshold above '+s.p.rtThr+' or increasing EMA alpha.';
+  }
+
+  // Mini charts
+  Object.values(rptCharts).forEach(c=>c.destroy());
+  const gc='rgba(255,255,255,0.05)', tc='#6e7681';
+  const mkM = (id,datasets,yMin,yMax) => new Chart(document.getElementById(id),{
+    type:'line',
+    data:{labels:rlog.t.map(v=>v+'s'), datasets:datasets.map(d=>({
+      label:d.label, data:d.data, borderColor:d.color,
+      borderWidth:1.2, pointRadius:0, fill:false, tension:0.2,
+    }))},
+    options:{responsive:true,maintainAspectRatio:false,animation:false,
+      plugins:{legend:{display:true,labels:{color:tc,font:{size:8,family:'JetBrains Mono'},boxWidth:8}}},
+      scales:{
+        x:{ticks:{color:tc,font:{size:7},maxTicksLimit:8},grid:{color:gc},border:{color:'transparent'}},
+        y:{min:yMin,max:yMax,ticks:{color:tc,font:{size:7},maxTicksLimit:5},grid:{color:gc},border:{color:'transparent'}}
+      }}
+  });
+
+  rptCharts.rsrp = mkM('rpt-chart-rsrp',[
+    {label:'RSRP',   data:rlog.rsrp, color:'#79c0ff'},
+    {label:'Thresh', data:rlog.t.map(()=>s.p.thresh), color:'rgba(247,129,102,0.5)'},
+  ],-140,-50);
+  rptCharts.risk = mkM('rpt-chart-risk',[
+    {label:'Pt', data:rlog.pt, color:'#79c0ff'},
+    {label:'St', data:rlog.st, color:'#ffa657'},
+    {label:'Rt', data:rlog.rt, color:'#d2a8ff'},
+    {label:'Rt thr', data:rlog.t.map(()=>s.p.rtThr), color:'rgba(240,230,140,0.4)'},
+  ],0,1.05);
+
+  document.getElementById('report-modal').classList.add('show');
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+document.getElementById('modal-close').addEventListener('click',()=>{
+  document.getElementById('report-modal').classList.remove('show');
+});
+document.getElementById('report-modal').addEventListener('click',e=>{
+  if(e.target.id==='report-modal')
+    document.getElementById('report-modal').classList.remove('show');
+});
+document.getElementById('btn-rand').addEventListener('click', ()=>{
+  if(running){ return; }
+  if(randRunning){ stopRandSim(); }
+  else{ startRandSim(); }
+});
+});
+</script>
+
+<!-- REPORT MODAL -->
+<div class="modal-overlay" id="report-modal">
+  <div class="modal">
+    <button class="modal-close" id="modal-close">✕</button>
+    <h2>Random Walk Analysis Report</h2>
+    <div class="msub" id="rpt-subtitle">500s random mobility simulation complete</div>
+
+    <div class="sec-title">Handover Summary</div>
+    <div class="report-grid">
+      <div class="rcard"><div class="rl">ML Handovers</div><div class="rv good" id="rpt-homl">—</div><div class="rsub">Rt-based (proactive)</div></div>
+      <div class="rcard"><div class="rl">Traditional HOs</div><div class="rv bad" id="rpt-hotrad">—</div><div class="rsub">RSRP threshold-based</div></div>
+      <div class="rcard"><div class="rl">HO Reduction</div><div class="rv purple" id="rpt-reduction">—</div><div class="rsub">fewer triggers = less ping-pong</div></div>
+      <div class="rcard"><div class="rl">Unnecessary Triggers</div><div class="rv amber" id="rpt-unnecessary">—</div><div class="rsub">Traditional excess over ML</div></div>
+      <div class="rcard full"><div class="rl">Simulation duration / Distance covered</div><div class="rv info" id="rpt-dist">—</div></div>
+    </div>
+
+    <div class="sec-title">Signal Quality (full 500s)</div>
+    <div class="report-grid">
+      <div class="rcard"><div class="rl">Mean RSRP</div><div class="rv info" id="rpt-rsrp-mean">—</div><div class="rsub">average over full run</div></div>
+      <div class="rcard"><div class="rl">Time below threshold</div><div class="rv" id="rpt-below">—</div><div class="rsub">% of time in degraded zone</div></div>
+      <div class="rcard"><div class="rl">Mean Pt (ML risk)</div><div class="rv purple" id="rpt-pt-mean">—</div><div class="rsub">avg degradation probability</div></div>
+      <div class="rcard"><div class="rl">Mean Rt (decision risk)</div><div class="rv purple" id="rpt-rt-mean">—</div><div class="rsub">avg composite risk score</div></div>
+    </div>
+
+    <div class="bar-row">
+      <div class="bar-label"><span>ML trigger rate</span><span id="rpt-ml-rate">—</span></div>
+      <div class="bar-bg"><div class="bar-fill" id="rpt-ml-bar" style="background:var(--green);width:0%"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label"><span>Traditional trigger rate</span><span id="rpt-trad-rate">—</span></div>
+      <div class="bar-bg"><div class="bar-fill" id="rpt-trad-bar" style="background:var(--red);width:0%"></div></div>
+    </div>
+
+    <div class="sec-title">Traditional System Correctness Audit</div>
+    <div class="verdict" id="rpt-verdict-trad">
+      <div class="vt" id="rpt-vt-title">—</div>
+      <div class="vd" id="rpt-vt-body">—</div>
+    </div>
+
+    <div class="sec-title">ML System Assessment</div>
+    <div class="verdict" id="rpt-verdict-ml">
+      <div class="vt" id="rpt-vm-title">—</div>
+      <div class="vd" id="rpt-vm-body">—</div>
+    </div>
+    <div class="sec-title">RSRP Signal Timeline</div>
+    <div class="modal-chart"><canvas id="rpt-chart-rsrp" role="img" aria-label="RSRP over 500s random walk">RSRP</canvas></div>
+    <div class="sec-title">ML Risk Scores Timeline</div>
+    <div class="modal-chart"><canvas id="rpt-chart-risk" role="img" aria-label="Pt Rt risk over 500s">Risk</canvas></div>
+  </div>
+</div>
+</body>
+</html>

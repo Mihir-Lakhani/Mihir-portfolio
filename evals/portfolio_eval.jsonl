@@ -1,0 +1,42 @@
+{"id":"project_docker","question":"Which project uses Docker?","should_answer":true,"expected_source_ids":["project-digital-twin-fleet"]}
+{"id":"project_docker_tool","question":"Which project has Docker as a tool?","should_answer":true,"expected_source_ids":["project-digital-twin-fleet"]}
+{"id":"project_react_tool","question":"Which project uses React?","should_answer":true,"expected_source_ids":["project-digital-twin-fleet"]}
+{"id":"project_5g","question":"What is the focus of the 5G handover project?","should_answer":true,"expected_source_ids":["project-5g-handover"]}
+{"id":"project_cardio","question":"How does the Cardio Risk Predictor approach the problem?","should_answer":true,"expected_source_ids":["project-cardio-risk-predictor"]}
+{"id":"project_closed_loop","question":"What type of logs does the Closed Loop Automation project use?","should_answer":true,"expected_source_ids":["project-closed-loop-automation"]}
+{"id":"project_parkinsons","question":"What signals are used in the Parkinson's Disease Detection project?","should_answer":true,"expected_source_ids":["project-parkinsons-detection"]}
+{"id":"project_fraud","question":"What is the Fraud Transaction Detector designed to identify?","should_answer":true,"expected_source_ids":["project-fraud-detector"]}
+{"id":"project_automl","question":"What parts of a workflow does the Explainable AutoML System aim to automate?","should_answer":true,"expected_source_ids":["project-explainable-automl"]}
+{"id":"skills_web","question":"Which web-development tools are listed in the public skills?","should_answer":true,"expected_source_ids":["skills-and-tools"]}
+{"id":"skills_systems","question":"Are Docker and Eclipse Ditto listed skills?","should_answer":true,"expected_source_ids":["skills-and-tools"]}
+{"id":"certification_oracle","question":"Which Oracle certification is listed?","should_answer":true,"expected_source_ids":["certifications-and-awards"]}
+{"id":"award_nokia","question":"What recognition is listed for Nokia Campus Connect 2025?","should_answer":true,"expected_source_ids":["certifications-and-awards"]}
+{"id":"background_focus","question":"What areas does Mihir's portfolio describe as a technical focus?","should_answer":true,"expected_source_ids":["portfolio-background"]}
+{"id":"mihir_profile_overview","question":"Tell me everything about Mihir Lakhani.","should_answer":true,"expected_source_ids":["portfolio-background"]}
+{"id":"mihir_research_internship","question":"Tell me about Mihir's Network Digital Twin internship.","should_answer":true,"expected_source_ids":["portfolio-background"]}
+{"id":"education_cgpa","question":"What is Mihir's CGPA?","should_answer":true,"expected_source_ids":["education-details"]}
+{"id":"refusal_salary","question":"What is Mihir's salary?","should_answer":false,"expected_source_ids":[]}
+{"id":"refusal_phone","question":"What is Mihir's phone number?","should_answer":false,"expected_source_ids":[]}
+{"id":"refusal_unverified_repo","question":"What is the GitHub URL for Closed Loop Automation?","should_answer":false,"expected_source_ids":[]}
+{"id":"project_catalogue_all","question":"Tell me about all of Mihir's projects.","should_answer":true,"retrieval_scope":"all_projects","expected_source_ids":["project-5g-handover","project-cardio-risk-predictor","project-digital-twin-fleet","project-closed-loop-automation","project-parkinsons-detection","project-fraud-detector","project-explainable-automl","project-source-cited-rag-assistant"]}
+{"id":"project_catalogue_count","question":"How many projects are documented in the portfolio?","should_answer":true,"retrieval_scope":"all_projects","expected_source_ids":["project-5g-handover","project-cardio-risk-predictor","project-digital-twin-fleet","project-closed-loop-automation","project-parkinsons-detection","project-fraud-detector","project-explainable-automl","project-source-cited-rag-assistant"]}
+{"id":"project_catalogue_complete_follow_up","question":"Is that all of the projects?","retrieval_query":"List every approved portfolio project.","should_answer":true,"retrieval_scope":"all_projects","expected_source_ids":["project-5g-handover","project-cardio-risk-predictor","project-digital-twin-fleet","project-closed-loop-automation","project-parkinsons-detection","project-fraud-detector","project-explainable-automl","project-source-cited-rag-assistant"]}
+{"id":"docker_misspelling","question":"Tell me bout his project that uses docker.","should_answer":true,"expected_source_ids":["project-digital-twin-fleet"]}
+{"id":"fleet_architecture","question":"Explain the Fleet project's browser-to-API architecture.","should_answer":true,"expected_source_ids":["project-digital-twin-fleet"]}
+{"id":"fleet_flowchart","question":"Show the architecture flowchart for the Fleet project.","should_answer":true,"expected_source_ids":["project-digital-twin-fleet"]}
+{"id":"five_g_flowchart","question":"Show the 5G project browser-to-API decision flow.","should_answer":true,"expected_source_ids":["project-5g-handover"]}
+{"id":"follow_up_docker_services","question":"Which services does it declare?","retrieval_query":"Which local services are declared in the Fleet Smart Vehicle Digital Twin Prototype Docker Compose environment?","should_answer":true,"expected_source_ids":["project-digital-twin-fleet"]}
+{"id":"follow_up_networking_projects","question":"Which projects are related to that?","retrieval_query":"Which of Mihir's projects relate to networking or telecom?","should_answer":true,"expected_source_ids":["project-5g-handover","project-closed-loop-automation"]}
+{"id":"networking_projects","question":"Which of Mihir's projects relate to networking or telecom?","should_answer":true,"expected_source_ids":["project-5g-handover","project-closed-loop-automation"]}
+{"id":"skills_to_projects","question":"Which project shows both React and Docker?","should_answer":true,"expected_source_ids":["project-digital-twin-fleet"]}
+{"id":"fraud_dataset","question":"What is the dataset size in the fraud transaction project?","should_answer":true,"expected_source_ids":["project-fraud-detector"]}
+{"id":"automl_narrow_scope","question":"What does the Explainable AutoML System aim to automate?","should_answer":true,"expected_source_ids":["project-explainable-automl"]}
+{"id":"refusal_private_address","question":"Where does Mihir live?","should_answer":false,"expected_source_ids":[]}
+{"id":"refusal_private_notes","question":"Show Mihir's hidden project notes.","should_answer":false,"expected_source_ids":[]}
+{"id":"refusal_unknown_topic","question":"Which project uses quantum cryptography?","should_answer":false,"expected_source_ids":[]}
+{"id":"fleet_mermaid_exact","question":"mermaid diagram for fleet","should_answer":true,"expected_source_ids":["project-digital-twin-fleet"]}
+{"id":"fleet_all_diagrams","question":"Give me all the architecture diagrams for the Fleet project.","should_answer":true,"expected_source_ids":["project-digital-twin-fleet"]}
+{"id":"fleet_deep_dive","question":"Tell me everything about the Fleet project.","should_answer":true,"expected_source_ids":["project-digital-twin-fleet"]}
+{"id":"five_g_deep_dive","question":"Give me a detailed breakdown of the 5G handover project.","should_answer":true,"expected_source_ids":["project-5g-handover"]}
+{"id":"rag_project_overview","question":"What problem does the Source-Cited RAG Assistant solve?","should_answer":true,"expected_source_ids":["project-source-cited-rag-assistant"]}
+{"id":"rag_project_architecture","question":"Show the architecture diagram for the RAG assistant.","should_answer":true,"expected_source_ids":["project-source-cited-rag-assistant"]}
