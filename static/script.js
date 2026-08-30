@@ -1099,6 +1099,30 @@ function ensureAboutDesk() {
 
 ensureAboutDesk();
 
+function askPortfolioAssistantAboutProject(project) {
+  if (!project?.titleText) return;
+
+  ensureAboutDesk();
+  const toggle = document.getElementById('aboutChatToggle');
+  const panel = document.getElementById('aboutChatPanel');
+  if (!toggle || !panel) return;
+
+  const { form, question, submit, feedback } = portfolioAssistantElements(panel);
+  if (question.disabled || submit.disabled) {
+    feedback.textContent = 'Please wait for the current answer before asking about another project.';
+    return;
+  }
+
+  const prompt = `Tell me everything in detail about the ${project.titleText} project, including all approved diagrams and pipelines.`;
+  question.value = prompt;
+
+  if (panel.hidden || panel.dataset.aboutChatClosing === 'true') {
+    setAboutChatLayerOpen(toggle, panel, true);
+  }
+
+  form.requestSubmit();
+}
+
 function setupAboutReveal() {
   const aboutSection = document.querySelector('.about-section');
 
@@ -1409,7 +1433,7 @@ const workSection = document.getElementById('work');
 const carouselRow = carouselContainer ? carouselContainer.closest('.work-flex-row') : null;
 
 if (projectsHeadingNote) {
-  projectsHeadingNote.textContent = 'You can unroll and visit the projects to access the links and know more about them.';
+  projectsHeadingNote.textContent = 'Use the Unroll button to explore each project in more detail and access supporting links.';
 }
 
 if (carouselRow) {
@@ -1699,7 +1723,7 @@ function selectArchiveProject(index, animate = true) {
       <h4>${project.title}</h4>
       <p>${project.descText}</p>
       <div class="project-archive-actions">
-        <a class="project-archive-link" href="${project.detailPath}">Know More <span aria-hidden="true">&#8599;</span></a>
+        <button class="project-archive-link project-archive-assistant" type="button">Know More <span aria-hidden="true">&#8599;</span></button>
         ${liveProjectLink}
         ${githubLink}
       </div>
@@ -1711,6 +1735,10 @@ function selectArchiveProject(index, animate = true) {
     const selected = buttonIndex === activeArchiveProjectIndex;
     button.classList.toggle('is-selected', selected);
     button.setAttribute('aria-current', selected ? 'true' : 'false');
+  });
+
+  projectArchivePreview.querySelector('.project-archive-assistant')?.addEventListener('click', () => {
+    askPortfolioAssistantAboutProject(project);
   });
 
   if (animate && !projectArchive.hidden) {
